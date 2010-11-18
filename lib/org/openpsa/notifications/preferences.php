@@ -67,7 +67,7 @@ class org_openpsa_notifications_preferences extends midcom_baseclasses_component
         $notifiers = $this->_list_notifiers();
 
         // Load actions of various components
-        $customdata = $_MIDCOM->componentloader->get_all_manifest_customdata('org.openpsa.notifications');
+        $customdata = midcom::componentloader->get_all_manifest_customdata('org.openpsa.notifications');
         foreach ($customdata as $component => $actions)
         {
             $prepended = false;
@@ -77,7 +77,7 @@ class org_openpsa_notifications_preferences extends midcom_baseclasses_component
                 $prepend = '';
                 if (!$prepended)
                 {
-                    $prepend = "<h3 style='clear: left;'>" . $_MIDCOM->i18n->get_string($component, $component) . "</h3>\n";
+                    $prepend = "<h3 style='clear: left;'>" . midcom::i18n()->get_string($component, $component) . "</h3>\n";
                     $prepended = true;
                 }
 
@@ -87,7 +87,7 @@ class org_openpsa_notifications_preferences extends midcom_baseclasses_component
                     str_replace(':', '_', str_replace('.', '_', $action_key)),
                     array
                     (
-                        'title'   => $_MIDCOM->i18n->get_string("action {$action}", $component),
+                        'title'   => midcom::i18n()->get_string("action {$action}", $component),
                         'storage' => array
                         (
                             'location' => 'configuration',
@@ -111,7 +111,7 @@ class org_openpsa_notifications_preferences extends midcom_baseclasses_component
     {
         parent::_on_initialize();
 
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
 
         $this->_schemadb = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb'));
 
@@ -125,13 +125,13 @@ class org_openpsa_notifications_preferences extends midcom_baseclasses_component
      */
     function _load_controller()
     {
-        $user = $_MIDCOM->auth->user->get_storage();
+        $user = midcom::auth->user->get_storage();
         $this->_controller = midcom_helper_datamanager2_controller::create('simple');
         $this->_controller->schemadb =& $this->_schemadb;
         $this->_controller->set_storage($user, 'notifications');
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for task {$user->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for task {$user->id}.");
             // This will exit.
         }
     }
@@ -147,14 +147,14 @@ class org_openpsa_notifications_preferences extends midcom_baseclasses_component
      */
     function _handler_edit($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         $this->_load_controller();
 
         switch ($this->_controller->process_form())
         {
             case 'save':
-                $_MIDCOM->relocate("");
+                midcom::relocate("");
 
             case 'cancel':
                 // This will exit.

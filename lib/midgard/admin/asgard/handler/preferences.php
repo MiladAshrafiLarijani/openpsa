@@ -65,10 +65,10 @@ class midgard_admin_asgard_handler_preferences extends midcom_baseclasses_compon
     function _on_initialize()
     {
         // Ensure we get the correct styles
-        $_MIDCOM->style->prepend_component_styledir('midgard.admin.asgard');
-        $_MIDCOM->skip_page_style = true;
+        midcom::style->prepend_component_styledir('midgard.admin.asgard');
+        midcom::skip_page_style = true;
 
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
     }
 
     /**
@@ -87,7 +87,7 @@ class midgard_admin_asgard_handler_preferences extends midcom_baseclasses_compon
 
         if (!$this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to generate the edit controller');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to generate the edit controller');
             // This will exit
         }
     }
@@ -99,7 +99,7 @@ class midgard_admin_asgard_handler_preferences extends midcom_baseclasses_compon
      */
     function _process_request_data(&$data)
     {
-        $data['view_title'] = $_MIDCOM->i18n->get_string('user preferences', 'midgard.admin.asgard');
+        $data['view_title'] = midcom::i18n()->get_string('user preferences', 'midgard.admin.asgard');
         $data['asgard_toolbar'] = new midcom_helper_toolbar();
         $data['controller'] =& $this->_controller;
 
@@ -110,15 +110,15 @@ class midgard_admin_asgard_handler_preferences extends midcom_baseclasses_compon
         $tmp[] = array
         (
             MIDCOM_NAV_URL => '__mfa/asgard/',
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('midgard.admin.asgard', 'midgard.admin.asgard'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('midgard.admin.asgard', 'midgard.admin.asgard'),
         );
         $tmp[] = array
         (
             MIDCOM_NAV_URL => '__mfa/asgard/preferences/',
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('user preferences', 'midgard.admin.asgard'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('user preferences', 'midgard.admin.asgard'),
         );
 
-        if ($this->_person->guid !== $_MIDCOM->auth->user->guid)
+        if ($this->_person->guid !== midcom::auth->user->guid)
         {
             $tmp[] = array
             (
@@ -127,7 +127,7 @@ class midgard_admin_asgard_handler_preferences extends midcom_baseclasses_compon
             );
         }
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
     }
 
@@ -141,7 +141,7 @@ class midgard_admin_asgard_handler_preferences extends midcom_baseclasses_compon
      */
     function _handler_preferences($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         if (isset($args[0]))
         {
@@ -157,7 +157,7 @@ class midgard_admin_asgard_handler_preferences extends midcom_baseclasses_compon
             || !isset($this->_person->guid)
             || !$this->_person->guid)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to get the requested person');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to get the requested person');
             // This will exit
         }
 
@@ -173,13 +173,13 @@ class midgard_admin_asgard_handler_preferences extends midcom_baseclasses_compon
         switch ($this->_controller->process_form())
         {
             case 'save':
-                $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('midgard.admin.asgard', 'midgard.admin.asgard'), $_MIDCOM->i18n->get_string('preferences saved', 'midgard.admin.asgard'));
-                $_MIDCOM->relocate($return_page);
+                midcom::uimessages()->add(midcom::i18n()->get_string('midgard.admin.asgard', 'midgard.admin.asgard'), midcom::i18n()->get_string('preferences saved', 'midgard.admin.asgard'));
+                midcom::relocate($return_page);
                 // This will exit
                 break;
             case 'cancel':
-                $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('midgard.admin.asgard', 'midgard.admin.asgard'), $_MIDCOM->i18n->get_string('cancelled', 'midcom'));
-                $_MIDCOM->relocate($return_page);
+                midcom::uimessages()->add(midcom::i18n()->get_string('midgard.admin.asgard', 'midgard.admin.asgard'), midcom::i18n()->get_string('cancelled', 'midcom'));
+                midcom::relocate($return_page);
                 // This will exit
                 break;
         }
@@ -218,8 +218,8 @@ class midgard_admin_asgard_handler_preferences extends midcom_baseclasses_compon
      */
     function get_languages()
     {
-        $lang_str = $_MIDCOM->i18n->get_current_language();
-        $languages = $_MIDCOM->i18n->list_languages();
+        $lang_str = midcom::i18n()->get_current_language();
+        $languages = midcom::i18n()->list_languages();
 
         if (!array_key_exists($lang_str, $languages))
         {
@@ -257,7 +257,7 @@ class midgard_admin_asgard_handler_preferences extends midcom_baseclasses_compon
         }
 
         // Patch for Midgard ACL problem of setting person's own parameters
-        $_MIDCOM->auth->request_sudo('midgard.admin.asgard');
+        midcom::auth->request_sudo('midgard.admin.asgard');
 
         debug_push_class(__CLASS__, __FUNCTION__);
 
@@ -271,7 +271,7 @@ class midgard_admin_asgard_handler_preferences extends midcom_baseclasses_compon
              if (!$this->_person->set_parameter('midgard.admin.asgard:preferences', $key, $value))
              {
                  $this->_status = false;
-                 $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('midgard.admin.asgard', 'midgard.admin.asgard'), sprintf($_MIDCOM->i18n->get_string('failed to save the preference for %s', 'midgard.admin.asgard'), $_MIDCOM->i18n->get_string($key, 'midgard.admin.asgard')));
+                 midcom::uimessages()->add(midcom::i18n()->get_string('midgard.admin.asgard', 'midgard.admin.asgard'), sprintf(midcom::i18n()->get_string('failed to save the preference for %s', 'midgard.admin.asgard'), midcom::i18n()->get_string($key, 'midgard.admin.asgard')));
              }
 
              debug_add("Added configuration key-value pair {$key} => {$value}", MIDCOM_LOG_DEBUG);
@@ -279,7 +279,7 @@ class midgard_admin_asgard_handler_preferences extends midcom_baseclasses_compon
 
         debug_pop();
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
 
         return true;
     }

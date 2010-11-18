@@ -50,7 +50,7 @@ function midcom_get_snippet_content_graceful($path)
             $cached_snippets[$path] = null;
             return null;
         }
-        $_MIDCOM->cache->content->register($snippet->guid);
+        midcom::cache()->content->register($snippet->guid);
         $data = $snippet->code;
     }
     $cached_snippets[$path] = $data;
@@ -75,7 +75,7 @@ function midcom_get_snippet_content($path)
     $data = midcom_get_snippet_content_graceful($path);
     if (is_null($data))
     {
-        $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Could not load the contents of the snippet {$path}: Snippet does not exist.");
+        midcom::generate_error(MIDCOM_ERRCRIT, "Could not load the contents of the snippet {$path}: Snippet does not exist.");
         // This will exit.
     }
     return $data;

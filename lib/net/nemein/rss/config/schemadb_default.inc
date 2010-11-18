@@ -103,17 +103,17 @@
                     array
                     (
                         'name' => 'code',
-                        'title' =>  $_MIDCOM->i18n->get_string('ISO code', 'net.nemein.rss'),
+                        'title' =>  midcom::i18n()->get_string('ISO code', 'net.nemein.rss'),
                     ),
                     array
                     (
                         'name' => 'name',
-                        'title' =>  $_MIDCOM->i18n->get_string('language (in english)', 'net.nemein.rss'),
+                        'title' =>  midcom::i18n()->get_string('language (in english)', 'net.nemein.rss'),
                     ),
                     array
                     (
                         'name' => 'native',
-                        'title' =>  $_MIDCOM->i18n->get_string('language (native)', 'net.nemein.rss'),
+                        'title' =>  midcom::i18n()->get_string('language (native)', 'net.nemein.rss'),
                     ),
                 ),
                 'id_field' => 'id',

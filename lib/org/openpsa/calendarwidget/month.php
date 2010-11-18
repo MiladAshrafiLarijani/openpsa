@@ -507,7 +507,7 @@ class org_openpsa_calendarwidget_month
     {
         if (empty($this->week_text))
         {
-            $this->week_text = $_MIDCOM->i18n->get_string('week', 'org.openpsa.calendarwidget');
+            $this->week_text = midcom::i18n()->get_string('week', 'org.openpsa.calendarwidget');
         }
 
         // Set the environmental variables

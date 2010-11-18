@@ -42,7 +42,7 @@ class org_openpsa_directmarketing_handler_message_message extends midcom_basecla
 
         if (!$this->_datamanager)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for messages.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for messages.");
             // This will exit.
         }
     }
@@ -52,12 +52,12 @@ class org_openpsa_directmarketing_handler_message_message extends midcom_basecla
      */
     function _handler_view ($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         $this->_message = new org_openpsa_directmarketing_campaign_message_dba($args[0]);
         if (   !$this->_message
             || !$this->_message->guid)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The message {$args[0]} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The message {$args[0]} was not found.");
             // This will exit.
         }
 
@@ -65,7 +65,7 @@ class org_openpsa_directmarketing_handler_message_message extends midcom_basecla
         if (   !$this->_campaign
             || $this->_campaign->node != $this->_topic->id)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The campaign {$this->_message->campaign} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The campaign {$this->_message->campaign} was not found.");
             // This will exit.
         }
 
@@ -80,7 +80,7 @@ class org_openpsa_directmarketing_handler_message_message extends midcom_basecla
             MIDCOM_NAV_URL => "message/{$this->_message->guid}/",
             MIDCOM_NAV_NAME => $this->_message->title,
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         $data['message'] =& $this->_message;
         $data['campaign'] =& $this->_campaign;
@@ -121,10 +121,10 @@ class org_openpsa_directmarketing_handler_message_message extends midcom_basecla
             )
         );
 
-        if (   !empty($_MIDCOM->auth->user)
-            && !empty($_MIDCOM->auth->user->guid))
+        if (   !empty(midcom::auth->user)
+            && !empty(midcom::auth->user->guid))
         {
-            $preview_url = "message/compose/{$this->_message->guid}/{$_MIDCOM->auth->user->guid}/";
+            $preview_url = "message/compose/{$this->_message->guid}/{midcom::auth->user->guid}/";
         }
         else
         {
@@ -191,11 +191,11 @@ class org_openpsa_directmarketing_handler_message_message extends midcom_basecla
         );
 
         // Populate calendar events for the message
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 
-        $_MIDCOM->bind_view_to_object($this->_message, $this->_datamanager->schema->name);
-        $_MIDCOM->set_26_request_metadata($this->_message->metadata->revised, $this->_message->guid);
-        $_MIDCOM->set_pagetitle($this->_message->title);
+        midcom::bind_view_to_object($this->_message, $this->_datamanager->schema->name);
+        midcom::set_26_request_metadata($this->_message->metadata->revised, $this->_message->guid);
+        midcom::set_pagetitle($this->_message->title);
 
         return true;
     }

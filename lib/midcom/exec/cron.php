@@ -5,20 +5,20 @@ $ip_sudo = false;
 if (   $ips 
     && in_array($_SERVER['REMOTE_ADDR'], $ips))
 {
-    if (! $_MIDCOM->auth->request_sudo('midcom.services.indexer'))
+    if (! midcom::auth()->request_sudo('midcom.services.indexer'))
     {
-        $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to acquire SUDO rights. Aborting.');
+        midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to acquire SUDO rights. Aborting.');
     }
     $ip_sudo = true;
 }
 else
 {
     // Require user to Basic-authenticate for security reasons
-    $_MIDCOM->auth->require_valid_user('basic');
-    $_MIDCOM->auth->require_admin_user();
+    midcom::auth()->require_valid_user('basic');
+    midcom::auth()->require_admin_user();
 }
 
-$_MIDCOM->cache->content->enable_live_mode();
+midcom::cache()->content->enable_live_mode();
 
 header('Content-Type: text/plain'); 
 
@@ -49,6 +49,6 @@ $cron->execute();
 
 if ($ip_sudo)
 {
-    $_MIDCOM->auth->drop_sudo();
+    midcom::auth()->drop_sudo();
 }
 ?>

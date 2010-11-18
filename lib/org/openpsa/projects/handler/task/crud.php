@@ -120,7 +120,7 @@ class org_openpsa_projects_handler_task_crud extends midcom_baseclasses_componen
                 break;
         }
         
-        $_MIDCOM->set_pagetitle($view_title);
+        midcom::set_pagetitle($view_title);
     }
 
     /**
@@ -285,7 +285,7 @@ class org_openpsa_projects_handler_task_crud extends midcom_baseclasses_componen
                 break;
         }
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**
@@ -298,7 +298,7 @@ class org_openpsa_projects_handler_task_crud extends midcom_baseclasses_componen
      */
     function _handler_callback($handler_id, $args, &$data)
     {
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -308,8 +308,8 @@ class org_openpsa_projects_handler_task_crud extends midcom_baseclasses_componen
             )
         );
         //need js for chooser-widgets for list of hour - because of dynamic load loading is needed here
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . "/midcom.helper.datamanager2/chooser/jquery.chooser_widget.js");
-        $_MIDCOM->add_link_head
+        midcom::add_jsfile(MIDCOM_STATIC_URL . "/midcom.helper.datamanager2/chooser/jquery.chooser_widget.js");
+        midcom::add_link_head
         (
             array
             (
@@ -321,7 +321,7 @@ class org_openpsa_projects_handler_task_crud extends midcom_baseclasses_componen
 
         if ($handler_id == 'task_view')
         {
-            $_MIDCOM->load_library('org.openpsa.contactwidget');
+            midcom::load_library('org.openpsa.contactwidget');
             $data['calendar_node'] = midcom_helper_find_node_by_component('org.openpsa.calendar');
         }
 
@@ -443,7 +443,7 @@ class org_openpsa_projects_handler_task_crud extends midcom_baseclasses_componen
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $task);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to create a new task under project #{$this->_request_data['project']->id}, cannot continue. Error: " . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -460,7 +460,7 @@ class org_openpsa_projects_handler_task_crud extends midcom_baseclasses_componen
      */
     public function _index_object(&$dm)
     {
-        $indexer = $_MIDCOM->get_service('indexer');
+        $indexer = midcom::get_service('indexer');
 
         $nav = new midcom_helper_nav();
         //get the node to fill the required index-data for topic/component

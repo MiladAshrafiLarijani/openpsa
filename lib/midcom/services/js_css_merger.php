@@ -77,7 +77,7 @@ class midcom_services_js_css_merger extends midcom_baseclasses_core_object
         parent::__construct();
         $this->documentroot = @getenv('DOCUMENT_ROOT');
         // We check this key later
-        $_MIDCOM->cache->memcache->put('jscss_merged', 'is_up', true);
+        midcom::cache()->memcache->put('jscss_merged', 'is_up', true);
     }
 
     function print_jsheaders()
@@ -186,7 +186,7 @@ class midcom_services_js_css_merger extends midcom_baseclasses_core_object
             $this->remove($cache_id);
         }
         */
-        $cache_metadata = $_MIDCOM->cache->memcache->get('jscss_merged', 'cache_metadata');
+        $cache_metadata = midcom::cache()->memcache->get('jscss_merged', 'cache_metadata');
         if (!is_array($cache_metadata))
         {
             $cache_metadata = array();
@@ -335,7 +335,7 @@ class midcom_services_js_css_merger extends midcom_baseclasses_core_object
         debug_push_class(__CLASS__, __FUNCTION__);
         debug_add("called for path {$path}");
 
-        if (!$_MIDCOM->cache->memcache->get('jscss_merged', 'is_up'))
+        if (!midcom::cache()->memcache->get('jscss_merged', 'is_up'))
         {
             // We need working memcache to use this feature
             debug_add('memcache seems not to be running');
@@ -586,14 +586,14 @@ class midcom_services_js_css_merger extends midcom_baseclasses_core_object
     function generate_cache_id(&$paths)
     {
         debug_push_class(__CLASS__, __FUNCTION__);
-        if (!$_MIDCOM->cache->memcache->get('jscss_merged', 'is_up'))
+        if (!midcom::cache()->memcache->get('jscss_merged', 'is_up'))
         {
             // memcache is not up
             debug_add('memcache seems not to be running', MIDCOM_LOG_ERROR);
             debug_pop();
             return false;
         }
-        $cache_metadata = $_MIDCOM->cache->memcache->get('jscss_merged', 'cache_metadata');
+        $cache_metadata = midcom::cache()->memcache->get('jscss_merged', 'cache_metadata');
         if (!is_array($cache_metadata))
         {
             $cache_metadata = array();
@@ -617,7 +617,7 @@ class midcom_services_js_css_merger extends midcom_baseclasses_core_object
                 'last_access' => time(),
             );
             debug_print_r("adding metadata: ",  $cache_metadata[$cache_id]);
-            $_MIDCOM->cache->memcache->put('jscss_merged', 'cache_metadata', $cache_metadata);
+            midcom::cache()->memcache->put('jscss_merged', 'cache_metadata', $cache_metadata);
         }
         debug_pop();
         return $cache_id;
@@ -632,7 +632,7 @@ class midcom_services_js_css_merger extends midcom_baseclasses_core_object
      */
     function store($cache_id, $data)
     {
-        return $_MIDCOM->cache->memcache->put('jscss_merged', $cache_id . '@jscss', $data);
+        return midcom::cache()->memcache->put('jscss_merged', $cache_id . '@jscss', $data);
     }
 
     /**
@@ -644,7 +644,7 @@ class midcom_services_js_css_merger extends midcom_baseclasses_core_object
     function get($cache_id)
     {
         // Update access time
-        $cache_metadata = $_MIDCOM->cache->memcache->get('jscss_merged', 'cache_metadata');
+        $cache_metadata = midcom::cache()->memcache->get('jscss_merged', 'cache_metadata');
         if (!isset($cache_metadata[$cache_id]))
         {
             // We do not have metadata for this key
@@ -653,10 +653,10 @@ class midcom_services_js_css_merger extends midcom_baseclasses_core_object
         }
         // update last accessed time
         $cache_metadata[$cache_id]['last_access'] = time();
-        $_MIDCOM->cache->memcache->put('jscss_merged', 'cache_metadata', $cache_metadata);
+        midcom::cache()->memcache->put('jscss_merged', 'cache_metadata', $cache_metadata);
 
         // return value
-        return $_MIDCOM->cache->memcache->get('jscss_merged', $cache_id . '@jscss');
+        return midcom::cache()->memcache->get('jscss_merged', $cache_id . '@jscss');
     }
 
     /**
@@ -664,7 +664,7 @@ class midcom_services_js_css_merger extends midcom_baseclasses_core_object
      */
     function garbage_collect()
     {
-        $cache_metadata = $_MIDCOM->cache->memcache->get('jscss_merged', 'cache_metadata');
+        $cache_metadata = midcom::cache()->memcache->get('jscss_merged', 'cache_metadata');
         if (!is_array($cache_metadata))
         {
             // Could not read metadata array, is memcache running ??
@@ -720,14 +720,14 @@ class midcom_services_js_css_merger extends midcom_baseclasses_core_object
      */
     function remove($cache_id)
     {
-        $cache_metadata = $_MIDCOM->cache->memcache->get('jscss_merged', 'cache_metadata');
+        $cache_metadata = midcom::cache()->memcache->get('jscss_merged', 'cache_metadata');
         if (isset($cache_metadata[$cache_id]))
         {
             // remove from metadata if set
             unset($cache_metadata[$cache_id]);
-            $_MIDCOM->cache->memcache->put('jscss_merged', 'cache_metadata', $cache_metadata);
+            midcom::cache()->memcache->put('jscss_merged', 'cache_metadata', $cache_metadata);
         }
-        return $_MIDCOM->cache->memcache->invalidate($cache_id . '@jscss');
+        return midcom::cache()->memcache->invalidate($cache_id . '@jscss');
     }
 
     /**
@@ -737,9 +737,9 @@ class midcom_services_js_css_merger extends midcom_baseclasses_core_object
      */
     function serve($name)
     {
-        if (!$_MIDCOM->cache->memcache->get('jscss_merged', 'is_up'))
+        if (!midcom::cache()->memcache->get('jscss_merged', 'is_up'))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Cache is not running');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Cache is not running');
             // this will exit()
         }
         list ($cache_id, $extension) = explode('.', $name, 2);
@@ -752,31 +752,31 @@ class midcom_services_js_css_merger extends midcom_baseclasses_core_object
                 $mimetype = 'application/javascript';
                 break;
             default:
-                $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Don't know what to do with extension '{$extension}'");
+                midcom::generate_error(MIDCOM_ERRNOTFOUND, "Don't know what to do with extension '{$extension}'");
                 // this will exit()
         }
-        $cache_metadata = $_MIDCOM->cache->memcache->get('jscss_merged', 'cache_metadata');
+        $cache_metadata = midcom::cache()->memcache->get('jscss_merged', 'cache_metadata');
         if (!isset($cache_metadata[$cache_id]))
         {
             // We do not have metadata for this key
             $this->remove($cache_id);
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Metadata for key '{$cache_id}' not found in cache");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Metadata for key '{$cache_id}' not found in cache");
             // this will exit()
         }
         $last_modified =& $cache_metadata[$cache_id]['generated'];
         debug_push_class(__CLASS__, __FUNCTION__);
-        if ($_MIDCOM->cache->content->_check_not_modified($last_modified, $cache_id))
+        if (midcom::cache()->content->_check_not_modified($last_modified, $cache_id))
         {
             debug_add('_check_not_modified returned true, finishing up here then');
             if (!_midcom_headers_sent())
             {
                 debug_add('For the weirdest reason headers have not been sent, send again');
                 // Doublecheck
-                $_MIDCOM->header('HTTP/1.0 304 Not Modified', 304);
-                $_MIDCOM->header("ETag: {$cache_id}");
-                $_MIDCOM->header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 315360000) . ' GMT');
-                $_MIDCOM->header('Cache-Control: public max-age=315360000');
-                $_MIDCOM->header('Pragma: public');
+                midcom::header('HTTP/1.0 304 Not Modified', 304);
+                midcom::header("ETag: {$cache_id}");
+                midcom::header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 315360000) . ' GMT');
+                midcom::header('Cache-Control: public max-age=315360000');
+                midcom::header('Pragma: public');
             }
             while(@ob_end_flush());
             debug_pop();
@@ -787,24 +787,24 @@ class midcom_services_js_css_merger extends midcom_baseclasses_core_object
         if (empty($data))
         {
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Key '{$cache_id}' not found in cache");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Key '{$cache_id}' not found in cache");
             // this will exit()
         }
 
-        $_MIDCOM->header("ETag: {$cache_id}");
-        $_MIDCOM->cache->content->content_type($mimetype);
-        $_MIDCOM->header("Content-Type: {$mimetype}");
-        $_MIDCOM->header('Last-Modified: ' . gmdate("D, d M Y H:i:s", $last_modified) . ' GMT');
-        $_MIDCOM->header('Content-Length: ' . strlen($data));
+        midcom::header("ETag: {$cache_id}");
+        midcom::cache()->content->content_type($mimetype);
+        midcom::header("Content-Type: {$mimetype}");
+        midcom::header('Last-Modified: ' . gmdate("D, d M Y H:i:s", $last_modified) . ' GMT');
+        midcom::header('Content-Length: ' . strlen($data));
         // PONDER: Support ranges ("continue download") somehow ?
-        $_MIDCOM->header('Accept-Ranges: none');
+        midcom::header('Accept-Ranges: none');
 
         /* We want to cache these so lets override some things
-        $_MIDCOM->cache->content->cache_control_headers();
+        midcom::cache()->content->cache_control_headers();
         */
-        $_MIDCOM->header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 315360000) . ' GMT');
-        $_MIDCOM->header('Cache-Control: public max-age=315360000');
-        $_MIDCOM->header('Pragma: public');
+        midcom::header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 315360000) . ' GMT');
+        midcom::header('Cache-Control: public max-age=315360000');
+        midcom::header('Pragma: public');
         while(@ob_end_flush());
 
         echo $data;
@@ -817,6 +817,6 @@ class midcom_services_js_css_merger extends midcom_baseclasses_core_object
 }
 
 // Instantiate the server
-$_MIDCOM->jscss = new midcom_services_js_css_merger();
+midcom::jscss = new midcom_services_js_css_merger();
 
 ?>

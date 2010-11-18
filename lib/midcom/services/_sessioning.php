@@ -64,7 +64,7 @@ class midcom_services__sessioning
 
         if ($started)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "MidCOM Sessioning has already been started, it must not be started twice. Aborting");
+            midcom::generate_error(MIDCOM_ERRCRIT, "MidCOM Sessioning has already been started, it must not be started twice. Aborting");
         }
 
         $started = true;
@@ -200,7 +200,7 @@ class midcom_services__sessioning
         {
             if (!$no_cache)
             {
-                $_MIDCOM->cache->content->no_cache();
+                midcom::cache()->content->no_cache();
                 $no_cache = true;
             }
             return $this->_get_helper($domain, $key);
@@ -259,7 +259,7 @@ class midcom_services__sessioning
         static $no_cache = false;
         if (!$no_cache)
         {
-            $_MIDCOM->cache->content->no_cache();
+            midcom::cache()->content->no_cache();
             $no_cache = true;
         }
         $_SESSION["midcom_session_data"][$domain][$key] = serialize($value);

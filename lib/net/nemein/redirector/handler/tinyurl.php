@@ -108,7 +108,7 @@ class net_nemein_redirector_handler_tinyurl extends midcom_baseclasses_component
                 break;
         }
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**
@@ -155,7 +155,7 @@ class net_nemein_redirector_handler_tinyurl extends midcom_baseclasses_component
 
         if (!$this->_tinyurl->create())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Failed to create a new TinyURL object, cannot continue. Last Midgard error was: '. midcom_connection::get_error_string());
             // This will exit.
         }
@@ -177,7 +177,7 @@ class net_nemein_redirector_handler_tinyurl extends midcom_baseclasses_component
         $this->_topic->require_do('midgard:create');
 
         // Ensure that datamanager is available
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
 
         // Load the controller
         $this->_controller = midcom_helper_datamanager2_controller::create('create');
@@ -187,14 +187,14 @@ class net_nemein_redirector_handler_tinyurl extends midcom_baseclasses_component
         // Initialize
         if (!$this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
             // This will exit.
         }
 
         switch ($this->_controller->process_form())
         {
             case 'save':
-                $_MIDCOM->relocate("edit/{$this->_tinyurl->name}");
+                midcom::relocate("edit/{$this->_tinyurl->name}");
                 // This will exit
         }
 
@@ -234,14 +234,14 @@ class net_nemein_redirector_handler_tinyurl extends midcom_baseclasses_component
         if (   !$this->_tinyurl
             || !$this->_tinyurl->guid)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, 'Item not found');
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, 'Item not found');
             // This will exit
         }
 
         $this->_tinyurl->require_do('midgard:update');
 
         // Ensure that datamanager is available
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
 
         // Edit controller
         $this->_controller = midcom_helper_datamanager2_controller::create('simple');
@@ -249,7 +249,7 @@ class net_nemein_redirector_handler_tinyurl extends midcom_baseclasses_component
         $this->_controller->set_storage($this->_tinyurl);
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for article {$this->_article->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for article {$this->_article->id}.");
             // This will exit.
         }
         $data['controller'] =& $this->_controller;
@@ -258,11 +258,11 @@ class net_nemein_redirector_handler_tinyurl extends midcom_baseclasses_component
         switch ($this->_controller->process_form())
         {
             case 'save':
-                $_MIDCOM->uimessages->add($this->_l10n->get('net.nemein.redirector'), $this->_l10n_midcom->get('saved'));
+                midcom::uimessages()->add($this->_l10n->get('net.nemein.redirector'), $this->_l10n_midcom->get('saved'));
                 // Fall through
 
             case 'cancel':
-                $_MIDCOM->relocate('');
+                midcom::relocate('');
         }
 
         // Set the request data

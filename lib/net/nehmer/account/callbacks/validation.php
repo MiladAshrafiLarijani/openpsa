@@ -43,7 +43,7 @@ class net_nehmer_account_callbacks_validation extends midcom_baseclasses_compone
             return true;
         }
 
-        $test = $_MIDCOM->auth->get_user_by_name($username);
+        $test = midcom::auth->get_user_by_name($username);
         if (! $test)
         {
             return true;
@@ -62,7 +62,7 @@ class net_nehmer_account_callbacks_validation extends midcom_baseclasses_compone
      */
     function verify_existing_user_name($username)
     {
-        $test = $_MIDCOM->auth->get_user_by_name($username);
+        $test = midcom::auth->get_user_by_name($username);
         if (! $test)
         {
             return false;
@@ -81,7 +81,7 @@ class net_nehmer_account_callbacks_validation extends midcom_baseclasses_compone
      */
     function verify_existing_user_email($email)
     {
-        $test = $_MIDCOM->auth->get_user_by_email($email);
+        $test = midcom::auth->get_user_by_email($email);
         if (! $test)
         {
             return false;

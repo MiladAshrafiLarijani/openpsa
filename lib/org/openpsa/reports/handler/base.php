@@ -32,7 +32,7 @@ class org_openpsa_reports_handler_base extends midcom_baseclasses_components_han
     function _handler_generator_get($handler_id, $args, &$data)
     {
         $this->_set_active_leaf();
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         if (   !array_key_exists('org_openpsa_reports_query_data', $_REQUEST)
             || !is_array($_REQUEST['org_openpsa_reports_query_data']))
         {
@@ -65,7 +65,7 @@ class org_openpsa_reports_handler_base extends midcom_baseclasses_components_han
 
     function _initialize_datamanager()
     {
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
 
         $this->_load_schemadb();
 
@@ -74,7 +74,7 @@ class org_openpsa_reports_handler_base extends midcom_baseclasses_components_han
 
         if (!$this->_datamanagers[$this->module])
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Datamanager could not be instantiated.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Datamanager could not be instantiated.");
             // This will exit.
         }
 
@@ -110,7 +110,7 @@ class org_openpsa_reports_handler_base extends midcom_baseclasses_components_han
         $this->_controller->set_storage($this->_request_data['query'], 'default');
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for document {$this->_document->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for document {$this->_document->id}.");
             // This will exit.
         }
     }
@@ -128,7 +128,7 @@ class org_openpsa_reports_handler_base extends midcom_baseclasses_components_han
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $query);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to create a new project, cannot continue. Error: " . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -163,7 +163,7 @@ class org_openpsa_reports_handler_base extends midcom_baseclasses_components_han
         $this->_controller->callback_object =& $this;
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
             // This will exit.
         }
     }
@@ -177,7 +177,7 @@ class org_openpsa_reports_handler_base extends midcom_baseclasses_components_han
     function _handler_query_form($handler_id, $args, &$data)
     {
         $this->_set_active_leaf();
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         if (isset($args[0]))
         {
@@ -190,7 +190,7 @@ class org_openpsa_reports_handler_base extends midcom_baseclasses_components_han
                 return false;
             }
 
-            $_MIDCOM->auth->require_do('midgard:update', $data['query']);
+            midcom::auth->require_do('midgard:update', $data['query']);
 
             $this->_load_edit_controller();
         }
@@ -204,12 +204,12 @@ class org_openpsa_reports_handler_base extends midcom_baseclasses_components_han
         {
             case 'save':
                 // Relocate to report view
-                $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-                $_MIDCOM->relocate($prefix . $this->module . '/' . $this->_request_data['query']->guid . "/");
+                $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+                midcom::relocate($prefix . $this->module . '/' . $this->_request_data['query']->guid . "/");
                 //this will exit
 
             case 'cancel':
-                $_MIDCOM->relocate('');
+                midcom::relocate('');
                 // This will exit
         }
 
@@ -235,9 +235,9 @@ class org_openpsa_reports_handler_base extends midcom_baseclasses_components_han
             MIDCOM_NAV_NAME => $breadcrumb_label,
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -304,8 +304,8 @@ class org_openpsa_reports_handler_base extends midcom_baseclasses_components_han
             debug_add('Generated filename: ' . $filename);
             debug_pop();
 
-            $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-            $_MIDCOM->relocate($prefix . $this->module . '/' . $this->_request_data['query']->guid . '/' . $filename);
+            $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+            midcom::relocate($prefix . $this->module . '/' . $this->_request_data['query']->guid . '/' . $filename);
             //this will exit
         }
         $this->_request_data['filename'] = $args[1];
@@ -328,7 +328,7 @@ class org_openpsa_reports_handler_base extends midcom_baseclasses_components_han
         if (!preg_match('/^builtin:(.+)/', $this->_request_data['query_data']['style']))
         {
             debug_add("appending '{$this->_request_data['query_data']['style']}' to substyle path");
-            $_MIDCOM->substyle_append($this->_request_data['query_data']['style']);
+            midcom::substyle_append($this->_request_data['query_data']['style']);
         }
 
         //TODO: Check if we're inside DL if so do not force mimetype
@@ -336,9 +336,9 @@ class org_openpsa_reports_handler_base extends midcom_baseclasses_components_han
             || empty($this->_request_data['query_data']['skip_html_headings']))
         {
             //Skip normal style, and force content type based on query data.
-            $_MIDCOM->skip_page_style = true;
+            midcom::skip_page_style = true;
             debug_add('Forcing content type: ' . $this->_request_data['query_data']['mimetype']);
-            $_MIDCOM->cache->content->content_type($this->_request_data['query_data']['mimetype']);
+            midcom::cache()->content->content_type($this->_request_data['query_data']['mimetype']);
         }
 
         debug_pop();
@@ -351,7 +351,7 @@ class org_openpsa_reports_handler_base extends midcom_baseclasses_components_han
     {
         debug_push_class(__CLASS__, __FUNCTION__);
         debug_add('Got resource_id: ' . $resource_id);
-        $dba_obj = $_MIDCOM->auth->get_assignee($resource_id);
+        $dba_obj = midcom::auth->get_assignee($resource_id);
 
         org_openpsa_reports_handler_base::_verify_cache('users', $this->_request_data);
         switch (get_class($dba_obj))

@@ -437,9 +437,9 @@ class midcom_baseclasses_components_request extends midcom_baseclasses_core_obje
      */
     public function __construct($topic, $config)
     {
-        if (! $_MIDCOM->dbclassloader->is_midcom_db_object($topic))
+        if (! midcom::dbclassloader()->is_midcom_db_object($topic))
         {
-            $this->_topic = $_MIDCOM->dbfactory->convert_midgard_to_midcom($topic);
+            $this->_topic = midcom::dbfactory()->convert_midgard_to_midcom($topic);
         }
         else
         {
@@ -459,9 +459,9 @@ class midcom_baseclasses_components_request extends midcom_baseclasses_core_obje
     {
         $this->_component = $component;
         $this->_component_data =& $GLOBALS['midcom_component_data'][$this->_component];
-        $_MIDCOM->set_custom_context_data('request_data', $this->_request_data);
+        midcom::set_custom_context_data('request_data', $this->_request_data);
 
-        $this->_i18n = $_MIDCOM->get_service('i18n');
+        $this->_i18n = midcom::get_service('i18n');
         $this->_l10n = $this->_i18n->get_l10n($this->_component);
         $this->_l10n_midcom = $this->_i18n->get_l10n('midcom');
 
@@ -635,7 +635,7 @@ class midcom_baseclasses_components_request extends midcom_baseclasses_core_obje
         {
             // Prepend the plugin anchor prefix so that it is complete.
             $this->_request_data['plugin_anchorprefix'] =
-                  $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+                  midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                 . $this->_request_data['plugin_anchorprefix'];
         }
 
@@ -643,22 +643,22 @@ class midcom_baseclasses_components_request extends midcom_baseclasses_core_obje
         // object. Note, if both are equal, we will have two assignments at this
         // point; it shouldn't bother us, it isn't a regular use-case anymore (besides
         // the fact that this is only a very very very minor performance issue).
-        $this->_node_toolbar = $_MIDCOM->toolbars->get_node_toolbar();
-        $this->_view_toolbar = $_MIDCOM->toolbars->get_view_toolbar();
-        $handler->_node_toolbar = $_MIDCOM->toolbars->get_node_toolbar();
-        $handler->_view_toolbar = $_MIDCOM->toolbars->get_view_toolbar();
+        $this->_node_toolbar = midcom::toolbars()->get_node_toolbar();
+        $this->_view_toolbar = midcom::toolbars()->get_view_toolbar();
+        $handler->_node_toolbar = midcom::toolbars()->get_node_toolbar();
+        $handler->_view_toolbar = midcom::toolbars()->get_view_toolbar();
 
         // Add the handler ID to request data
         $this->_request_data['handler_id'] = $this->_handler['id'];
 
         // Add handler help link
         $handler_help_id = 'handlers_' . $this->_handler['id'];
-        $help_toolbar = $_MIDCOM->toolbars->get_help_toolbar();
+        $help_toolbar = midcom::toolbars()->get_help_toolbar();
         $help_toolbar->add_help_item
         (
             'handlers', //file
             $this->_topic->component,        //component
-            $_MIDCOM->i18n->get_string('about current handler','midcom.admin.help'),  //label
+            midcom::i18n()->get_string('about current handler','midcom.admin.help'),  //label
             $this->_handler['id'],
             0
         );
@@ -681,11 +681,11 @@ class midcom_baseclasses_components_request extends midcom_baseclasses_core_obje
         // Check whether this request should not be cached by default:
         if ($this->_handler['no_cache'] == true)
         {
-            $_MIDCOM->cache->content->no_cache();
+            midcom::cache()->content->no_cache();
         }
         if ($this->_handler['expires'] >= 0)
         {
-            $_MIDCOM->cache->content->expires($this->_handler['expires']);
+            midcom::cache()->content->expires($this->_handler['expires']);
         }
 
         $this->_on_handled($this->_handler['id'], $this->_handler['args']);
@@ -706,7 +706,7 @@ class midcom_baseclasses_components_request extends midcom_baseclasses_core_obje
             $classname = $this->_handler['handler'][0];
             if (! $this->_verify_handler_class($classname))
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Failed to create a class instance of the type {$classname}, the class is not declared.");
                 // This will exit
             }
@@ -714,14 +714,14 @@ class midcom_baseclasses_components_request extends midcom_baseclasses_core_obje
             $this->_handler['handler'][0] = new $classname();
             if (! is_a($this->_handler['handler'][0], 'midcom_baseclasses_components_handler'))
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Failed to create a class instance of the type {$classname}, it is no subclass of midcom_baseclasses_components_handler.");
                 // This will exit
             }
 
             $this->_handler['handler'][0]->initialize($this);
 
-            $_MIDCOM->_set_context_data($this->_handler['id'], MIDCOM_CONTEXT_HANDLERID);
+            midcom::_set_context_data($this->_handler['id'], MIDCOM_CONTEXT_HANDLERID);
         }
     }
 
@@ -911,7 +911,7 @@ class midcom_baseclasses_components_request extends midcom_baseclasses_core_obje
     {
         if (array_key_exists($namespace, self::$_plugin_namespace_config))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Tried to register the plugin namespace {$namespace}, but it is already registered.");
             // This will exit
         }
@@ -1005,7 +1005,7 @@ class midcom_baseclasses_components_request extends midcom_baseclasses_core_obje
                 break;
 
             case 'component':
-                $_MIDCOM->componentloader->load($src);
+                midcom::componentloader()->load($src);
                 break;
 
             case 'snippet':
@@ -1013,14 +1013,14 @@ class midcom_baseclasses_components_request extends midcom_baseclasses_core_obje
                 break;
 
             default:
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "The plugin loader method {$method} is unknown, cannot continue.");
                 // This will exit().
         }
 
         if (! class_exists($plugin_config['class']))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to load the plugin {$namespace}/{$plugin}, implementation class not available.");
             // This will exit.
         }
@@ -1120,12 +1120,12 @@ class midcom_baseclasses_components_request extends midcom_baseclasses_core_obje
 
         // Load plugins registered via component manifests
         $manifest_plugins = array();
-        $customdata = $_MIDCOM->componentloader->get_all_manifest_customdata('request_handler_plugin');
+        $customdata = midcom::componentloader()->get_all_manifest_customdata('request_handler_plugin');
         foreach ($customdata as $component => $plugin_config)
         {
             $manifest_plugins[$component] = $plugin_config;
         }
-        $customdata = $_MIDCOM->componentloader->get_all_manifest_customdata('asgard_plugin');
+        $customdata = midcom::componentloader()->get_all_manifest_customdata('asgard_plugin');
         foreach ($customdata as $component => $plugin_config)
         {
             $manifest_plugins["asgard_{$component}"] = $plugin_config;

@@ -83,7 +83,7 @@ class midcom_services_permalinks extends midcom_baseclasses_core_object
             return $napobj[MIDCOM_NAV_FULLURL];
         }
 
-        $object = $_MIDCOM->dbfactory->get_object_by_guid($guid);
+        $object = midcom::dbfactory()->get_object_by_guid($guid);
 
         if (   !$object
             || !isset($object->guid)
@@ -166,7 +166,7 @@ class midcom_services_permalinks extends midcom_baseclasses_core_object
         // We need to try every topic for the GUID.
         $topic_qb = midcom_db_topic::new_query_builder();
         $topic_qb->add_constraint('name', '<>', '');
-        $topic_qb->add_constraint('up', 'INTREE', $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ROOTTOPIC)->id);
+        $topic_qb->add_constraint('up', 'INTREE', midcom::get_context_data(MIDCOM_CONTEXT_ROOTTOPIC)->id);
         $topics = $topic_qb->execute();
         foreach ($topics as $topic)
         {
@@ -189,11 +189,11 @@ class midcom_services_permalinks extends midcom_baseclasses_core_object
         // in any way, return in the same way as resolve_permalink itself.
 
         $component = $topic->component;
-        if (!$_MIDCOM->componentloader->is_installed($component))
+        if (!midcom::componentloader->is_installed($component))
         {
             return null;
         }
-        $interface = $_MIDCOM->componentloader->get_interface_class($component);
+        $interface = midcom::componentloader->get_interface_class($component);
         if ($interface === null)
         {
             debug_push_class(__CLASS__, __FUNCTION__);

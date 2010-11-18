@@ -68,7 +68,7 @@ class midcom_helper_datamanager2_type_urlname extends midcom_helper_datamanager2
     function _on_initialize()
     {
         // We need the reflector later
-        $_MIDCOM->componentloader->load('midcom.helper.reflector');
+        midcom::componentloader()->load('midcom.helper.reflector');
         /**
          * If write_privilege is not set, default to midcom:urlname.
          *

@@ -95,7 +95,7 @@ class midgard_admin_sitewizard_plugin extends midcom_baseclasses_components_hand
      */
     function _handler_create_user_home()
     {
-        $user = $_MIDCOM->auth->user;
+        $user = midcom::auth->user;
 
         $this->_home_name = $user->username;
         $this->_home_title = $user->name;
@@ -139,7 +139,7 @@ class midgard_admin_sitewizard_plugin extends midcom_baseclasses_components_hand
 
             if (! empty($this->_redirect_after_done))
             {
-                $_MIDCOM->relocate($this->_redirect_after_done);
+                midcom::relocate($this->_redirect_after_done);
             }
         }
         catch (midgard_admin_sitewizard_exception $e)

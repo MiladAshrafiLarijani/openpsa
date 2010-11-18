@@ -56,7 +56,7 @@ class net_nehmer_blog_handler_index extends midcom_baseclasses_components_handle
         $this->_content_topic =& $this->_request_data['content_topic'];
         $this->_request_data['config'] =& $this->_config;
 
-        $_MIDCOM->load_library('org.openpsa.qbpager');
+        midcom::load_library('org.openpsa.qbpager');
     }
 
     /**
@@ -82,7 +82,7 @@ class net_nehmer_blog_handler_index extends midcom_baseclasses_components_handle
     {
         if ($handler_id == 'ajax-latest')
         {
-            $_MIDCOM->skip_page_style = true;
+            midcom::skip_page_style = true;
         }
 
         $this->_datamanager = new midcom_helper_datamanager2_datamanager($data['schemadb']);
@@ -131,7 +131,7 @@ class net_nehmer_blog_handler_index extends midcom_baseclasses_components_handle
 
             // Add category to title
             $data['page_title'] = sprintf($this->_l10n->get('%s category %s'), $this->_topic->extra, $data['category']);
-            $_MIDCOM->set_pagetitle($data['page_title']);
+            midcom::set_pagetitle($data['page_title']);
 
             // Activate correct leaf
             if (   $this->_config->get('show_navigation_pseudo_leaves')
@@ -143,14 +143,14 @@ class net_nehmer_blog_handler_index extends midcom_baseclasses_components_handle
             // Add RSS feed to headers
             if ($this->_config->get('rss_enable'))
             {
-                $_MIDCOM->add_link_head
+                midcom::add_link_head
                 (
                     array
                     (
                         'rel'   => 'alternate',
                         'type'  => 'application/rss+xml',
                         'title' => $this->_l10n->get('rss 2.0 feed') . ": {$data['category']}",
-                        'href'  => $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "feeds/category/{$data['category']}/",
+                        'href'  => midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "feeds/category/{$data['category']}/",
                     )
                 );
             }
@@ -182,16 +182,16 @@ class net_nehmer_blog_handler_index extends midcom_baseclasses_components_handle
         $this->_articles = $qb->execute();
 
         $this->_prepare_request_data();
-        $_MIDCOM->set_26_request_metadata(net_nehmer_blog_viewer::get_last_modified($this->_topic, $this->_content_topic), $this->_topic->guid);
+        midcom::set_26_request_metadata(net_nehmer_blog_viewer::get_last_modified($this->_topic, $this->_content_topic), $this->_topic->guid);
 
         if ($qb->get_current_page() > 1)
         {
             $tmp[] = Array
             (
-                MIDCOM_NAV_URL => $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX),
-                MIDCOM_NAV_NAME => sprintf($_MIDCOM->i18n->get_string('page %s', 'org.openpsa.qbpager'), $qb->get_current_page()),
+                MIDCOM_NAV_URL => midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX),
+                MIDCOM_NAV_NAME => sprintf(midcom::i18n()->get_string('page %s', 'org.openpsa.qbpager'), $qb->get_current_page()),
             );
-            $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+            midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
         }
 
         return true;
@@ -209,7 +209,7 @@ class net_nehmer_blog_handler_index extends midcom_baseclasses_components_handle
 
         if ($this->_config->get('ajax_comments_enable'))
         {
-            $_MIDCOM->componentloader->load('net.nehmer.comments');
+            midcom::componentloader->load('net.nehmer.comments');
 
             $comments_node = $this->_seek_comments();
 
@@ -224,7 +224,7 @@ class net_nehmer_blog_handler_index extends midcom_baseclasses_components_handle
 
         if ($this->_config->get('comments_enable'))
         {
-            $_MIDCOM->componentloader->load('net.nehmer.comments');
+            midcom::componentloader->load('net.nehmer.comments');
             $this->_request_data['comments_enable'] = true;
         }
 
@@ -232,7 +232,7 @@ class net_nehmer_blog_handler_index extends midcom_baseclasses_components_handle
         {
             $total_count = count($this->_articles);
             $data['article_count'] = $total_count;
-            $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+            $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
             foreach ($this->_articles as $article_counter => $article)
             {
                 if (! $this->_datamanager->autoset_storage($article))
@@ -321,10 +321,10 @@ class net_nehmer_blog_handler_index extends midcom_baseclasses_components_handle
         $comments_node = midcom_helper_find_node_by_component('net.nehmer.comments');
 
         // Cache the data
-        if ($_MIDCOM->auth->request_sudo('net.nehmer.blog'))
+        if (midcom::auth->request_sudo('net.nehmer.blog'))
         {
             $this->_topic->parameter('net.nehmer.blog', 'comments_topic', $comments_node[MIDCOM_NAV_GUID]);
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
         }
 
         return $comments_node;

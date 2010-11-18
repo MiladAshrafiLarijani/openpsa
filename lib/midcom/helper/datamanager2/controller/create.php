@@ -144,19 +144,19 @@ class midcom_helper_datamanager2_controller_create extends midcom_helper_dataman
     {
         if (count($this->schemadb) == 0)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'You must set a schema database before initializing midcom_helper_datamanager2_controller_create.');
             // This will exit.
         }
         if (! is_object($this->callback_object))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'You must set a valid callback_object prior initialization: Object is undefined.');
             // This will exit.
         }
         if (! method_exists($this->callback_object, $this->callback_method))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "You must set a valid callback_object prior initialization: Method {$this->callback_method} is undefined.");
             // This will exit.
         }
@@ -171,7 +171,7 @@ class midcom_helper_datamanager2_controller_create extends midcom_helper_dataman
         if (array_key_exists($this->_tmpid_fieldname, $_REQUEST))
         {
             $tmpid = $_REQUEST[$this->_tmpid_fieldname];
-            $object = $_MIDCOM->tmp->request_object($tmpid);
+            $object = midcom::tmp()->request_object($tmpid);
 
             if (   $object
                 && isset($object->guid)
@@ -216,14 +216,14 @@ class midcom_helper_datamanager2_controller_create extends midcom_helper_dataman
 
         $this->form_identifier = "midcom_helper_datamanager2_controller_ajax_composite_{$this->form_identifier}";
 
-        $_MIDCOM->enable_jquery();
+        midcom::enable_jquery();
 
         require_once(MIDCOM_ROOT . "/midcom/helper/datamanager2/formmanager/ajax.php");
 
         // Add the required JavaScript
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/jquery.dm2_ajax_editor.js');
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.dimensions-1.2.min.js');
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.metadata.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/jquery.dm2_ajax_editor.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.dimensions-1.2.min.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.metadata.js');
 
         $this->formmanager = new midcom_helper_datamanager2_formmanager_ajax($this->datamanager->schema, $this->datamanager->types);
 
@@ -246,9 +246,9 @@ class midcom_helper_datamanager2_controller_create extends midcom_helper_dataman
 
         $config = "{mode: '{$mode}'}";//, allow_creation: {$creation_mode_enabled}}";
         $script = "jQuery.dm2.ajax_editor.init('{$this->form_identifier}', {$config}, true);";
-        $_MIDCOM->add_jquery_state_script($script);
+        midcom::add_jquery_state_script($script);
 
-        $_MIDCOM->add_link_head(
+        midcom::add_link_head(
             array
             (
                 'rel'   => 'stylesheet',
@@ -265,7 +265,7 @@ class midcom_helper_datamanager2_controller_create extends midcom_helper_dataman
                 $this->formmanager->initialize($this->form_identifier . '_qf');
                 $this->formmanager->display_form($this->form_identifier);
                 $state = 'ajax_editing';
-                $_MIDCOM->finish();
+                midcom::finish();
                 _midcom_stop_request();
 
             case (array_key_exists("{$this->form_identifier}_preview", $_REQUEST)):
@@ -273,7 +273,7 @@ class midcom_helper_datamanager2_controller_create extends midcom_helper_dataman
                 $this->formmanager->process_form();
                 $this->formmanager->display_view($this->form_identifier);
                 $state = 'ajax_preview';
-                $_MIDCOM->finish();
+                midcom::finish();
                 _midcom_stop_request();
 
             case (array_key_exists("{$this->form_identifier}_save", $_POST)):
@@ -300,7 +300,7 @@ class midcom_helper_datamanager2_controller_create extends midcom_helper_dataman
                     $this->formmanager->display_form($this->form_identifier);
                     $state = 'ajax_editing';
                 }
-                $_MIDCOM->finish();
+                midcom::finish();
                 _midcom_stop_request();
 
             case (array_key_exists("{$this->form_identifier}_cancel", $_REQUEST)):
@@ -308,7 +308,7 @@ class midcom_helper_datamanager2_controller_create extends midcom_helper_dataman
                 $this->formmanager->initialize($this->form_identifier . '_qf');
                 $this->formmanager->display_view($this->form_identifier);
 
-                $_MIDCOM->finish();
+                midcom::finish();
                 _midcom_stop_request();
         }
     }
@@ -345,7 +345,7 @@ class midcom_helper_datamanager2_controller_create extends midcom_helper_dataman
 
         if ($this->formmanager === null)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'You must initialize a controller class before using it.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'You must initialize a controller class before using it.');
         }
 
         // Pre process check for validation etc, we create a new object at this point if everything
@@ -379,7 +379,7 @@ class midcom_helper_datamanager2_controller_create extends midcom_helper_dataman
                 }
                 return 'edit';
                 // we have a better defined way-of-life here.
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Failed to save object, type validation failed:\n" . implode("\n", $this->datamanager->validation_errors));
                 // This will exit.
             }
@@ -397,7 +397,7 @@ class midcom_helper_datamanager2_controller_create extends midcom_helper_dataman
                 debug_pop();
 
                 // We seem to have a critical error.
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Failed to save the data to disk: {$midgard_error}. Check the debug level log for more information.");
                 // This will exit.
             }
@@ -432,7 +432,7 @@ class midcom_helper_datamanager2_controller_create extends midcom_helper_dataman
                 || !isset($tmp_object->guid)
                 || !$tmp_object->guid)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to get the temporary object');
+                midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to get the temporary object');
                 // This will exit
             }
 

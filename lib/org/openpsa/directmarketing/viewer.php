@@ -21,7 +21,7 @@ class org_openpsa_directmarketing_viewer extends midcom_baseclasses_components_r
         parent::__construct($topic, $config);
 
         // Always run in uncached mode
-        $_MIDCOM->cache->content->no_cache();
+        midcom::cache()->content->no_cache();
 
         // Match /campaign/import/<guid>
         $this->_request_switch['import_main'] = array
@@ -353,10 +353,10 @@ class org_openpsa_directmarketing_viewer extends midcom_baseclasses_components_r
         );
 
         // This component uses Ajax, include the handler javascripts
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . "/org.openpsa.helpers/ajaxutils.js");
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . "/org.openpsa.helpers/messages.js");
+        midcom::add_jsfile(MIDCOM_STATIC_URL . "/org.openpsa.helpers/ajaxutils.js");
+        midcom::add_jsfile(MIDCOM_STATIC_URL . "/org.openpsa.helpers/messages.js");
         // This is no longer autoloaded by core
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -408,9 +408,9 @@ class org_openpsa_directmarketing_viewer extends midcom_baseclasses_components_r
      */
     function _handler_frontpage($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
-        if ($_MIDCOM->auth->can_user_do('midgard:create', null, 'org_openpsa_directmarketing_campaign_dba'))
+        if (midcom::auth->can_user_do('midgard:create', null, 'org_openpsa_directmarketing_campaign_dba'))
         {
             $schemadb_campaign = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb_campaign'));
             foreach (array_keys($schemadb_campaign) as $name)
@@ -453,7 +453,7 @@ class org_openpsa_directmarketing_viewer extends midcom_baseclasses_components_r
      */
     function _handler_debug($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         $this->_request_data['config'] =& $this->_config;
         return true;
     }

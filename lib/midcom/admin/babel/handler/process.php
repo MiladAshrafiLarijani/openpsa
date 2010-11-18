@@ -40,17 +40,17 @@ class midcom_admin_babel_handler_process extends midcom_baseclasses_components_h
     function _on_initialize()
     {
 
-        $this->_l10n = $_MIDCOM->i18n->get_l10n('midcom.admin.babel');
+        $this->_l10n = midcom::i18n()->get_l10n('midcom.admin.babel');
         $this->_request_data['l10n'] = $this->_l10n;
         $this->_debug_prefix = 'midcom_admin_babel::';
         $this->_save_new = false;
         $this->_save_update = false;
 
-        $this->_fallback_language = $_MIDCOM->i18n->get_fallback_language();
+        $this->_fallback_language = midcom::i18n()->get_fallback_language();
 
-        $_MIDCOM->cache->content->no_cache();
+        midcom::cache()->content->no_cache();
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -111,7 +111,7 @@ class midcom_admin_babel_handler_process extends midcom_baseclasses_components_h
                 break;
         }
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**
@@ -142,7 +142,7 @@ class midcom_admin_babel_handler_process extends midcom_baseclasses_components_h
     {
         $this->_update_breadcrumb_line($handler_id);
         $this->_prepare_toolbar($data);
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
         return true;
     }
 
@@ -175,13 +175,13 @@ class midcom_admin_babel_handler_process extends midcom_baseclasses_components_h
 
         if (array_key_exists('f_cancel', $_POST))
         {
-            $_MIDCOM->relocate("__mfa/asgard_midcom.admin.babel/status/{$this->_lang}/");
+            midcom::relocate("__mfa/asgard_midcom.admin.babel/status/{$this->_lang}/");
             // This will exit
         }
 
         debug_add("saving data for component '{$this->_component_path}', language '{$this->_lang}'");
 
-        $this->_component_l10n = $_MIDCOM->i18n->get_l10n($this->_component_path);
+        $this->_component_l10n = midcom::i18n()->get_l10n($this->_component_path);
 
         if (array_key_exists('string_id', $_REQUEST))
         {
@@ -280,17 +280,17 @@ class midcom_admin_babel_handler_process extends midcom_baseclasses_components_h
 
             if (in_array('midcom_admin_babel_lang_status', $GLOBALS['midcom_config']['cache_module_memcache_data_groups']))
             {
-                $_MIDCOM->cache->memcache->invalidate($this->_lang);
-                $_MIDCOM->cache->memcache->invalidate($this->_fallback_language);
+                midcom::cache()->memcache->invalidate($this->_lang);
+                midcom::cache()->memcache->invalidate($this->_fallback_language);
             }
 
         }
 
         $this->_update_breadcrumb_line($handler_id);
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
         debug_pop();
 
-        $_MIDCOM->relocate("__mfa/asgard_midcom.admin.babel/edit/{$this->_component_path}/{$this->_lang}/");
+        midcom::relocate("__mfa/asgard_midcom.admin.babel/edit/{$this->_component_path}/{$this->_lang}/");
         // This will exit
     }
 
@@ -327,7 +327,7 @@ class midcom_admin_babel_handler_process extends midcom_baseclasses_components_h
 
         $this->_update_breadcrumb_line($handler_id);
         $this->_prepare_toolbar($data);
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
         return true;
     }
 
@@ -355,7 +355,7 @@ class midcom_admin_babel_handler_process extends midcom_baseclasses_components_h
         foreach ($data['components_core'] as $component => $string_counts)
         {
             $data['component'] = $component;
-            $data['icon'] = $_MIDCOM->componentloader->get_component_icon($component);
+            $data['icon'] = midcom::componentloader()->get_component_icon($component);
             $data['string_counts'] = $string_counts;
             midcom_show_style('midcom_admin_babel_status_item');
         }
@@ -368,7 +368,7 @@ class midcom_admin_babel_handler_process extends midcom_baseclasses_components_h
         foreach ($data['components_other'] as $component => $string_counts)
         {
             $data['component'] = $component;
-            $data['icon'] = $_MIDCOM->componentloader->get_component_icon($component);
+            $data['icon'] = midcom::componentloader()->get_component_icon($component);
             $data['string_counts'] = $string_counts;
             midcom_show_style('midcom_admin_babel_status_item');
         }
@@ -403,7 +403,7 @@ class midcom_admin_babel_handler_process extends midcom_baseclasses_components_h
             && $this->_lang)
         {
             debug_add('Loading i10n class for '.$this->_component_path, MIDCOM_LOG_DEBUG);
-            if (!$this->_component_l10n = $_MIDCOM->i18n->get_l10n($this->_component_path))
+            if (!$this->_component_l10n = midcom::i18n()->get_l10n($this->_component_path))
             {
                 debug_pop();
                 return false;
@@ -416,13 +416,13 @@ class midcom_admin_babel_handler_process extends midcom_baseclasses_components_h
                 }
                 else
                 {
-                    $_MIDCOM->componentloader->manifests[$this->_component_path]->get_name_translated();
-                    $data['component_translated'] = $_MIDCOM->componentloader->manifests[$this->_component_path]->name_translated;
+                    midcom::componentloader()->manifests[$this->_component_path]->get_name_translated();
+                    $data['component_translated'] = midcom::componentloader()->manifests[$this->_component_path]->name_translated;
                 }
 
                 $this->_update_breadcrumb_line($handler_id);
                 $this->_prepare_toolbar($data);
-                $_MIDCOM->set_pagetitle($data['view_title']);
+                midcom::set_pagetitle($data['view_title']);
                 debug_pop();
                 return true;
             }

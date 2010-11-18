@@ -59,9 +59,9 @@ class org_openpsa_sales_handler_list extends midcom_baseclasses_components_handl
      */
     function _handler_list($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/org.openpsa.core/table2csv.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/org.openpsa.core/table2csv.js');
 
         $data['list_title'] = $args[0];
 
@@ -172,7 +172,7 @@ class org_openpsa_sales_handler_list extends midcom_baseclasses_components_handl
 
         org_openpsa_core_ui::enable_jqgrid();
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -189,7 +189,7 @@ class org_openpsa_sales_handler_list extends midcom_baseclasses_components_handl
             MIDCOM_NAV_NAME => $this->_l10n->get('salesprojects ' . $data['list_title']),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
 
         return true;

@@ -20,8 +20,8 @@ $encoding = 'UTF-8';
 $items = array();
 
 // Common headers
-$_MIDCOM->cache->content->content_type('text/xml');
-$_MIDCOM->header('Content-type: text/xml; charset=' . $encoding);
+midcom::cache()->content->content_type('text/xml');
+midcom::header('Content-type: text/xml; charset=' . $encoding);
 echo '<?xml version="1.0" encoding="' . $encoding . '" standalone="yes"?>' . "\n";
 echo "<response>\n";
 
@@ -33,7 +33,7 @@ if (! isset($_REQUEST["query"]))
 
     debug_add("Empty query string. Quitting now.");
     debug_pop();
-    $_MIDCOM->finish();
+    midcom::finish();
     _midcom_stop_request();
 }
 
@@ -121,7 +121,7 @@ if (!empty($_callback_class))
 else
 {
     // Load component if possible
-    $_MIDCOM->componentloader->load_graceful($component);
+    midcom::componentloader()->load_graceful($component);
 
     // Could not get required class defined, abort
     if (!class_exists($class))
@@ -129,7 +129,7 @@ else
         echo "    <status>0</status>\n";
         echo "    <errstr>Class {$class} could not be loaded</errstr>\n";
         echo "</response>\n";
-        $_MIDCOM->finish();
+        midcom::finish();
         _midcom_stop_request();
     }
 
@@ -139,7 +139,7 @@ else
         echo "    <status>0</status>\n";
         echo "    <errstr>No fields to search for defined</errstr>\n";
         echo "</response>\n";
-        $_MIDCOM->finish();
+        midcom::finish();
         _midcom_stop_request();
     }
 
@@ -207,7 +207,7 @@ else
         echo "    <status>0</status>\n";
         echo "    <errstr>Error when executing QB</errstr>\n";
         echo "</response>\n";
-        $_MIDCOM->finish();
+        midcom::finish();
         _midcom_stop_request();
     }
 }
@@ -218,7 +218,7 @@ if (   count($results) <= 0
     echo "    <status>2</status>\n";
     echo "    <errstr>No results found</errstr>\n";
     echo "</response>\n";
-    $_MIDCOM->finish();
+    midcom::finish();
     _midcom_stop_request();
 }
 
@@ -339,5 +339,5 @@ echo "</response>\n";
 debug_print_r('Got results',$results);
 
 debug_pop();
-$_MIDCOM->finish();
+midcom::finish();
 ?>

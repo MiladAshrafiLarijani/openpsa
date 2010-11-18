@@ -18,17 +18,17 @@ class org_openpsa_invoices_billing_data_dba extends midcom_core_dbaobject
 
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
 
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
 
     function get_parent_guid_uncached()
@@ -45,7 +45,7 @@ class org_openpsa_invoices_billing_data_dba extends midcom_core_dbaobject
 
         //html-ouptut
         echo '<div class="vcard">';
-        echo '<div style="text-align:center"><em>' . $_MIDCOM->i18n->get_string('invoice address', 'org.openpsa.contacts') . "</em></div>\n";
+        echo '<div style="text-align:center"><em>' . midcom::i18n()->get_string('invoice address', 'org.openpsa.contacts') . "</em></div>\n";
         echo "<strong>\n";
         echo $this->recipient . "\n";
         echo "</strong>\n";
@@ -63,7 +63,7 @@ class org_openpsa_invoices_billing_data_dba extends midcom_core_dbaobject
         if($this->useContactAddress && !empty($this->linkGuid))
         {
             //get the contact object
-            $contact = $_MIDCOM->dbfactory->get_object_by_guid($this->linkGuid);
+            $contact = midcom::dbfactory()->get_object_by_guid($this->linkGuid);
             if(empty($contact->guid))
             {
                 debug_push_class(__CLASS__, __FUNCTION__);

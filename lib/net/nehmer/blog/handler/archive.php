@@ -107,9 +107,9 @@ class net_nehmer_blog_handler_archive extends midcom_baseclasses_components_hand
             $this->_component_data['active_leaf'] = "{$this->_topic->id}_ARCHIVE";
         }
         
-        $_MIDCOM->set_pagetitle("{$this->_topic->extra}: " . $this->_l10n->get('archive'));
+        midcom::set_pagetitle("{$this->_topic->extra}: " . $this->_l10n->get('archive'));
         
-        $_MIDCOM->set_26_request_metadata(net_nehmer_blog_viewer::get_last_modified($this->_topic, $this->_content_topic), $this->_topic->guid);
+        midcom::set_26_request_metadata(net_nehmer_blog_viewer::get_last_modified($this->_topic, $this->_content_topic), $this->_topic->guid);
         return true;
     }
 
@@ -134,10 +134,10 @@ class net_nehmer_blog_handler_archive extends midcom_baseclasses_components_hand
         $qb->add_order('metadata.published');
         $qb->set_limit(1);
 
-        if ($_MIDCOM->auth->request_sudo())
+        if (midcom::auth->request_sudo())
         {
             $result = $qb->execute_unchecked();
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
         }
         else
         {
@@ -182,7 +182,7 @@ class net_nehmer_blog_handler_archive extends midcom_baseclasses_components_hand
     function _compute_welcome_data()
     {
         // Helpers
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . 'archive/';
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . 'archive/';
 
         // First step of request data: Overall info
         $total_count = 0;
@@ -344,7 +344,7 @@ class net_nehmer_blog_handler_archive extends midcom_baseclasses_components_hand
             case 'archive-year-category':
                 if (!$this->_config->get('archive_years_enable'))
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, 'Year archive not allowed');
+                    midcom::generate_error(MIDCOM_ERRNOTFOUND, 'Year archive not allowed');
                     // This will exit
                 }
             
@@ -367,7 +367,7 @@ class net_nehmer_blog_handler_archive extends midcom_baseclasses_components_hand
             case 'archive-year':
                 if (!$this->_config->get('archive_years_enable'))
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, 'Year archive not allowed');
+                    midcom::generate_error(MIDCOM_ERRNOTFOUND, 'Year archive not allowed');
                     // This will exit
                 }
 
@@ -379,7 +379,7 @@ class net_nehmer_blog_handler_archive extends midcom_baseclasses_components_hand
                 break;
 
             default:
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "The request handler {$handler_id} is not supported.");
+                midcom::generate_error(MIDCOM_ERRCRIT, "The request handler {$handler_id} is not supported.");
                 // This will exit.
         }
 
@@ -409,7 +409,7 @@ class net_nehmer_blog_handler_archive extends midcom_baseclasses_components_hand
             MIDCOM_NAV_URL => "archive/year/{$args[0]}/",
             MIDCOM_NAV_NAME => "{$start} - {$end}",
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $breadcrumb);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $breadcrumb);
 
         $this->_prepare_request_data();
 
@@ -422,8 +422,8 @@ class net_nehmer_blog_handler_archive extends midcom_baseclasses_components_hand
             $this->_component_data['active_leaf'] = "{$this->_topic->id}_ARCHIVE_{$args[0]}";
         }
 
-        $_MIDCOM->set_26_request_metadata(net_nehmer_blog_viewer::get_last_modified($this->_topic, $this->_content_topic), $this->_topic->guid);
-        $_MIDCOM->set_pagetitle("{$this->_topic->extra}: {$start} - {$end}");
+        midcom::set_26_request_metadata(net_nehmer_blog_viewer::get_last_modified($this->_topic, $this->_content_topic), $this->_topic->guid);
+        midcom::set_pagetitle("{$this->_topic->extra}: {$start} - {$end}");
 
         return true;
     }
@@ -441,14 +441,14 @@ class net_nehmer_blog_handler_archive extends midcom_baseclasses_components_hand
         if (   ! is_numeric($year)
             || strlen($year) != 4)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The year '{$year}' is not a valid year identifier.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The year '{$year}' is not a valid year identifier.");
             // This will exit.
         }
 
         $now = new Date();
         if ($year > $now->getYear())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The year '{$year}' is in the future, no archive available.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The year '{$year}' is in the future, no archive available.");
             // This will exit.
         }
 
@@ -472,7 +472,7 @@ class net_nehmer_blog_handler_archive extends midcom_baseclasses_components_hand
         if (   ! is_numeric($year)
             || strlen($year) != 4)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The year '{$year}' is not a valid year identifier.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The year '{$year}' is not a valid year identifier.");
             // This will exit.
         }
 
@@ -480,7 +480,7 @@ class net_nehmer_blog_handler_archive extends midcom_baseclasses_components_hand
             || $month < 1
             || $month > 12)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The year {$month} is not a valid year identifier.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The year {$month} is not a valid year identifier.");
             // This will exit.
         }
 
@@ -492,7 +492,7 @@ class net_nehmer_blog_handler_archive extends midcom_baseclasses_components_hand
         $this->_start = new Date("{$year}-{$month}-01 00:00:00");
         if ($this->_start->after($now))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The month '{$year}-{$month}' is in the future, no archive available.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The month '{$year}-{$month}' is in the future, no archive available.");
             // This will exit.
         }
 
@@ -530,12 +530,12 @@ class net_nehmer_blog_handler_archive extends midcom_baseclasses_components_hand
             $data['index_fulltext'] = $this->_config->get('index_fulltext');
             if ($this->_config->get('comments_enable'))
             {
-                $_MIDCOM->componentloader->load_graceful('net.nehmer.comments');
+                midcom::componentloader->load_graceful('net.nehmer.comments');
                 $data['comments_enable'] = true;
             }
 
             $total_count = count($this->_articles);
-            $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+            $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 
             foreach ($this->_articles as $article_counter => $article)
             {

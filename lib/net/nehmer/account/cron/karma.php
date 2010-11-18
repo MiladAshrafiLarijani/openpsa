@@ -35,7 +35,7 @@ class net_nehmer_account_cron_karma extends midcom_baseclasses_components_cron_h
 
         $calculator = new net_nehmer_account_calculator();
 
-        if (!$_MIDCOM->auth->request_sudo('net.nehmer.account'))
+        if (!midcom::auth->request_sudo('net.nehmer.account'))
         {
             $msg = "Could not get sudo, aborting operation, see error log for details";
             $this->print_error($msg);
@@ -62,7 +62,7 @@ class net_nehmer_account_cron_karma extends midcom_baseclasses_components_cron_h
             $karmas = $calculator->calculate_person($person, true);
             debug_add("{$person->name} got Karma of {$karmas['karma']}.");
         }
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         debug_pop();
     }
 }

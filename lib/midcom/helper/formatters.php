@@ -342,7 +342,7 @@ if (!function_exists('midcom_helper_formatters_noimages'))
             $title = $url_parts[(count($url_parts)-1)];
         }
 
-        $title_prefix = $_MIDCOM->i18n->get_string('image','midcom');
+        $title_prefix = midcom::i18n()->get_string('image','midcom');
         $link = "<a href=\"{$url}\" title=\"{$title}\">[{$title_prefix}:{$title}]</a>";
 
         return $link;

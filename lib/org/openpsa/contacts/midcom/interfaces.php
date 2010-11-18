@@ -48,7 +48,7 @@ class org_openpsa_contacts_interface extends midcom_baseclasses_components_inter
     {
         debug_push_class(__CLASS__, __FUNCTION__);
 
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
 
         $qb = org_openpsa_contacts_group_dba::new_query_builder();
         $qb->add_constraint('orgOpenpsaObtype', '<>', 0);
@@ -147,12 +147,12 @@ class org_openpsa_contacts_interface extends midcom_baseclasses_components_inter
             debug_pop();
 
             //Attempt to  auto-initialize the group.
-            $_MIDCOM->auth->request_sudo();
+            midcom::auth->request_sudo();
             $grp = new midcom_db_group();
             $grp->owner = 0;
             $grp->name = '__org_openpsa_contacts';
             $ret = $grp->create();
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
             if (!$ret)
             {
                 debug_add("Could not auto-initialize the module, create root group '__org_openpsa_contacts' manually", MIDCOM_LOG_ERROR);
@@ -344,7 +344,7 @@ class org_openpsa_contacts_interface extends midcom_baseclasses_components_inter
         $data = array();
 
         // TODO: Error handling
-        $_MIDCOM->load_library('org.openpsa.httplib');
+        midcom::load_library('org.openpsa.httplib');
         $client = new org_openpsa_httplib();
         $html = $client->get($url);
 
@@ -363,7 +363,7 @@ class org_openpsa_contacts_interface extends midcom_baseclasses_components_inter
             $data['rss_url'] = $rss_url[0]['href'];
 
             // We have a feed URL, but we should check if it is GeoRSS as well
-            $_MIDCOM->load_library('net.nemein.rss');
+            midcom::load_library('net.nemein.rss');
             $rss_content = net_nemein_rss_fetch::raw_fetch($data['rss_url']);
 
             if (   isset($rss_content->items)
@@ -541,7 +541,7 @@ class org_openpsa_contacts_interface extends midcom_baseclasses_components_inter
                         && (   $longitude < 180
                             && $longitude > -180))
                     {
-                        $_MIDCOM->load_library('org.routamc.positioning');
+                        midcom::load_library('org.routamc.positioning');
                         $location = new org_routamc_positioning_location_dba();
                         $location->date = time();
                         $location->latitude = $latitude;
@@ -620,7 +620,7 @@ class org_openpsa_contacts_interface extends midcom_baseclasses_components_inter
      */
     function reopen_account($args , &$handler)
     {
-        $_MIDCOM->auth->request_sudo('org.openpsa.contacts');
+        midcom::auth->request_sudo('org.openpsa.contacts');
         $person = new midcom_db_person($args['guid']);
 
         if(!$person)
@@ -638,14 +638,14 @@ class org_openpsa_contacts_interface extends midcom_baseclasses_components_inter
             debug_add($msg, MIDCOM_LOG_ERROR);
             $handler->print_error($msg);
             debug_pop();
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
             return false;
         }
 
         $person->password = $person->get_parameter($args['parameter_name'] , $args['password']);
         $person->set_parameter($args['parameter_name'] , $args['password'] , "");
         $person->update();
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         return true;
     }
 }

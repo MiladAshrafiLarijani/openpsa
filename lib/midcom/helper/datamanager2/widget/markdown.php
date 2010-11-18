@@ -73,10 +73,10 @@ class midcom_helper_datamanager2_widget_markdown extends midcom_helper_datamanag
             return false;
         }
 
-        $_MIDCOM->enable_jquery();
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/markitup/jquery.markitup.pack.js');
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/markitup/sets/markdown/set.js');
-        $_MIDCOM->add_link_head
+        midcom::enable_jquery();
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/markitup/jquery.markitup.pack.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/markitup/sets/markdown/set.js');
+        midcom::add_link_head
         (
             array
             (
@@ -85,7 +85,7 @@ class midcom_helper_datamanager2_widget_markdown extends midcom_helper_datamanag
                 'href' => MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/markitup/skins/markitup/style.css',
             )
         );
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -122,7 +122,7 @@ class midcom_helper_datamanager2_widget_markdown extends midcom_helper_datamanag
         $elements[] = HTML_QuickForm::createElement('static', "{$this->name}_toolbar", '', "<script> jQuery('#{$this->_namespace}{$this->name}').markItUp(mySettings);\n</script>");
         
         // Load help text
-        $_MIDCOM->load_library('net.nehmer.markdown');
+        midcom::load_library('net.nehmer.markdown');
         // TODO: l10n
         $file = MIDCOM_ROOT . "/midcom/helper/datamanager2/documentation/markdown.en.txt";
         if (file_exists($file))

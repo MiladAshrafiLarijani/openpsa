@@ -31,17 +31,17 @@ class org_openpsa_projects_task_dba extends midcom_core_dbaobject
 
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
 
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
 
     /**
@@ -162,7 +162,7 @@ class org_openpsa_projects_task_dba extends midcom_core_dbaobject
         $this->update_cache(false);
         if ($this->reportedHours > 0)
         {
-            $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('org.openpsa.projects', 'org.openpsa.projects'), $_MIDCOM->i18n->get_string('task deletion now allowed because of hour reports', 'org.openpsa.projects'), 'warn');
+            midcom::uimessages()->add(midcom::i18n()->get_string('org.openpsa.projects', 'org.openpsa.projects'), midcom::i18n()->get_string('task deletion now allowed because of hour reports', 'org.openpsa.projects'), 'warn');
             return false;
         }
 
@@ -491,7 +491,7 @@ class org_openpsa_projects_task_dba extends midcom_core_dbaobject
             && $project->orgOpenpsaObtype == ORG_OPENPSA_OBTYPE_PROJECT)
         {
             //Make sure the parent is initialized in correct class
-            if (!$_MIDCOM->dbfactory->is_a($project, 'org_openpsa_projects_project'))
+            if (!midcom::dbfactory()->is_a($project, 'org_openpsa_projects_project'))
             {
                 $project = new org_openpsa_projects_project($project->id);
             }
@@ -502,7 +502,7 @@ class org_openpsa_projects_task_dba extends midcom_core_dbaobject
 
     static function pid_to_obj($pid)
     {
-        return $_MIDCOM->auth->get_user($pid);
+        return midcom::auth->get_user($pid);
     }
 
     /**
@@ -578,7 +578,7 @@ class org_openpsa_projects_task_dba extends midcom_core_dbaobject
     static function get_task_resources()
     {
         $resource_array = array();
-        $view_data =& $_MIDCOM->get_custom_context_data('request_data');
+        $view_data =& midcom::get_custom_context_data('request_data');
         if (!array_key_exists('task', $view_data))
         {
             return $resource_array;

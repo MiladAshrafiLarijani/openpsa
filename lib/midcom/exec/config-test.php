@@ -3,7 +3,7 @@ if (! exec ('which which'))
 {
     _midcom_stop_request("The 'which' utility cannot be found. It is required for configuration-testing. Aborting.");
 }
-$_MIDCOM->auth->require_admin_user();
+midcom::auth()->require_admin_user();
 ?>
 <html>
 <head><title>MidCOM Configuration Test</title></head>
@@ -172,7 +172,7 @@ function check_rcs()
 }
 
 // Some helpers
-$i18n = $_MIDCOM->get_service('i18n');
+$i18n = midcom::get_service('i18n');
 
 if (version_compare(mgd_version(), '8.09.2', '<'))
 {

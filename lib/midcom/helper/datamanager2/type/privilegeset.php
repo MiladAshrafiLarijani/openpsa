@@ -67,7 +67,7 @@ class midcom_helper_datamanager2_type_privilegeset extends midcom_helper_dataman
     {
         if (! $this->privileges)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "The field {$this->name} had no privileges specified with it, cannot start up.");
             // This will exit.
         }

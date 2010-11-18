@@ -46,7 +46,7 @@ class org_openpsa_documents_handler_directory_create extends midcom_baseclasses_
 
     function _on_initialize()
     {
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
     }
 
     /**
@@ -66,7 +66,7 @@ class org_openpsa_documents_handler_directory_create extends midcom_baseclasses_
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $topic);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to create a new topic, cannot continue. Error: " . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -90,7 +90,7 @@ class org_openpsa_documents_handler_directory_create extends midcom_baseclasses_
         $this->_controller->callback_object =& $this;
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
             // This will exit.
         }
     }
@@ -103,7 +103,7 @@ class org_openpsa_documents_handler_directory_create extends midcom_baseclasses_
      */
     function _handler_create($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_do('midgard:create', $this->_request_data['directory']);
+        midcom::auth->require_do('midgard:create', $this->_request_data['directory']);
 
         $this->_load_create_controller();
 
@@ -111,15 +111,15 @@ class org_openpsa_documents_handler_directory_create extends midcom_baseclasses_
         {
             case 'save':
                 // Index the directory
-                $indexer = $_MIDCOM->get_service('indexer');
+                $indexer = midcom::get_service('indexer');
                 $indexer->index($this->_controller->datamanager);
 
                 // Relocate to the new directory view
-                $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+                midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                     . $this->_request_data["directory"]->name. "/");
                 // This will exit
             case 'cancel':
-                $_MIDCOM->relocate('');
+                midcom::relocate('');
                 // This will exit
         }
         $this->_request_data['controller'] = $this->_controller;
@@ -132,7 +132,7 @@ class org_openpsa_documents_handler_directory_create extends midcom_baseclasses_
             MIDCOM_NAV_NAME => $this->_l10n->get('new directory'),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
 
         // Add toolbar items

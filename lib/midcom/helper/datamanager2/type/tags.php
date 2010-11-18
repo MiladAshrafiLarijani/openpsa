@@ -33,7 +33,7 @@ class midcom_helper_datamanager2_type_tags extends midcom_helper_datamanager2_ty
      */
     function _on_initialize()
     {
-        return $_MIDCOM->load_library('net.nemein.tag');
+        return midcom::load_library('net.nemein.tag');
     }
 
     function convert_from_storage($source)

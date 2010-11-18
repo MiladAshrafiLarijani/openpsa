@@ -88,10 +88,10 @@
             (
                 'options' => array_merge(array
                 (
-                    '' => sprintf($_MIDCOM->i18n->get_string('default (%s)', 'midcom.admin.settings'),
+                    '' => sprintf(midcom::i18n()->get_string('default (%s)', 'midcom.admin.settings'),
                                     $GLOBALS['midcom_config_default']['i18n_fallback_language'])
                 ),
-                $_MIDCOM->i18n->list_languages()),
+                midcom::i18n()->list_languages()),
             ),
             'widget' => 'select',
 
@@ -145,13 +145,13 @@
                     '0' => 'no',
                 ),
             ),
-            'hidden' => ($_MIDCOM->componentloader->is_installed('org.routamc.positioning')) ? false : true,
+            'hidden' => (midcom::componentloader()->is_installed('org.routamc.positioning')) ? false : true,
         ),
         'component_listing_allowed' => array
         (
             'type' => 'select',
             'widget' => 'select',
-            'title' => $_MIDCOM->i18n->get_string('allowed components (leave empty to allow all)', 'midcom.admin.settings'),
+            'title' => midcom::i18n()->get_string('allowed components (leave empty to allow all)', 'midcom.admin.settings'),
             'type_config' => array
             (
                 'allow_multiple' => true,
@@ -162,7 +162,7 @@
         (
             'type' => 'select',
             'widget' => 'select',
-            'title' => $_MIDCOM->i18n->get_string('excluded components (leave empty to allow all)', 'midcom.admin.settings'),
+            'title' => midcom::i18n()->get_string('excluded components (leave empty to allow all)', 'midcom.admin.settings'),
             'type_config' => array
             (
                 'allow_multiple' => true,

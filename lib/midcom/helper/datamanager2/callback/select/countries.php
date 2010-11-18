@@ -8,7 +8,7 @@
  */
 
 /** @ignore */
-$_MIDCOM->load_library('org.routamc.positioning');
+midcom::load_library('org.routamc.positioning');
 
 /**
  * Form Validation helper methods.

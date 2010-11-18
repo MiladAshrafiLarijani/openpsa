@@ -1,5 +1,5 @@
 <?php
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 $view_today =& $data['view_today'];
 $tasks = org_openpsa_projects_task_resource_dba::get_resource_tasks('guid');
 

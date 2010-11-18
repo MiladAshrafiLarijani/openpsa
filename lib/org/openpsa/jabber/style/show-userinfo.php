@@ -1,5 +1,5 @@
 <?php
-$user = $_MIDCOM->auth->user->storage;
+$user = midcom::auth->user->storage;
 $nap = new midcom_helper_nav();
 $node = $nap->get_node($nap->get_root_node());
 ?>

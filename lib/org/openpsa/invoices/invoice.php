@@ -24,17 +24,17 @@ class org_openpsa_invoices_invoice_dba extends midcom_core_dbaobject
 
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
 
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
 
     function get_invoice_class()
@@ -92,13 +92,13 @@ class org_openpsa_invoices_invoice_dba extends midcom_core_dbaobject
             $task->manager = midcom_connection::get_user();
             // TODO: Connect the customer as the contact?
             $task->orgOpenpsaObtype = ORG_OPENPSA_OBTYPE_TASK;
-            $task->title = sprintf($_MIDCOM->i18n->get_string('send invoice %s', 'org.openpsa.invoices'), sprintf($config->get('invoice_number_format'), sprintf($config->get('invoice_number_format'), $this->number)));
+            $task->title = sprintf(midcom::i18n()->get_string('send invoice %s', 'org.openpsa.invoices'), sprintf($config->get('invoice_number_format'), sprintf($config->get('invoice_number_format'), $this->number)));
             // TODO: Store link to invoice into description
             $task->end = time() + 24 * 3600;
             if ($task->create())
             {
                 org_openpsa_relatedto_plugin::create($task, 'org.openpsa.projects', $this, 'org.openpsa.invoices');
-                $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('org.openpsa.invoices', 'org.openpsa.invoices'), sprintf($_MIDCOM->i18n->get_string('created "%s" task to %s', 'org.openpsa.invoices'), $task->title, $invoice_sender->name), 'ok');
+                midcom::uimessages()->add(midcom::i18n()->get_string('org.openpsa.invoices', 'org.openpsa.invoices'), sprintf(midcom::i18n()->get_string('created "%s" task to %s', 'org.openpsa.invoices'), $task->title, $invoice_sender->name), 'ok');
             }
         }
     }
@@ -136,7 +136,7 @@ class org_openpsa_invoices_invoice_dba extends midcom_core_dbaobject
     {
         parent::_on_deleted();
 
-        if (! $_MIDCOM->auth->request_sudo('org.openpsa.invoices'))
+        if (! midcom::auth->request_sudo('org.openpsa.invoices'))
         {
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_add('Failed to get SUDO privileges, skipping invoice hour deletion silently.', MIDCOM_LOG_ERROR);
@@ -181,7 +181,7 @@ class org_openpsa_invoices_invoice_dba extends midcom_core_dbaobject
             $item->delete();
         }
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         return;
     }
 
@@ -383,7 +383,7 @@ class org_openpsa_invoices_invoice_dba extends midcom_core_dbaobject
         //set the default-values for vat&due from config
         if (!array_key_exists('org.openpsa.invoices', $GLOBALS['midcom_component_data']))
         {
-            if (!$_MIDCOM->componentloader->load('org.openpsa.invoices'))
+            if (!midcom::componentloader->load('org.openpsa.invoices'))
             {
                 debug_push_class(__CLASS__, __FUNCTION__);
                 debug_add("Failed to load org.openpsa.invoices: " . midcom_connection::get_error_string(), MIDCOM_LOG_ERROR);

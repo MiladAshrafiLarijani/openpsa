@@ -12,7 +12,7 @@
  * 
  * <b>Job registration</b>
  *
- * First load this library, either via autoload_libraries or using  $_MIDCOM->componentloader->load('midcom.services.at')
+ * First load this library, either via autoload_libraries or using  midcom::componentloader->load('midcom.services.at')
  * Then call midcom_services_at_interface::register with the following parameters
  *
  * - <i>int start</i> timestamp on/after which the job is run (we have approximately

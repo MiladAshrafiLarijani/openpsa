@@ -1,5 +1,5 @@
 <?php
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 $contact = new org_openpsa_contactwidget($data['person']);
 ?>
 <div class="main">

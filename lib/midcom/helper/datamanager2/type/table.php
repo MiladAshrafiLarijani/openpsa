@@ -147,7 +147,7 @@ class midcom_helper_datamanager2_type_table extends midcom_helper_datamanager2_t
      */
     function convert_from_csv ($source)
     {
-        $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "This operation is not supported");
+        midcom::generate_error(MIDCOM_ERRCRIT, "This operation is not supported");
     }
 
     /**
@@ -156,7 +156,7 @@ class midcom_helper_datamanager2_type_table extends midcom_helper_datamanager2_t
      */
     function convert_to_csv()
     {
-        $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "This operation is not supported");
+        midcom::generate_error(MIDCOM_ERRCRIT, "This operation is not supported");
     }
 
     /**

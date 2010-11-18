@@ -1,5 +1,5 @@
 <?php
-$_MIDCOM->auth->require_admin_user();
+midcom::auth->require_admin_user();
 ?>
 <h1>Clean up old contents</h1>
 <?php

@@ -33,7 +33,7 @@ class org_openpsa_contactwidget_interface extends midcom_baseclasses_components_
     function _on_initialize()
     {
         // Make the hCards pretty
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (

@@ -13,7 +13,7 @@
  * This class tests the midcom_helper_xml_objectmapper
  * @package midcom.helper.xml
  */
-$_MIDCOM->load_library('midcom.helper.xml');
+midcom::load_library('midcom.helper.xml');
 $GLOBALS['testclasses'] = array ('midcom_helper_xml_objectmapper_test' => 0);
 
 class midcom_helper_xml_objectmapper_test extends UnitTestCase

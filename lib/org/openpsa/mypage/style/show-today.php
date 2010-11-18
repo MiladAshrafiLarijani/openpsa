@@ -1,5 +1,5 @@
 <?php
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 $view_today =& $data['view_today'];
 ?>
 
@@ -31,7 +31,7 @@ $view_today =& $data['view_today'];
         ?>
         <div class="agenda">
             <?php
-            $_MIDCOM->dynamic_load($data['calendar_url'] . 'agenda/day/' . date('Y-m-d', $data['requested_time']));
+            midcom::dynamic_load($data['calendar_url'] . 'agenda/day/' . date('Y-m-d', $data['requested_time']));
             ?>
         </div>
         <?php
@@ -65,12 +65,12 @@ $view_today =& $data['view_today'];
                 <?php
                     //index is needed for sorting
                     echo "'index_name',";
-                    echo "'" . $_MIDCOM->i18n->get_string('entry title', 'org.openpsa.relatedto') ."',";
-                    echo "'" . $_MIDCOM->i18n->get_string('entry text', 'org.openpsa.relatedto') . "',";
+                    echo "'" . midcom::i18n()->get_string('entry title', 'org.openpsa.relatedto') ."',";
+                    echo "'" . midcom::i18n()->get_string('entry text', 'org.openpsa.relatedto') . "',";
                     echo "'index_date',";
-                    echo "'" . $_MIDCOM->i18n->get_string('followUp', 'org.openpsa.relatedto') . "',";
+                    echo "'" . midcom::i18n()->get_string('followUp', 'org.openpsa.relatedto') . "',";
                     echo "'index_object',";
-                    echo "'" . $_MIDCOM->i18n->get_string('linked object', 'org.openpsa.relatedto') . "'";
+                    echo "'" . midcom::i18n()->get_string('linked object', 'org.openpsa.relatedto') . "'";
                 ?>
                 ],
                 colModel:[
@@ -85,7 +85,7 @@ $view_today =& $data['view_today'];
                  ],
                 rownumbers: false,
                 loadonce: true,
-                caption: "<?php echo $_MIDCOM->i18n->get_string('journal entries', 'org.openpsa.relatedto');?>",
+                caption: "<?php echo midcom::i18n()->get_string('journal entries', 'org.openpsa.relatedto');?>",
              });
              jQuery("#gbox_treegrid").css('float' , 'none');
         });
@@ -100,7 +100,7 @@ $view_today =& $data['view_today'];
         ?>
         <div class="tasks">
             <?php
-            $_MIDCOM->dynamic_load($data['projects_relative_url'] . 'task/list/');
+            midcom::dynamic_load($data['projects_relative_url'] . 'task/list/');
             ?>
         </div>
         <?php
@@ -111,7 +111,7 @@ $view_today =& $data['view_today'];
         ?>
         <div class="wiki">
             <?php
-            $_MIDCOM->dynamic_load($data['wiki_url'] . 'latest/');
+            midcom::dynamic_load($data['wiki_url'] . 'latest/');
             ?>
         </div>
         <?php

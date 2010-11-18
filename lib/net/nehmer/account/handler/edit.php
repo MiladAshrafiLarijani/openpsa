@@ -69,12 +69,12 @@ class net_nehmer_account_handler_edit extends midcom_baseclasses_components_hand
     {
         if ($handler_id == 'admin_edit')
         {
-            $_MIDCOM->auth->require_admin_user();
+            midcom::auth->require_admin_user();
             $this->_account = new midcom_db_person($args[0]);
             if (   !$this->_account
                 || !$this->_account->guid)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND,
+                midcom::generate_error(MIDCOM_ERRNOTFOUND,
                     "The account '{$args[0]}' could not be loaded, reason: "
                     . midcom_connection::get_error_string());
             }
@@ -83,11 +83,11 @@ class net_nehmer_account_handler_edit extends midcom_baseclasses_components_hand
         }
         else
         {
-            $_MIDCOM->auth->require_valid_user();
-            $this->_account = $_MIDCOM->auth->user->get_storage();
+            midcom::auth->require_valid_user();
+            $this->_account = midcom::auth->user->get_storage();
             net_nehmer_account_viewer::verify_person_privileges($this->_account);
-            $_MIDCOM->auth->require_do('midgard:update', $this->_account);
-            $_MIDCOM->auth->require_do('midgard:parameters', $this->_account);
+            midcom::auth->require_do('midgard:update', $this->_account);
+            midcom::auth->require_do('midgard:parameters', $this->_account);
             switch ($this->_config->get('redirect_edit_to'))
             {
                 case 'view':
@@ -107,7 +107,7 @@ class net_nehmer_account_handler_edit extends midcom_baseclasses_components_hand
         {
             // Relocate back to view
 
-            $_MIDCOM->relocate($return_url);
+            midcom::relocate($return_url);
             // This will exit.
         }
 
@@ -116,7 +116,7 @@ class net_nehmer_account_handler_edit extends midcom_baseclasses_components_hand
         if ($this->_controller->process_form() == 'save')
         {
             // Relocate back to view
-            $_MIDCOM->relocate($return_url);
+            midcom::relocate($return_url);
             // This will exit.
         }
 
@@ -127,12 +127,12 @@ class net_nehmer_account_handler_edit extends midcom_baseclasses_components_hand
             MIDCOM_NAV_URL => 'edit/',
             MIDCOM_NAV_NAME => $this->_l10n->get('edit account'),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
         $this->_view_toolbar->hide_item('edit/');
 
-        $_MIDCOM->bind_view_to_object($this->_account, $this->_controller->datamanager->schema->name);
-        $_MIDCOM->set_26_request_metadata(time(), $this->_topic->guid);
-        $_MIDCOM->set_pagetitle($this->_l10n->get('edit account'));
+        midcom::bind_view_to_object($this->_account, $this->_controller->datamanager->schema->name);
+        midcom::set_26_request_metadata(time(), $this->_topic->guid);
+        midcom::set_pagetitle($this->_l10n->get('edit account'));
 
         return true;
     }
@@ -149,7 +149,7 @@ class net_nehmer_account_handler_edit extends midcom_baseclasses_components_hand
         $this->_request_data['datamanager'] =& $this->_controller;
         $this->_request_data['schema'] =& $this->_controller->datamanager->schema;
         $this->_request_data['account'] =& $this->_account;
-        $this->_request_data['profile_url'] = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+        $this->_request_data['profile_url'] = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
             . $return_url;
     }
 

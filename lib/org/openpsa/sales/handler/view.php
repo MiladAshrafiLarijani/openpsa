@@ -77,7 +77,7 @@ class org_openpsa_sales_handler_view extends midcom_baseclasses_components_handl
         $relatedto_button_settings['wikinote']['wikiword'] = sprintf($this->_l10n->get($this->_config->get('new_wikinote_wikiword_format')), $this->_request_data['salesproject']->title, date('Y-m-d H:i'));
         org_openpsa_relatedto_plugin::common_node_toolbar_buttons($this->_view_toolbar, $this->_request_data['salesproject'], $this->_component, $relatedto_button_settings);
 
-        $_MIDCOM->bind_view_to_object($this->_salesproject);
+        midcom::bind_view_to_object($this->_salesproject);
 
     }
 
@@ -108,7 +108,7 @@ class org_openpsa_sales_handler_view extends midcom_baseclasses_components_handl
             return false;
         }
 
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
 
         $this->_load_controller();
 
@@ -119,10 +119,10 @@ class org_openpsa_sales_handler_view extends midcom_baseclasses_components_handl
         $this->_populate_toolbar();
 
         $this->_update_breadcrumb_line();
-        $_MIDCOM->set_26_request_metadata($this->_salesproject->metadata->revised, $this->_salesproject->guid);
-        $_MIDCOM->set_pagetitle($this->_salesproject->title);
+        midcom::set_26_request_metadata($this->_salesproject->metadata->revised, $this->_salesproject->guid);
+        midcom::set_pagetitle($this->_salesproject->title);
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
                 array
             (
@@ -172,7 +172,7 @@ class org_openpsa_sales_handler_view extends midcom_baseclasses_components_handl
             MIDCOM_NAV_URL => "salesproject/{$this->_salesproject->guid}/",
             MIDCOM_NAV_NAME => $this->_salesproject->title,
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**

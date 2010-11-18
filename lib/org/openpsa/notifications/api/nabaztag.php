@@ -59,7 +59,7 @@ class org_openpsa_notifications_notifier_api_nabaztag extends org_openpsa_notifi
         
         if ($stat)
         {
-            $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('org.openpsa.notifications', 'org.openpsa.notifications'), sprintf($_MIDCOM->i18n->get_string('notification sent to %s', 'org.openpsa.notifications'), "Nabaztag"));
+            midcom::uimessages()->add(midcom::i18n()->get_string('org.openpsa.notifications', 'org.openpsa.notifications'), sprintf(midcom::i18n()->get_string('notification sent to %s', 'org.openpsa.notifications'), "Nabaztag"));
         }
         
         return $stat;

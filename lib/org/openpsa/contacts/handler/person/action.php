@@ -28,7 +28,7 @@ class org_openpsa_contacts_handler_person_action extends midcom_baseclasses_comp
 
     function _on_initialize()
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
     }
 
     function _load_person($identifier)
@@ -43,7 +43,7 @@ class org_openpsa_contacts_handler_person_action extends midcom_baseclasses_comp
             return false;
         }
 
-        $_MIDCOM->set_pagetitle("{$person->firstname} {$person->lastname}");
+        midcom::set_pagetitle("{$person->firstname} {$person->lastname}");
 
         return $person;
     }
@@ -73,7 +73,7 @@ class org_openpsa_contacts_handler_person_action extends midcom_baseclasses_comp
         $this->_request_data['memberships'] = $qb->execute();
 
         // Group person listing, always work even if there are none
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
 
         return true;
     }
@@ -98,7 +98,7 @@ class org_openpsa_contacts_handler_person_action extends midcom_baseclasses_comp
 
         $this->_request_data['person'] =& $this->_person;
 
-        $_MIDCOM->auth->require_do('midgard:update', $this->_person);
+        midcom::auth->require_do('midgard:update', $this->_person);
 
         if ($this->_person->username)
         {
@@ -119,19 +119,19 @@ class org_openpsa_contacts_handler_person_action extends midcom_baseclasses_comp
             if ($stat)
             {
                 // Account created, redirect to person card
-                $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-                $_MIDCOM->relocate($prefix . "person/" . $this->_person->guid . "/");
+                $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+                midcom::relocate($prefix . "person/" . $this->_person->guid . "/");
             }
             else
             {
                 // Failure, give a message
-                $_MIDCOM->uimessages->add($this->_l10n->get('org.openpsa.contacts'), $this->_l10n->get("failed to create user account, reason ").midcom_connection::get_error_string(), 'error');
+                midcom::uimessages()->add($this->_l10n->get('org.openpsa.contacts'), $this->_l10n->get("failed to create user account, reason ").midcom_connection::get_error_string(), 'error');
             }
         }
         else if (array_key_exists('midcom_helper_datamanager2_cancel', $_POST))
         {
-            $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-            $_MIDCOM->relocate($prefix . "person/" . $this->_person->guid . "/");
+            $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+            midcom::relocate($prefix . "person/" . $this->_person->guid . "/");
         }
 
         $this->_request_data['person_action'] = 'create account';
@@ -170,7 +170,7 @@ class org_openpsa_contacts_handler_person_action extends midcom_baseclasses_comp
             $this->_request_data['default_password'] .= $passwdchars[$rand(0, strlen($passwdchars) - 1)];
         }
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -186,7 +186,7 @@ class org_openpsa_contacts_handler_person_action extends midcom_baseclasses_comp
         $result = eval ("\$contents = array ( {$data_rules}\n );");
         if ($result === false)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to parse the schema definition in '{$rules}', see above for PHP errors.");
             // This will exit.
         }
@@ -226,7 +226,7 @@ class org_openpsa_contacts_handler_person_action extends midcom_baseclasses_comp
 
         $this->_request_data['person'] =& $this->_person;
 
-        $_MIDCOM->auth->require_do('midgard:update', $this->_person);
+        midcom::auth->require_do('midgard:update', $this->_person);
 
         if ($this->_person->id != midcom_connection::get_user() && !midcom_connection::is_admin())
         {
@@ -236,8 +236,8 @@ class org_openpsa_contacts_handler_person_action extends midcom_baseclasses_comp
         if (!$this->_person->username)
         {
             // Account needs to be created first, relocate
-            $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-            $_MIDCOM->relocate($prefix . "account/create/" . $this->_person->guid . "/");
+            $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+            midcom::relocate($prefix . "account/create/" . $this->_person->guid . "/");
         }
 
         $this->_request_data['person_action'] = 'edit account';
@@ -248,9 +248,9 @@ class org_openpsa_contacts_handler_person_action extends midcom_baseclasses_comp
             // Check that the inputted passwords match
             if ($_POST['org_openpsa_contacts_person_account_newpassword'] != $_POST['org_openpsa_contacts_person_account_newpassword2'])
             {
-                $_MIDCOM->uimessages->add($this->_l10n->get('org.openpsa.contacts'), $this->_l10n->get("passwords don't match"), 'error');
+                midcom::uimessages()->add($this->_l10n->get('org.openpsa.contacts'), $this->_l10n->get("passwords don't match"), 'error');
             }
-            elseif($_POST['org_openpsa_contacts_person_account_current_password'] != null || $_MIDCOM->auth->admin)
+            elseif($_POST['org_openpsa_contacts_person_account_current_password'] != null || midcom::auth->admin)
             {
                 $plaintext = true;
                 if(array_key_exists('org_openpsa_contacts_person_account_encrypt' , $_POST))
@@ -259,7 +259,7 @@ class org_openpsa_contacts_handler_person_action extends midcom_baseclasses_comp
                 }
                 $check_user = true;
                 //check user auth if current user is not admin
-                if(!$_MIDCOM->auth->admin)
+                if(!midcom::auth->admin)
                 {
                     //user auth
                     $check_user = midgard_user::auth($this->_person->username, $_POST['org_openpsa_contacts_person_account_current_password']);
@@ -267,7 +267,7 @@ class org_openpsa_contacts_handler_person_action extends midcom_baseclasses_comp
 
                 if(!$check_user)
                 {
-                    $_MIDCOM->uimessages->add($this->_l10n->get('org.openpsa.contacts'), $this->_l10n->get("wrong current password"), 'error');
+                    midcom::uimessages()->add($this->_l10n->get('org.openpsa.contacts'), $this->_l10n->get("wrong current password"), 'error');
                     $stat = false;
                 }
                 else
@@ -278,27 +278,27 @@ class org_openpsa_contacts_handler_person_action extends midcom_baseclasses_comp
                 if ($stat)
                 {
                     // Account updated, redirect to person card
-                    $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-                    $_MIDCOM->relocate($prefix . "person/" . $this->_person->guid . "/");
+                    $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+                    midcom::relocate($prefix . "person/" . $this->_person->guid . "/");
                 }
                 else
                 {
                     // Failure, give a message
-                    $_MIDCOM->uimessages->add($this->_l10n->get('org.openpsa.contacts'), $this->_l10n->get("failed to update user account, reason ") . midcom_connection::get_error_string(), 'error');
+                    midcom::uimessages()->add($this->_l10n->get('org.openpsa.contacts'), $this->_l10n->get("failed to update user account, reason ") . midcom_connection::get_error_string(), 'error');
                 }
             }
             else
             {
-                $_MIDCOM->uimessages->add($this->_l10n->get('org.openpsa.contacts'), $this->_l10n->get("no current password given"), 'error');
+                midcom::uimessages()->add($this->_l10n->get('org.openpsa.contacts'), $this->_l10n->get("no current password given"), 'error');
             }
         }
         else if (array_key_exists('midcom_helper_datamanager2_cancel', $_POST))
         {
-            $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-            $_MIDCOM->relocate($prefix . "person/" . $this->_person->guid . "/");
+            $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+            midcom::relocate($prefix . "person/" . $this->_person->guid . "/");
         }
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -307,7 +307,7 @@ class org_openpsa_contacts_handler_person_action extends midcom_baseclasses_comp
                 'href' => MIDCOM_STATIC_URL . "/midcom.helper.datamanager2/legacy.css",
             )
         );
-        $_MIDCOM->enable_jquery();
+        midcom::enable_jquery();
 
         //get rules for js in style
         $rules = $this->_config->get('password_match_score');
@@ -315,7 +315,7 @@ class org_openpsa_contacts_handler_person_action extends midcom_baseclasses_comp
         $result = eval ("\$contents = array ( {$data_rules}\n );");
         if ($result === false)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to parse the schema definition in '{$rules}', see above for PHP errors.");
             // This will exit.
         }
@@ -355,7 +355,7 @@ class org_openpsa_contacts_handler_person_action extends midcom_baseclasses_comp
             MIDCOM_NAV_NAME => $this->_l10n->get($this->_request_data['person_action']),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**

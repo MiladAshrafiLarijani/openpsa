@@ -220,14 +220,14 @@ class net_nehmer_static_viewer extends midcom_baseclasses_components_request
         {
             debug_add('Failed to open symlink content topic, (might also be an invalid object) last Midgard Error: '
                 . midcom_connection::get_error_string(), MIDCOM_LOG_ERROR);
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to open symlink content topic.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to open symlink content topic.');
             // This will exit.
         }
 
         if ($this->_content_topic->component != 'net.nehmer.static')
         {
             debug_print_r('Retrieved topic was:', $this->_content_topic);
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Symlink content topic is invalid, see the debug level log for details.');
             // This will exit.
         }
@@ -252,7 +252,7 @@ class net_nehmer_static_viewer extends midcom_baseclasses_components_request
             $tmp = new midcom_db_topic($topic);
             if (! $tmp)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Failed to load the topic referenced by {$topic} for indexing, this is fatal.");
                 // This will exit.
             }

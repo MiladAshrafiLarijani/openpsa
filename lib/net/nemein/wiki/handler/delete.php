@@ -47,7 +47,7 @@ class net_nemein_wiki_handler_delete extends midcom_baseclasses_components_handl
         if (   ! $this->_datamanager
             || ! $this->_datamanager->autoset_storage($this->_page))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for article {$this->_page->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for article {$this->_page->id}.");
             // This will exit.
         }
     }
@@ -88,17 +88,17 @@ class net_nemein_wiki_handler_delete extends midcom_baseclasses_components_handl
             $wikiword = $this->_page->title;
             if ($this->_page->delete())
             {
-                $_MIDCOM->uimessages->add($this->_request_data['l10n']->get('net.nemein.wiki'), sprintf($this->_request_data['l10n']->get('page %s deleted'), $wikiword), 'ok');
+                midcom::uimessages()->add($this->_request_data['l10n']->get('net.nemein.wiki'), sprintf($this->_request_data['l10n']->get('page %s deleted'), $wikiword), 'ok');
 
                 // Update the index
-                $indexer = $_MIDCOM->get_service('indexer');
+                $indexer = midcom::get_service('indexer');
                 $indexer->delete($this->_page->guid);
 
-                $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX));
+                midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX));
             }
             else
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to delete wikipage, reason ".midcom_connection::get_error_string());
+                midcom::generate_error(MIDCOM_ERRCRIT, "Failed to delete wikipage, reason ".midcom_connection::get_error_string());
                 // This will exit.
             }
         }
@@ -128,9 +128,9 @@ class net_nemein_wiki_handler_delete extends midcom_baseclasses_components_handl
             MIDCOM_NAV_URL => "delete/{$this->_page->name}/",
             MIDCOM_NAV_NAME => $this->_request_data['l10n_midcom']->get('delete'),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
-        $_MIDCOM->set_pagetitle($this->_page->title);
+        midcom::set_pagetitle($this->_page->title);
         return true;
     }
 

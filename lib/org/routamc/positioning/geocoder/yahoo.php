@@ -22,7 +22,7 @@ class org_routamc_positioning_geocoder_yahoo extends org_routamc_positioning_geo
     function __construct()
     {
          $this->_component = 'org.routamc.positioning';
-         $_MIDCOM->load_library('org.openpsa.httplib');
+         midcom::load_library('org.openpsa.httplib');
          parent::__construct();
     }
 

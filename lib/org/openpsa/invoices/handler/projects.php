@@ -101,15 +101,15 @@ class org_openpsa_invoices_handler_projects extends midcom_baseclasses_component
                 $invoice->generate_invoicing_task($invoice_sender_guid);
             }
 
-            $_MIDCOM->uimessages->add($this->_l10n->get('org.openpsa.invoices'), sprintf($this->_l10n->get('invoice "%s" created'), $invoice->get_label()), 'ok');
+            midcom::uimessages()->add($this->_l10n->get('org.openpsa.invoices'), sprintf($this->_l10n->get('invoice "%s" created'), $invoice->get_label()), 'ok');
 
-            $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-            $_MIDCOM->relocate("{$prefix}invoice/edit/{$invoice->guid}/");
+            $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+            midcom::relocate("{$prefix}invoice/edit/{$invoice->guid}/");
             // This will exit
         }
         else
         {
-            $_MIDCOM->uimessages->add($this->_l10n->get('org.openpsa.invoices'), $this->_l10n->get('failed to create invoice, reason ') . midcom_connection::get_error_string(), 'error');
+            midcom::uimessages()->add($this->_l10n->get('org.openpsa.invoices'), $this->_l10n->get('failed to create invoice, reason ') . midcom_connection::get_error_string(), 'error');
         }
     }
 
@@ -121,14 +121,14 @@ class org_openpsa_invoices_handler_projects extends midcom_baseclasses_component
      */
     function _handler_uninvoiced($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
-        $_MIDCOM->auth->require_user_do('midgard:create', null, 'org_openpsa_invoices_invoice_dba');
+        midcom::auth->require_valid_user();
+        midcom::auth->require_user_do('midgard:create', null, 'org_openpsa_invoices_invoice_dba');
 
         $qb = org_openpsa_projects_task_dba::new_query_builder();
         $qb->add_constraint('status', '>=', ORG_OPENPSA_TASKSTATUS_COMPLETED);
 
         //Load component here already to get the needed constants
-        if ($_MIDCOM->componentloader->load_graceful('org.openpsa.sales'))
+        if (midcom::componentloader->load_graceful('org.openpsa.sales'))
         {
             $qb->begin_group('OR');
                 $qb->add_constraint('invoiceableHours', '>', 0);
@@ -163,7 +163,7 @@ class org_openpsa_invoices_handler_projects extends midcom_baseclasses_component
             $this->_generate_invoice();
         }
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -175,7 +175,7 @@ class org_openpsa_invoices_handler_projects extends midcom_baseclasses_component
 
         $title = $this->_l10n->get('project invoicing');
 
-        $_MIDCOM->set_pagetitle($title);
+        midcom::set_pagetitle($title);
 
         $tmp = array();
         $tmp[] = array
@@ -184,7 +184,7 @@ class org_openpsa_invoices_handler_projects extends midcom_baseclasses_component
             MIDCOM_NAV_NAME => $title,
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         return true;
     }

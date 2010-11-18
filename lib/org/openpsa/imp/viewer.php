@@ -29,7 +29,7 @@ class org_openpsa_imp_viewer extends midcom_baseclasses_components_request
         parent::__construct($topic, $config);
 
         // Always run in uncached mode
-        $_MIDCOM->cache->content->no_cache();
+        midcom::cache()->content->no_cache();
 
         // Match /redirect
         $this->_request_switch[] = array
@@ -79,8 +79,8 @@ class org_openpsa_imp_viewer extends midcom_baseclasses_components_request
     {
         debug_push_class(__CLASS__, __FUNCTION__);
 
-        $current_topic = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_CONTENTTOPIC);
-        $current_user_dbobj = $_MIDCOM->auth->user->get_storage();
+        $current_topic = midcom::get_context_data(MIDCOM_CONTEXT_CONTENTTOPIC);
+        $current_user_dbobj = midcom::auth->user->get_storage();
 
         if (!is_object($current_user_dbobj))
         {
@@ -136,7 +136,7 @@ class org_openpsa_imp_viewer extends midcom_baseclasses_components_request
      */
     function _handler_redirect($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         debug_push_class(__CLASS__, __FUNCTION__);
 
         $formData = false;
@@ -214,14 +214,14 @@ class org_openpsa_imp_viewer extends midcom_baseclasses_components_request
             //Address to post the form to not found, we try to just to redirect to the given server URI
             debug_add('Action URI not found in data, relocating to server base URI');
             debug_pop();
-            $_MIDCOM->relocate($this->_server_uri);
+            midcom::relocate($this->_server_uri);
             //This will exit
         }
 
         $this->_request_data['login_form_html'] = $formData;
 
         // We're using a popup here
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
 
         debug_pop();
         return true;
@@ -245,7 +245,7 @@ class org_openpsa_imp_viewer extends midcom_baseclasses_components_request
      */
     function _handler_settings($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         debug_push_class(__CLASS__, __FUNCTION__);
 
         $this->_check_imp_settings();
@@ -253,7 +253,7 @@ class org_openpsa_imp_viewer extends midcom_baseclasses_components_request
         //Initialize/handle DM
         debug_add("Loading Schema Database", MIDCOM_LOG_DEBUG);
 
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
 
         // Load the schema definition file
         $schemadb = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb_horde_account'));
@@ -274,12 +274,12 @@ class org_openpsa_imp_viewer extends midcom_baseclasses_components_request
         $controller->schemadb =& $schemadb;
 
         // Load the person record into DM
-        $person_record = $_MIDCOM->auth->user->get_storage();
+        $person_record = midcom::auth->user->get_storage();
 
         $controller->set_storage($person_record, $schema);
         if (! $controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for person {$person_record->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for person {$person_record->id}.");
             // This will exit.
         }
 
@@ -287,11 +287,11 @@ class org_openpsa_imp_viewer extends midcom_baseclasses_components_request
         switch ($controller->process_form())
         {
             case 'save':
-                $_MIDCOM->relocate( $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX));
+                midcom::relocate( midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX));
                 //this will exit
                 break;
             case 'cancel':
-                $_MIDCOM->relocate( $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX));
+                midcom::relocate( midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX));
                 //this will exit
                 break;
         }
@@ -320,7 +320,7 @@ class org_openpsa_imp_viewer extends midcom_baseclasses_components_request
      */
     function _handler_frontpage($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         debug_push_class(__CLASS__, __FUNCTION__);
 
         //If settings are not complete redirect to settings page
@@ -328,7 +328,7 @@ class org_openpsa_imp_viewer extends midcom_baseclasses_components_request
         {
             debug_add("Horde/Imp settings incomplete, redirecting to settings page.");
             debug_pop();
-            $_MIDCOM->relocate( $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+            midcom::relocate( midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                                 . 'settings/');
             //This will exit
         }

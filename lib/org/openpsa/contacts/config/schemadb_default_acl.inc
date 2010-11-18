@@ -20,11 +20,11 @@
             'storage'     => null,
             'start_fieldgroup' => array
             (
-                'title' => $_MIDCOM->i18n->get_string('org.openpsa.calendar', 'org.openpsa.calendar'),
+                'title' => midcom::i18n()->get_string('org.openpsa.calendar', 'org.openpsa.calendar'),
                 'css_group' => 'area',
             ),
             'end_fieldgroup' => '',
-            'hidden' => !$_MIDCOM->componentloader->is_installed('org.openpsa.calendar'),
+            'hidden' => !midcom::componentloader->is_installed('org.openpsa.calendar'),
         ),
 
         'projects' => array
@@ -41,11 +41,11 @@
             'widget'      => 'privilege',
             'start_fieldset' => array
             (
-                'title' => $_MIDCOM->i18n->get_string('org.openpsa.projects', 'org.openpsa.projects'),
+                'title' => midcom::i18n()->get_string('org.openpsa.projects', 'org.openpsa.projects'),
                 'css_group' => 'area',
             ),
             'end_fieldset' => '',
-            'hidden' => !$_MIDCOM->componentloader->is_installed('org.openpsa.calendar'),
+            'hidden' => !midcom::componentloader->is_installed('org.openpsa.calendar'),
         ),
 
         'contact_creation' => array
@@ -126,10 +126,10 @@
             'widget'      => 'privilege',
             'start_fieldset' => array
             (
-                'title' => $_MIDCOM->i18n->get_string('org.openpsa.invoices', 'org.openpsa.invoices'),
+                'title' => midcom::i18n()->get_string('org.openpsa.invoices', 'org.openpsa.invoices'),
                 'css_group' => 'area',
             ),
-            'hidden' => !$_MIDCOM->componentloader->is_installed('org.openpsa.invoices'),
+            'hidden' => !midcom::componentloader->is_installed('org.openpsa.invoices'),
         ),
 
         'invoices_editing' => array
@@ -145,7 +145,7 @@
 
             'widget'      => 'privilege',
             'end_fieldset' => '',
-            'hidden' => !$_MIDCOM->componentloader->is_installed('org.openpsa.invoices'),
+            'hidden' => !midcom::componentloader->is_installed('org.openpsa.invoices'),
         ),
 
         'wiki_creation' => array
@@ -162,10 +162,10 @@
             'widget'      => 'privilege',
             'start_fieldset' => array
             (
-                'title' => $_MIDCOM->i18n->get_string('net.nemein.wiki', 'net.nemein.wiki'),
+                'title' => midcom::i18n()->get_string('net.nemein.wiki', 'net.nemein.wiki'),
                 'css_group' => 'area',
             ),
-            'hidden' => !$_MIDCOM->componentloader->is_installed('net.nemein.wiki'),
+            'hidden' => !midcom::componentloader->is_installed('net.nemein.wiki'),
         ),
 
         'wiki_editing' => array
@@ -181,7 +181,7 @@
 
             'widget'      => 'privilege',
             'end_fieldset' => '',
-            'hidden' => !$_MIDCOM->componentloader->is_installed('net.nemein.wiki'),
+            'hidden' => !midcom::componentloader->is_installed('net.nemein.wiki'),
         ),
 
         'products_creation' => array
@@ -198,10 +198,10 @@
             'widget'      => 'privilege',
             'start_fieldset' => array
             (
-                'title' => $_MIDCOM->i18n->get_string('org.openpsa.products', 'org.openpsa.products'),
+                'title' => midcom::i18n()->get_string('org.openpsa.products', 'org.openpsa.products'),
                 'css_group' => 'area',
             ),
-            'hidden' => !$_MIDCOM->componentloader->is_installed('org.openpsa.products'),
+            'hidden' => !midcom::componentloader->is_installed('org.openpsa.products'),
         ),
 
         'products_editing' => array
@@ -217,7 +217,7 @@
 
             'widget'      => 'privilege',
             'end_fieldset' => '',
-            'hidden' => !$_MIDCOM->componentloader->is_installed('org.openpsa.products'),
+            'hidden' => !midcom::componentloader->is_installed('org.openpsa.products'),
         ),
 
         'campaigns_creation' => array
@@ -234,10 +234,10 @@
             'widget'      => 'privilege',
             'start_fieldset' => array
             (
-                'title' => $_MIDCOM->i18n->get_string('org.openpsa.directmarketing', 'org.openpsa.directmarketing'),
+                'title' => midcom::i18n()->get_string('org.openpsa.directmarketing', 'org.openpsa.directmarketing'),
                 'css_group' => 'area',
             ),
-            'hidden' => !$_MIDCOM->componentloader->is_installed('org.openpsa.directmarketing'),
+            'hidden' => !midcom::componentloader->is_installed('org.openpsa.directmarketing'),
         ),
 
         'campaigns_editing' => array
@@ -253,7 +253,7 @@
 
             'widget'      => 'privilege',
             'end_fieldset' => '',
-            'hidden' => !$_MIDCOM->componentloader->is_installed('org.openpsa.directmarketing'),
+            'hidden' => !midcom::componentloader->is_installed('org.openpsa.directmarketing'),
         ),
 
         'salesproject_creation' => array
@@ -270,11 +270,11 @@
             'widget'      => 'privilege',
             'start_fieldset' => array
             (
-                'title' => $_MIDCOM->i18n->get_string('org.openpsa.sales', 'org.openpsa.sales'),
+                'title' => midcom::i18n()->get_string('org.openpsa.sales', 'org.openpsa.sales'),
                 'css_group' => 'area',
             ),
             'end_fieldset' => '',
-            'hidden' => !$_MIDCOM->componentloader->is_installed('org.openpsa.sales'),
+            'hidden' => !midcom::componentloader->is_installed('org.openpsa.sales'),
         ),
     )
 )

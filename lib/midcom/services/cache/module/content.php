@@ -264,7 +264,7 @@ class midcom_services_cache_module_content extends midcom_services_cache_module
 
         if (isset($_MIDCOM))
         {
-            $identifier_source .= ';URL=' . $_MIDCOM->get_context_data(MIDCOM_CONTEXT_URI);
+            $identifier_source .= ';URL=' . midcom::get_context_data(MIDCOM_CONTEXT_URI);
         }
         else
         {
@@ -819,7 +819,7 @@ class midcom_services_cache_module_content extends midcom_services_cache_module
      */
     public function register($guid)
     {
-        $context = $_MIDCOM->get_current_context();
+        $context = midcom::get_current_context();
         if ($context != 0)
         {
             // We're in a dynamic_load, register it for that as well
@@ -1025,7 +1025,7 @@ class midcom_services_cache_module_content extends midcom_services_cache_module
     {
         $entry_data = array();
         // Construct cache identifiers
-        $context = $_MIDCOM->get_current_context();
+        $context = midcom::get_current_context();
         $request_id = $this->generate_request_identifier($context);
 
         if (!is_null($this->_expires))
@@ -1280,9 +1280,9 @@ class midcom_services_cache_module_content extends midcom_services_cache_module
              * Fallback to time() if this fails.
              */
             $time = 0;
-            foreach ($_MIDCOM->get_all_contexts() as $id => $context)
+            foreach (midcom::get_all_contexts() as $id => $context)
             {
-                $meta = $_MIDCOM->get_26_request_metadata($id);
+                $meta = midcom::get_26_request_metadata($id);
                 if ($meta['lastmodified'] > $time)
                 {
                     $time = $meta['lastmodified'];
@@ -1356,9 +1356,9 @@ class midcom_services_cache_module_content extends midcom_services_cache_module
             // Typecast to make copy in stead of reference
             $strategy = (string)$this->_headers_strategy;
             $default_lifetime = (int)$this->_default_lifetime;
-            if (   (   isset($_MIDCOM->auth)
-                    && is_a($_MIDCOM->auth, 'midcom_services_auth')
-                    && $_MIDCOM->auth->is_valid_user())
+            if (   (   isset(midcom::auth)
+                    && is_a(midcom::auth, 'midcom_services_auth')
+                    && midcom::auth->is_valid_user())
                 || !midcom_connection::get_user()
                 )
             {

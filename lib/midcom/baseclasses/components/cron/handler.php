@@ -99,7 +99,7 @@ class midcom_baseclasses_components_cron_handler
             $this->_component = $config['component'];
             $this->_component_data =& $GLOBALS['midcom_component_data'][$this->_component];
             $this->_config = $this->_component_data['config'];
-            $this->_component_interface = $_MIDCOM->componentloader->get_interface_class($this->_component);
+            $this->_component_interface = midcom::componentloader()->get_interface_class($this->_component);
         }
         return $this->_on_initialize();
     }

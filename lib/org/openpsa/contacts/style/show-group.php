@@ -18,8 +18,8 @@ $addresses = array();
         <?php
     }
     ?>
-    <?php $_MIDCOM->dynamic_load($node[MIDCOM_NAV_RELATIVEURL] . "group/" . $data['group']->guid . "/members/"); ?>
-    <?php $_MIDCOM->dynamic_load($node[MIDCOM_NAV_RELATIVEURL] . "group/" . $data['group']->guid . "/subgroups/"); ?>
+    <?php midcom::dynamic_load($node[MIDCOM_NAV_RELATIVEURL] . "group/" . $data['group']->guid . "/members/"); ?>
+    <?php midcom::dynamic_load($node[MIDCOM_NAV_RELATIVEURL] . "group/" . $data['group']->guid . "/subgroups/"); ?>
 
     <!-- TODO: Add salesprojects here -->
     <!-- TODO: Projects list, Add project button -->
@@ -69,7 +69,7 @@ $addresses = array();
     if (array_key_exists('billing_data' , $data))
     {
         echo "<h2>" . $data['l10n']->get('invoice defaults') . "</h2>\n";
-        echo "<div><strong>" . $_MIDCOM->i18n->get_string('vat' , 'org.openpsa.invoices') . ": </strong>";
+        echo "<div><strong>" . midcom::i18n()->get_string('vat' , 'org.openpsa.invoices') . ": </strong>";
         echo $data['billing_data']->vat . "</div>\n";
         echo "<div><strong>" . $data['l10n']->get('due') . ": </strong>";
         echo $data['billing_data']->due . "</div>\n";
@@ -90,7 +90,7 @@ $addresses = array();
         $tabs[] = array
         (
             'url' => $invoices_url . "list/customer/all/{$data['group']->guid}/",
-            'title' => $_MIDCOM->i18n->get_string('invoices', 'org.openpsa.invoices'),
+            'title' => midcom::i18n()->get_string('invoices', 'org.openpsa.invoices'),
         );
     }
     org_openpsa_core_ui::render_tabs($data['group']->guid, $tabs);

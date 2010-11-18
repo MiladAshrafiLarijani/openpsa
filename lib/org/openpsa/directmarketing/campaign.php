@@ -33,17 +33,17 @@ class org_openpsa_directmarketing_campaign_dba extends midcom_core_dbaobject
 
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
 
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
 
     function _on_loaded()
@@ -157,7 +157,7 @@ class org_openpsa_directmarketing_campaign_dba extends midcom_core_dbaobject
             debug_pop();
             return false;
         }
-        $_MIDCOM->auth->request_sudo('org.openpsa.directmarketing');
+        midcom::auth->request_sudo('org.openpsa.directmarketing');
         $this->parameter('org.openpsa.directmarketing_smart_campaign', 'members_update_failed', '');
         $this->parameter('org.openpsa.directmarketing_smart_campaign', 'members_update_started', time());
 
@@ -169,7 +169,7 @@ class org_openpsa_directmarketing_campaign_dba extends midcom_core_dbaobject
             debug_add('Failed to resolve rules', MIDCOM_LOG_ERROR);
             debug_print_r("this->rules has value:", $this->rules);
             debug_pop();
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
             return false;
         }
         //returns now the result array of collector instead array of objects of query builder
@@ -179,7 +179,7 @@ class org_openpsa_directmarketing_campaign_dba extends midcom_core_dbaobject
             $this->parameter('org.openpsa.directmarketing_smart_campaign', 'members_update_failed', time());
             debug_pop('Failure when executing rules based search', MIDCOM_LOG_ERROR);
             debug_pop();
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
             return false;
         }
 
@@ -257,7 +257,7 @@ class org_openpsa_directmarketing_campaign_dba extends midcom_core_dbaobject
         //All done, set last updated timestamp
         $this->parameter('org.openpsa.directmarketing_smart_campaign', 'members_updated', time());
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         return true;
     }
 
@@ -283,17 +283,17 @@ class org_openpsa_directmarketing_campaign_dba extends midcom_core_dbaobject
             debug_pop();
             return false;
         }
-        $_MIDCOM->auth->request_sudo('org.openpsa.directmarketing');
+        midcom::auth->request_sudo('org.openpsa.directmarketing');
         $stat = midcom_services_at_interface::register($time, 'org.openpsa.directmarketing', 'background_update_campaign_members', array('campaign_guid' => $this->guid));
         if (!$stat)
         {
             debug_add('Failed to register an AT job for members update, errstr: ' . midcom_connection::get_error_string(), MIDCOM_LOG_ERROR);
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
             debug_pop();
             return false;
         }
         $this->parameter('org.openpsa.directmarketing_smart_campaign', 'members_update_scheduled', $time);
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         debug_pop();
         return true;
     }

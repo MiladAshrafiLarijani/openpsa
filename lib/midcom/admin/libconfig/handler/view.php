@@ -29,10 +29,10 @@ class midcom_admin_libconfig_handler_view extends midcom_baseclasses_components_
     function _on_initialize()
     {
 
-        $this->_l10n = $_MIDCOM->i18n->get_l10n('midcom.admin.libconfig');
+        $this->_l10n = midcom::i18n()->get_l10n('midcom.admin.libconfig');
         $this->_request_data['l10n'] = $this->_l10n;
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -50,7 +50,7 @@ class midcom_admin_libconfig_handler_view extends midcom_baseclasses_components_
     function _update_breadcrumb($name)
     {
         // Populate breadcrumb
-        $label = $_MIDCOM->i18n->get_string($name,$name);
+        $label = midcom::i18n()->get_string($name,$name);
         $tmp = Array();
         $tmp[] = Array
         (
@@ -64,7 +64,7 @@ class midcom_admin_libconfig_handler_view extends midcom_baseclasses_components_
             MIDCOM_NAV_NAME => $label,
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     function _prepare_toolbar(&$data)
@@ -74,7 +74,7 @@ class midcom_admin_libconfig_handler_view extends midcom_baseclasses_components_
             array
             (
                 MIDCOM_TOOLBAR_URL => "__mfa/asgard_midcom.admin.libconfig/edit/{$data['name']}",
-                MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('edit', 'midcom'),
+                MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('edit', 'midcom'),
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/edit.png',
             )
         );
@@ -92,16 +92,16 @@ class midcom_admin_libconfig_handler_view extends midcom_baseclasses_components_
     {
 
         $data['name'] = $args[0];
-        if (array_key_exists($data['name'],$_MIDCOM->componentloader->manifests))
+        if (array_key_exists($data['name'],midcom::componentloader()->manifests))
         {
-            $lib = $_MIDCOM->componentloader->manifests[$data['name']];
+            $lib = midcom::componentloader()->manifests[$data['name']];
         }
         else
         {
             return false;
         }
 
-        $componentpath = MIDCOM_ROOT . $_MIDCOM->componentloader->path_to_snippetpath($data['name']);
+        $componentpath = MIDCOM_ROOT . midcom::componentloader()->path_to_snippetpath($data['name']);
 
         // Load and parse the global config
         $cfg = midcom_baseclasses_components_interface::read_array_from_file("{$componentpath}/config/config.inc");
@@ -131,7 +131,7 @@ class midcom_admin_libconfig_handler_view extends midcom_baseclasses_components_
 
         $this->_update_breadcrumb($data['name']);
         $this->_prepare_toolbar($data);
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
 
         return true;
     }
@@ -152,7 +152,7 @@ class midcom_admin_libconfig_handler_view extends midcom_baseclasses_components_
         $data['even'] = false;
         foreach($data['config']->_global as $key => $value)
         {
-            $data['key'] = $_MIDCOM->i18n->get_string($key,$data['name']);
+            $data['key'] = midcom::i18n()->get_string($key,$data['name']);
             $data['global'] = $this->_detect($data['config']->_global[$key]);
 
             if (isset($data['config']->_local[$key]))

@@ -69,9 +69,9 @@ class midcom_helper_datamanager2_widget_privilegeselection extends midcom_helper
             MIDCOM_PRIVILEGE_DENY => $this->_l10n->get('widget privilege: deny'),
         );
         
-        $_MIDCOM->enable_jquery();
+        midcom::enable_jquery();
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -81,7 +81,7 @@ class midcom_helper_datamanager2_widget_privilegeselection extends midcom_helper
             )
         );
         
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/privilege/jquery.privilege.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/privilege/jquery.privilege.js');
         
         return true;
     }

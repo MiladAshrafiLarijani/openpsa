@@ -59,9 +59,9 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
     {
         if ($_openid_root_url = $this->_config->get('openidprovider_link'))
         {
-            $_MIDCOM->header('X-XRDS-Location: '.$_openid_root_url.'/xrds/');
-            $_MIDCOM->add_link_head(array('rel' => 'openid2.provider', 'href' => $_openid_root_url));
-            $_MIDCOM->add_link_head(array('rel' => 'openid.server',    'href' => $_openid_root_url));
+            midcom::header('X-XRDS-Location: '.$_openid_root_url.'/xrds/');
+            midcom::add_link_head(array('rel' => 'openid2.provider', 'href' => $_openid_root_url));
+            midcom::add_link_head(array('rel' => 'openid.server',    'href' => $_openid_root_url));
         }
     }
 
@@ -190,42 +190,42 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
                 // Show the list
                 if ($this->_config->get('allow_list'))
                 {
-                    $_MIDCOM->relocate('list/');
+                    midcom::relocate('list/');
                 }
                 
                 // Show authenticated user the profile page
-                if ($_MIDCOM->auth->user)
+                if (midcom::auth->user)
                 {
-                    $_MIDCOM->relocate('me/');
+                    midcom::relocate('me/');
                 }
                 
                 // Go to registration if allowed
                 if ($this->_config->get('allow_register'))
                 {
-                    $_MIDCOM->relocate('register/');
+                    midcom::relocate('register/');
                 }
                 
                 // As the last resort, show login page
-                $_MIDCOM->auth->require_valid_user();
+                midcom::auth->require_valid_user();
                 
                 break;
 
             case 'self':
-                if (   !$_MIDCOM->auth->user
+                if (   !midcom::auth->user
                     && $this->_config->get('allow_register'))
                 {
-                    $_MIDCOM->relocate('register/');
+                    midcom::relocate('register/');
                 }
-                $_MIDCOM->auth->require_valid_user();
-                $this->_account = $_MIDCOM->auth->user->get_storage();
+                midcom::auth->require_valid_user();
+                $this->_account = midcom::auth->user->get_storage();
                 net_nehmer_account_viewer::verify_person_privileges($this->_account);
                 $this->_view_self = true;
                 $this->_view_quick = false;
                 break;
 
             case 'self_quick':
-                $_MIDCOM->auth->require_valid_user();
-                $this->_account = $_MIDCOM->auth->user->get_storage();
+                midcom::auth->require_valid_user();
+                $this->_account = midcom::auth->user->get_storage();
                 net_nehmer_account_viewer::verify_person_privileges($this->_account);
                 $this->_view_self = true;
                 $this->_view_quick = true;
@@ -234,14 +234,14 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
             case 'other':
                 if (!$this->_get_account($args[0]))
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The account '{$args[0]}' could not be loaded, reason: " . midcom_connection::get_error_string());
+                    midcom::generate_error(MIDCOM_ERRNOTFOUND, "The account '{$args[0]}' could not be loaded, reason: " . midcom_connection::get_error_string());
                 }
                 break;
 
             case 'other_direct':
                 if (!$this->_get_account($args[0]))
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The account '{$args[0]}' could not be loaded, reason: " . midcom_connection::get_error_string());
+                    midcom::generate_error(MIDCOM_ERRNOTFOUND, "The account '{$args[0]}' could not be loaded, reason: " . midcom_connection::get_error_string());
                 }
                 $this->_view_self = false;
                 $this->_view_quick = false;
@@ -250,7 +250,7 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
             case 'other_quick':
                 if (!$this->_get_account($args[0]))
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The account '{$args[0]}' could not be loaded, reason: " . midcom_connection::get_error_string());
+                    midcom::generate_error(MIDCOM_ERRNOTFOUND, "The account '{$args[0]}' could not be loaded, reason: " . midcom_connection::get_error_string());
                 }
                 $this->_view_self = false;
                 $this->_view_quick = true;
@@ -259,16 +259,16 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
             default:
                 $this->errstr = "Unknown handler ID {$handler_id} encountered.";
                 $this->errcode = MIDCOM_ERRCRIT;
-                $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Unknown handler ID {$handler_id} encountered.");
+                midcom::generate_error(MIDCOM_ERRNOTFOUND, "Unknown handler ID {$handler_id} encountered.");
         }
 
         if (   !$this->_account
             || !$this->_account->guid)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, $this->_l10n->get('the account was not found.'));
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, $this->_l10n->get('the account was not found.'));
             // this will exit
         }
-        $this->_user = $_MIDCOM->auth->get_user($this->_account);
+        $this->_user = midcom::auth->get_user($this->_account);
         $this->_avatar = $this->_account->get_attachment('avatar');
         $this->_avatar_thumbnail = $this->_account->get_attachment('avatar_thumbnail');
 
@@ -277,9 +277,9 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
         $this->_prepare_request_data();
         $this->_populate_toolbar();
         $this->_populate_person_toolbar();
-        $_MIDCOM->bind_view_to_object($this->_account, $this->_datamanager->schema->name);
-        $_MIDCOM->set_26_request_metadata(time(), $this->_topic->guid);
-        $_MIDCOM->set_pagetitle($this->_user->name);
+        midcom::bind_view_to_object($this->_account, $this->_datamanager->schema->name);
+        midcom::set_26_request_metadata(time(), $this->_topic->guid);
+        midcom::set_pagetitle($this->_user->name);
 
         if (   $handler_id == 'other'
             || $handler_id == 'other_quick')
@@ -289,7 +289,7 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
                 MIDCOM_NAV_URL => '',
                 MIDCOM_NAV_NAME => $this->_user->name,
             );
-            $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+            midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
         }
 
         return true;
@@ -297,17 +297,17 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
 
     function _populate_person_toolbar()
     {
-        if (!$_MIDCOM->auth->user)
+        if (!midcom::auth->user)
         {
             return;
         }
 
 
-        if (   $_MIDCOM->auth->user
-            && $this->_account->guid == $_MIDCOM->auth->user->guid)
+        if (   midcom::auth->user
+            && $this->_account->guid == midcom::auth->user->guid)
         {
             if (   $GLOBALS['midcom_config']['toolbars_enable_centralized']
-                && $_MIDCOM->auth->can_user_do('midcom:centralized_toolbar', null, 'midcom_services_toolbars'))
+                && midcom::auth->can_user_do('midcom:centralized_toolbar', null, 'midcom_services_toolbars'))
             {
                 return;
             }
@@ -409,7 +409,7 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
         {
             // Someones profile page
             if (   $GLOBALS['midcom_config']['toolbars_enable_centralized']
-                && $_MIDCOM->auth->can_user_do('midcom:centralized_toolbar', null, 'midcom_services_toolbars'))
+                && midcom::auth->can_user_do('midcom:centralized_toolbar', null, 'midcom_services_toolbars'))
             {
                 $buddy_toolbar =& $this->_view_toolbar;
             }
@@ -423,13 +423,13 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
             {
 
                 $buddylist_path = $this->_config->get('net_nehmer_buddylist_integration');
-                $current_prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+                $current_prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
                 $view_url = $this->_get_view_url();
 
-                $_MIDCOM->componentloader->load_graceful('net.nehmer.buddylist');
+                midcom::componentloader->load_graceful('net.nehmer.buddylist');
 
                 $qb = net_nehmer_buddylist_entry::new_query_builder();
-                $user = $_MIDCOM->auth->user->get_storage();
+                $user = midcom::auth->user->get_storage();
                 $qb->add_constraint('account', '=', $user->guid);
                 $qb->add_constraint('buddy', '=', $this->_account->guid);
                 $qb->add_constraint('blacklisted', '=', false);
@@ -446,7 +446,7 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
                             MIDCOM_TOOLBAR_LABEL => $this->_l10n->get('remove buddy'),
                             MIDCOM_TOOLBAR_HELPTEXT => null,
                             MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/trash.png',
-                            MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:delete', $buddies[0]),
+                            MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:delete', $buddies[0]),
                             MIDCOM_TOOLBAR_POST => true,
                             MIDCOM_TOOLBAR_POST_HIDDENARGS => array
                             (
@@ -468,7 +468,7 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
                             MIDCOM_TOOLBAR_LABEL => $this->_l10n->get('add buddy'),
                             MIDCOM_TOOLBAR_HELPTEXT => null,
                             MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/stock_person.png',
-                            MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:create', $user),
+                            MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:create', $user),
                         )
                     );
                 }
@@ -576,7 +576,7 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
 
     function _get_view_url()
     {
-        $url = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . 'view/';
+        $url = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . 'view/';
 
         if (!$this->_config->get('allow_view_by_username'))
         {
@@ -640,8 +640,8 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
      */
     function _prepare_request_data()
     {
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-        $att_prefix = $_MIDCOM->get_page_prefix();
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $att_prefix = midcom::get_page_prefix();
 
         $visible_data = Array();
         foreach ($this->_visible_fields as $name)
@@ -692,7 +692,7 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
         {
             $this->_request_data['edit_url'] = "{$prefix}edit/";
         }
-        else if ($_MIDCOM->auth->admin)
+        else if (midcom::auth->admin)
         {
             $this->_request_data['edit_url'] = "{$prefix}admin/edit/{$this->_account->guid}/";
         }
@@ -785,7 +785,7 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
      */
     function _is_field_visible($name)
     {
-        if (   $_MIDCOM->auth->admin
+        if (   midcom::auth->admin
             || (   $this->_view_self
                 && ! $this->_view_quick))
         {
@@ -805,7 +805,7 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
                 $target = $this->_datamanager->schema->fields[$name]['customdata']['visible_link'];
                 if ($target == $name)
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                    midcom::generate_error(MIDCOM_ERRCRIT,
                         "Tried to link the visibility of {$name} to itself.");
                     // this will exit()
                 }
@@ -815,7 +815,7 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
                 return in_array($name, $this->_visible_fields_user_selection);
 
         }
-        $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+        midcom::generate_error(MIDCOM_ERRCRIT,
             "Unknown Visibility declaration in {$name}: {$this->_datamanager->schema->fields[$name]['customdata']['visible_mode']}.");
         // This will exit()
     }
@@ -840,12 +840,12 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
 
     function _populate_toolbar()
     {
-        if ($_MIDCOM->auth->user == null)
+        if (midcom::auth->user == null)
         {
             return;
         }
 
-        if ($this->_account->guid == $_MIDCOM->auth->user->guid)
+        if ($this->_account->guid == midcom::auth->user->guid)
         {
             // Own profile page
             $this->_view_toolbar->add_item
@@ -932,13 +932,13 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
             if ($this->_config->get('net_nehmer_buddylist_integration'))
             {
                 $buddylist_path = $this->_config->get('net_nehmer_buddylist_integration');
-                $current_prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+                $current_prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
                 $view_url = $this->_get_view_url();
 
-                $_MIDCOM->componentloader->load_graceful('net.nehmer.buddylist');
+                midcom::componentloader->load_graceful('net.nehmer.buddylist');
 
                 $qb = net_nehmer_buddylist_entry::new_query_builder();
-                $user = $_MIDCOM->auth->user->get_storage();
+                $user = midcom::auth->user->get_storage();
                 $qb->add_constraint('account', '=', $user->guid);
                 $qb->add_constraint('buddy', '=', $this->_account->guid);
                 $qb->add_constraint('blacklisted', '=', false);
@@ -955,7 +955,7 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
                             MIDCOM_TOOLBAR_LABEL => $this->_l10n->get('remove buddy'),
                             MIDCOM_TOOLBAR_HELPTEXT => null,
                             MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/trash.png',
-                            MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:delete', $buddies[0]),
+                            MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:delete', $buddies[0]),
                             MIDCOM_TOOLBAR_POST => true,
                             MIDCOM_TOOLBAR_POST_HIDDENARGS => array
                             (
@@ -977,14 +977,14 @@ class net_nehmer_account_handler_view extends midcom_baseclasses_components_hand
                             MIDCOM_TOOLBAR_LABEL => $this->_l10n->get('add buddy'),
                             MIDCOM_TOOLBAR_HELPTEXT => null,
                             MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/stock_person.png',
-                            MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:create', $user),
+                            MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:create', $user),
                         )
                     );
                 }
             }
         }
 
-        if ($_MIDCOM->auth->admin)
+        if (midcom::auth->admin)
         {
             // Admin viewing another profile
             $this->_view_toolbar->add_item

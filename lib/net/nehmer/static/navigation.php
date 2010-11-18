@@ -169,7 +169,7 @@ class net_nehmer_static_navigation extends midcom_baseclasses_components_navigat
             debug_add('Failed to open symlink content topic, (might also be an invalid object) last Midgard Error: ' . midcom_connection::get_error_string(),
                 MIDCOM_LOG_ERROR);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Failed to open symlink content topic {$guid}.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Failed to open symlink content topic {$guid}.");
             // This will exit.
         }
     }

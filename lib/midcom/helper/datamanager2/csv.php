@@ -111,7 +111,7 @@ class midcom_helper_datamanager2_csv extends midcom_baseclasses_components_purec
     {
         if (! $this->datamanager)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Cannot operate on CSV files while no DM2 instance is set.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Cannot operate on CSV files while no DM2 instance is set.");
             // This will exit.
         }
 
@@ -151,7 +151,7 @@ class midcom_helper_datamanager2_csv extends midcom_baseclasses_components_purec
     {
         if (! $this->datamanager)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Cannot operate on CSV files while no DM2 instance is set.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Cannot operate on CSV files while no DM2 instance is set.");
             // This will exit.
         }
 
@@ -200,7 +200,7 @@ class midcom_helper_datamanager2_csv extends midcom_baseclasses_components_purec
     function convert_list_to_stdout(&$list)
     {
         _midcom_header('Content-Type: text/plain');
-        $_MIDCOM->cache->content->enable_live_mode();
+        midcom::cache()->content->enable_live_mode();
 
         echo $this->get_header_line();
         foreach ($list as $id => $copy)
@@ -208,7 +208,7 @@ class midcom_helper_datamanager2_csv extends midcom_baseclasses_components_purec
             echo $this->get_line($list[$id]);
         }
 
-        $_MIDCOM->finish();
+        midcom::finish();
         _midcom_stop_request();
     }
 

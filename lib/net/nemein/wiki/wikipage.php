@@ -41,7 +41,7 @@ class net_nemein_wiki_wikipage extends midcom_db_article
      */
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     function _on_loaded()
@@ -85,13 +85,13 @@ class net_nemein_wiki_wikipage extends midcom_db_article
 
     function _on_updating()
     {
-        if ($_MIDCOM->auth->user)
+        if (midcom::auth->user)
         {
             // Place current user in the page authors list
             $authors = explode('|', substr($this->metadata->authors, 1, -1));
-            if (!in_array($_MIDCOM->auth->user->guid, $authors))
+            if (!in_array(midcom::auth->user->guid, $authors))
             {
-                $authors[] = $_MIDCOM->auth->user->guid;
+                $authors[] = midcom::auth->user->guid;
                 $this->metadata->authors = '|' . implode('|', $authors) . '|';
             }
         }
@@ -192,31 +192,31 @@ class net_nemein_wiki_wikipage extends midcom_db_article
             return;
         }
 
-        $_MIDCOM->load_library('org.openpsa.notifications');
+        midcom::load_library('org.openpsa.notifications');
 
         // Construct the message
         $message = array();
-        $user_string = $_MIDCOM->i18n->get_string('anonymous', 'net.nemein.wiki');
-        if ($_MIDCOM->auth->user)
+        $user_string = midcom::i18n()->get_string('anonymous', 'net.nemein.wiki');
+        if (midcom::auth->user)
         {
-            $user = $_MIDCOM->auth->user->get_storage();
+            $user = midcom::auth->user->get_storage();
             $user_string = $user->name;
         }
         // Title for long notifications
-        $message['title'] = sprintf($_MIDCOM->i18n->get_string('page %s has been updated by %s', 'net.nemein.wiki'), $this->title, $user_string);
+        $message['title'] = sprintf(midcom::i18n()->get_string('page %s has been updated by %s', 'net.nemein.wiki'), $this->title, $user_string);
         // Content for long notifications
         $message['content']  = "{$message['title']}\n\n";
 
         // TODO: Get RCS diff here
-        $message['content'] .= $_MIDCOM->i18n->get_string('page modifications', 'net.nemein.wiki') . ":\n";
+        $message['content'] .= midcom::i18n()->get_string('page modifications', 'net.nemein.wiki') . ":\n";
         $message['content'] .= "\n{$diff}\n\n";
 
-        $message['content'] .= $_MIDCOM->i18n->get_string('link to page', 'net.nemein.wiki') . ":\n";
-        $message['content'] .= $_MIDCOM->permalinks->create_permalink($this->guid);
+        $message['content'] .= midcom::i18n()->get_string('link to page', 'net.nemein.wiki') . ":\n";
+        $message['content'] .= midcom::permalinks->create_permalink($this->guid);
 
         // Content for short notifications
         $topic = new midcom_db_topic($this->topic);
-        $message['abstract'] = sprintf($_MIDCOM->i18n->get_string('page %s has been updated by %s in wiki %s', 'net.nemein.wiki'), $this->title, $user_string, $topic->extra);
+        $message['abstract'] = sprintf(midcom::i18n()->get_string('page %s has been updated by %s in wiki %s', 'net.nemein.wiki'), $this->title, $user_string, $topic->extra);
 
         debug_push_class(__CLASS__, __FUNCTION__);
         debug_add("Processing list of Wiki subscribers", MIDCOM_LOG_DEBUG);
@@ -234,7 +234,7 @@ class net_nemein_wiki_wikipage extends midcom_db_article
 
     function _get_diff($field = 'content')
     {
-        $_MIDCOM->load_library('midcom.helper.xml');
+        midcom::load_library('midcom.helper.xml');
 
         if (!class_exists('Text_Diff'))
         {
@@ -250,7 +250,7 @@ class net_nemein_wiki_wikipage extends midcom_db_article
         }
 
         // Load the RCS handler
-        $rcs = $_MIDCOM->get_service('rcs');
+        $rcs = midcom::get_service('rcs');
         $rcs_handler = $rcs->load_handler($this);
         if (!$rcs_handler)
         {
@@ -302,7 +302,7 @@ class net_nemein_wiki_wikipage extends midcom_db_article
             return $fulltag;
         }
 
-        $_MIDCOM->componentloader->load_graceful('org.routamc.photostream');
+        midcom::componentloader->load_graceful('org.routamc.photostream');
         if (!class_exists('org_routamc_photostream_photo_dba'))
         {
             // TODO: do something to explain that we can't load o.r.photos...
@@ -346,17 +346,17 @@ class net_nemein_wiki_wikipage extends midcom_db_article
         }
 
         // Start buffering
-        $oldcontext = $_MIDCOM->get_current_context();
+        $oldcontext = midcom::get_current_context();
         ob_start();
         // Load the photo
-        $_MIDCOM->dynamic_load("{$node[MIDCOM_NAV_RELATIVEURL]}photo/raw/{$photo->guid}");
+        midcom::dynamic_load("{$node[MIDCOM_NAV_RELATIVEURL]}photo/raw/{$photo->guid}");
         // FIXME: The newlines are to avoid some CSS breakage. Problem is that Markdown adds block-level tags around this first
         $content = "\n\n" . str_replace('h1', 'h3', ob_get_contents()) . "\n\n";
         ob_end_clean();
 
         // Return from the DLd context into the correct context
         // FIXME: Why doesn't dynamic_load do this by itself?
-        $_MIDCOM->style->enter_context($oldcontext);
+        midcom::style->enter_context($oldcontext);
 
         return "{$content}{$after}";
     }
@@ -450,7 +450,7 @@ class net_nemein_wiki_wikipage extends midcom_db_article
      */
     function _replace_wikiwords_macro_tagged($macro_content, $fulltag, $after)
     {
-        if (!$_MIDCOM->load_library('net.nemein.tag'))
+        if (!midcom::load_library('net.nemein.tag'))
         {
             // TODO: do something to explain that we can't load n.n.tag...
             return $fulltag;
@@ -585,11 +585,11 @@ EOF;
                     && $folder[MIDCOM_NAV_OBJECT]->can_do('midgard:create'))
                 {
                     $wikilink = rawurlencode($wikilink);
-                    return "<a href=\"{$folder[MIDCOM_NAV_FULLURL]}create/?wikiword={$wikipage_match['remaining_path']}\" class=\"wiki_missing\" title=\"" . $_MIDCOM->i18n->get_string('click to create', 'net.nemein.wiki') . "\">{$text}</a>{$after}";
+                    return "<a href=\"{$folder[MIDCOM_NAV_FULLURL]}create/?wikiword={$wikipage_match['remaining_path']}\" class=\"wiki_missing\" title=\"" . midcom::i18n()->get_string('click to create', 'net.nemein.wiki') . "\">{$text}</a>{$after}";
                 }
                 else
                 {
-                    return "<span class=\"wiki_missing_nouser\" title=\"" . $_MIDCOM->i18n->get_string('login to create', 'net.nemein.wiki') . "\">{$text}</span>{$after}";
+                    return "<span class=\"wiki_missing_nouser\" title=\"" . midcom::i18n()->get_string('login to create', 'net.nemein.wiki') . "\">{$text}</span>{$after}";
                 }
             }
 

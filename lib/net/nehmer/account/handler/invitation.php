@@ -33,11 +33,11 @@ class net_nehmer_account_handler_invitation extends midcom_baseclasses_component
      */
     function _on_initialize()
     {
-        $_MIDCOM->load_library('org.openpsa.mail');
+        midcom::load_library('org.openpsa.mail');
 
-        if ($_MIDCOM->componentloader->is_installed('com.magnettechnologies.contactgrabber'))
+        if (midcom::componentloader->is_installed('com.magnettechnologies.contactgrabber'))
         {
-            $_MIDCOM->load_library('com.magnettechnologies.contactgrabber');
+            midcom::load_library('com.magnettechnologies.contactgrabber');
             $this->_contactgrabber = new com_magnettechnologies_contactgrabber();
         }
         $this->_request_data['contactgrabber'] =& $this->_contactgrabber;
@@ -69,14 +69,14 @@ class net_nehmer_account_handler_invitation extends midcom_baseclasses_component
      */
      function _add_as_buddy($buddy_user_guid)
      {
-         if (!$_MIDCOM->componentloader->is_loaded('net.nehmer.buddylist'))
+         if (!midcom::componentloader->is_loaded('net.nehmer.buddylist'))
          {
-             if ($_MIDCOM->componentloader->load_graceful('net.nehmer.buddylist'))
+             if (midcom::componentloader->load_graceful('net.nehmer.buddylist'))
              {
-                 $_MIDCOM->auth->require_valid_user();
+                 midcom::auth->require_valid_user();
 
                  // Setup.
-                 $buddy_user = $_MIDCOM->auth->get_user($buddy_user_guid);
+                 $buddy_user = midcom::auth->get_user($buddy_user_guid);
                  if (!$buddy_user)
                  {
                      debug_add("The user guid {$buddy_user} is unknown.");
@@ -89,7 +89,7 @@ class net_nehmer_account_handler_invitation extends midcom_baseclasses_component
                  else
                  {
                      $entry = new net_nehmer_buddylist_entry();
-                     $entry->account = $_MIDCOM->auth->user->guid;
+                     $entry->account = midcom::auth->user->guid;
                      $entry->buddy = $buddy_user->guid;
                      $entry->create();
                      $this->_processing_msg_raw = 'buddy request sent.';
@@ -103,28 +103,28 @@ class net_nehmer_account_handler_invitation extends midcom_baseclasses_component
         /**
          * Sending invitations
          */
-        if (!$_MIDCOM->auth->user->_storage->email)
+        if (!midcom::auth->user->_storage->email)
         {
-            $_MIDCOM->auth->user->_storage->email = "webmaster@{$_SERVER['HTTP_HOST']}";
+            midcom::auth->user->_storage->email = "webmaster@{$_SERVER['HTTP_HOST']}";
         }
 
-        $_MIDCOM->load_library('org.openpsa.mail');
+        midcom::load_library('org.openpsa.mail');
 
         debug_push_class(__CLASS__, __FUNCTION__);
         debug_add("Sending email to {$email}, {$name}");
         $this->_mail = new org_openpsa_mail();
         $this->_mail->to = $email;
         $this->_mail->from = $this->_config->get('invitation_mail_sender');
-        $this->_mail->subject = sprintf($this->_l10n->get($this->_config->get('invitation_mail_subject')), $_MIDCOM->auth->user->name);
+        $this->_mail->subject = sprintf($this->_l10n->get($this->_config->get('invitation_mail_subject')), midcom::auth->user->name);
         // This may be a hack, but it allows us tons more control in rendering the email
-        $_MIDCOM->style->enter_context(0);
-        $this->_request_data['sender'] =& $_MIDCOM->auth->user->get_storage();
+        midcom::style->enter_context(0);
+        $this->_request_data['sender'] =& midcom::auth->user->get_storage();
         $this->_request_data['user_message'] = $this->_user_defined_message;
         ob_start();
         midcom_show_style('invitation-email-body');
         $this->_mail->body = ob_get_contents();
         ob_end_clean();
-        $_MIDCOM->style->leave_context();
+        midcom::style->leave_context();
 
         if (!$this->_mail->send())
         {
@@ -157,7 +157,7 @@ class net_nehmer_account_handler_invitation extends midcom_baseclasses_component
             $this->_send_email_invitation($invite->email);
         }
 
-        $_MIDCOM->relocate('sent_invites');
+        midcom::relocate('sent_invites');
 
         return true;
     }
@@ -185,7 +185,7 @@ class net_nehmer_account_handler_invitation extends midcom_baseclasses_component
             $invite->delete();
         }
 
-        $_MIDCOM->relocate('sent_invites');
+        midcom::relocate('sent_invites');
 
         return true;
     }
@@ -216,7 +216,7 @@ class net_nehmer_account_handler_invitation extends midcom_baseclasses_component
 
         debug_push_class(__CLASS__, __FUNCTION__);
 
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         if (isset($_POST['net_nehmer_accounts_invitation_submit']))
         {
@@ -243,9 +243,9 @@ class net_nehmer_account_handler_invitation extends midcom_baseclasses_component
                     * Saving the invite object
                     */
                     $this->_invite = new net_nehmer_account_invites_invite_dba();
-                    $this->_invite->hash = md5($_POST["net_nehmer_accounts_invitation_invitee_email_{$i}"] . "_{$_MIDCOM->auth->user->guid}");
+                    $this->_invite->hash = md5($_POST["net_nehmer_accounts_invitation_invitee_email_{$i}"] . "_{midcom::auth->user->guid}");
                     $this->_invite->email = $_POST["net_nehmer_accounts_invitation_invitee_email_{$i}"];
-                    $this->_invite->buddy = $_MIDCOM->auth->user->guid;
+                    $this->_invite->buddy = midcom::auth->user->guid;
 
                     debug_print_r("Creating invite: ",$this->_invite);
 
@@ -281,17 +281,17 @@ class net_nehmer_account_handler_invitation extends midcom_baseclasses_component
 
             }
             debug_pop();
-            $_MIDCOM->relocate('sent_invites');
+            midcom::relocate('sent_invites');
         }
 
         $step_overrides = $this->_config->get('override_registration_steps');
         if (array_key_exists('invite', $step_overrides))
         {
-            $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+            $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
             $this->_request_data['skip_url'] = "{$prefix}{$step_overrides['invite']}";
         }
 
-        $_MIDCOM->set_pagetitle($this->_l10n->get('import contacts'));
+        midcom::set_pagetitle($this->_l10n->get('import contacts'));
         $tmp = Array();
         $tmp[] = Array
         (
@@ -299,7 +299,7 @@ class net_nehmer_account_handler_invitation extends midcom_baseclasses_component
             MIDCOM_NAV_NAME => $this->_l10n->get('import contacts'),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         return true;
     }
@@ -327,10 +327,10 @@ class net_nehmer_account_handler_invitation extends midcom_baseclasses_component
             return false;
         }
 
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         $qb = net_nehmer_account_invites_invite_dba::new_query_builder();
-        $qb->add_constraint('metadata.creator', '=', $_MIDCOM->auth->user->guid);
+        $qb->add_constraint('metadata.creator', '=', midcom::auth->user->guid);
 
         $invites = $qb->execute();
 
@@ -351,7 +351,7 @@ class net_nehmer_account_handler_invitation extends midcom_baseclasses_component
 
         $this->_sent_invites = $qb->execute();
 
-        $_MIDCOM->set_pagetitle($this->_l10n->get('invited contacts'));
+        midcom::set_pagetitle($this->_l10n->get('invited contacts'));
         $tmp = Array();
         $tmp[] = Array
         (
@@ -364,7 +364,7 @@ class net_nehmer_account_handler_invitation extends midcom_baseclasses_component
             MIDCOM_NAV_NAME => $this->_l10n->get('invited contacts'),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         return true;
     }

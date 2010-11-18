@@ -98,8 +98,8 @@ class org_openpsa_documents_handler_directory_navigation extends midcom_baseclas
     function _handler_navigation($handler_id, $args, &$data)
     {
 
-        $current_topic = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_CONTENTTOPIC);
-        $current_component = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_CONTENTTOPIC)->component;
+        $current_topic = midcom::get_context_data(MIDCOM_CONTEXT_CONTENTTOPIC);
+        $current_component = midcom::get_context_data(MIDCOM_CONTEXT_CONTENTTOPIC)->component;
         $root_topic = $current_topic;
         while($root_topic->get_parent()->component == $current_component)
         {
@@ -115,7 +115,7 @@ class org_openpsa_documents_handler_directory_navigation extends midcom_baseclas
         $this->_request_data['topic_array'] = $document_topics;
 
         //This handler is supposed to be used with dynamic_load or AJAX, so skip page style
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
         return true;
     }
     /**

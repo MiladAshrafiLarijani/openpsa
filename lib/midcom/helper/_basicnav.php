@@ -207,28 +207,28 @@ class midcom_helper__basicnav
      */
     function __construct($context = 0)
     {
-        $tmp = $_MIDCOM->get_context_data($context, MIDCOM_CONTEXT_ROOTTOPIC);
+        $tmp = midcom::get_context_data($context, MIDCOM_CONTEXT_ROOTTOPIC);
         $this->_root = $tmp->id;
 
-        $this->_nap_cache = $_MIDCOM->cache->nap;
+        $this->_nap_cache = midcom::cache()->nap;
 
         $this->_leaves = array();
 
-        $this->_loader = $_MIDCOM->get_component_loader();
+        $this->_loader = midcom::get_component_loader();
 
         $this->_currentleaf = false;
 
         $this->_lastgoodnode = -1;
 
-        if (!$_MIDCOM->auth->admin)
+        if (!midcom::auth()->admin)
         {
-            $this->_user_id = $_MIDCOM->auth->acl->get_user_id();
+            $this->_user_id = midcom::auth()->acl->get_user_id();
         }
 
         $up = null;
         $node_path_candidates = array($this->_root);
         $this->_current = $this->_root;
-        foreach ($_MIDCOM->get_context_data($context, MIDCOM_CONTEXT_URLTOPICS) as $topic)
+        foreach (midcom::get_context_data($context, MIDCOM_CONTEXT_URLTOPICS) as $topic)
         {
             $id = $this->_nodeid($topic->id, $up);
             $node_path_candidates[] = $id;
@@ -406,7 +406,7 @@ class midcom_helper__basicnav
 
         if (    !$this->_is_object_visible($nodedata)
              || (   $this->_user_id
-                 && !$_MIDCOM->auth->acl->can_do_byguid('midgard:read', $nodedata[MIDCOM_NAV_GUID], 'midcom_db_topic', $this->_user_id)))
+                 && !midcom::auth()->acl->can_do_byguid('midgard:read', $nodedata[MIDCOM_NAV_GUID], 'midcom_db_topic', $this->_user_id)))
         {
             return MIDCOM_ERRFORBIDDEN;
         }
@@ -463,9 +463,9 @@ class midcom_helper__basicnav
 
         if (!$nodedata)
         {
-            $_MIDCOM->auth->request_sudo('midcom.helper.nav');
+            midcom::auth()->request_sudo('midcom.helper.nav');
             $nodedata = $this->_get_node_from_database($topic_id, $up);
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth()->drop_sudo();
 
             if (is_null($nodedata))
             {
@@ -481,9 +481,9 @@ class midcom_helper__basicnav
 
         // Rewrite all host dependant URLs based on the relative URL within our topic tree.
         $nodedata[MIDCOM_NAV_FULLURL] = "{$GLOBALS['midcom_config']['midcom_site_url']}{$nodedata[MIDCOM_NAV_RELATIVEURL]}";
-        $nodedata[MIDCOM_NAV_ABSOLUTEURL] = substr($GLOBALS['midcom_config']['midcom_site_url'], strlen($_MIDCOM->get_host_name()))
+        $nodedata[MIDCOM_NAV_ABSOLUTEURL] = substr($GLOBALS['midcom_config']['midcom_site_url'], strlen(midcom::get_host_name()))
             . "{$nodedata[MIDCOM_NAV_RELATIVEURL]}";
-        $nodedata[MIDCOM_NAV_PERMALINK] = $_MIDCOM->permalinks->create_permalink($nodedata[MIDCOM_NAV_GUID]);
+        $nodedata[MIDCOM_NAV_PERMALINK] = midcom::permalinks()->create_permalink($nodedata[MIDCOM_NAV_GUID]);
 
         return $nodedata;
     }
@@ -532,7 +532,7 @@ class midcom_helper__basicnav
         // Retrieve a NAP instance
         // if we are missing the component, use the nullcomponent.
         if (   !$topic->component
-            || !array_key_exists($topic->component, $_MIDCOM->componentloader->manifests))
+            || !array_key_exists($topic->component, midcom::componentloader()->manifests))
         {
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_add("The topic {$topic->id} has no component assigned to it, using 'midcom.core.nullcomponent'.",
@@ -687,9 +687,9 @@ class midcom_helper__basicnav
             debug_pop();
 
             //we always write all the leaves to cache and filter for ACLs after the fact
-            $_MIDCOM->auth->request_sudo('midcom.helper.nav');
+            midcom::auth()->request_sudo('midcom.helper.nav');
             $leaves = $this->_get_leaves_from_database($node);
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth()->drop_sudo();
 
             $this->_write_leaves_to_cache($node, $leaves);
         }
@@ -702,7 +702,7 @@ class midcom_helper__basicnav
                 && $data[MIDCOM_NAV_GUID])
             {
                 if (    $this->_user_id
-                     && !$_MIDCOM->auth->acl->can_do_byguid('midgard:read', $data[MIDCOM_NAV_GUID], $data[MIDCOM_NAV_OBJECT]->__midcom_class_name__, $this->_user_id))
+                     && !midcom::auth()->acl->can_do_byguid('midgard:read', $data[MIDCOM_NAV_GUID], $data[MIDCOM_NAV_OBJECT]->__midcom_class_name__, $this->_user_id))
                 {
                     continue;
                 }
@@ -752,7 +752,7 @@ class midcom_helper__basicnav
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('Topic object dump:', $topic);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Cannot load NAP information, aborting: Could not set the nap instance of {$node[MIDCOM_NAV_COMPONENT]} to the topic {$topic->id}.");
             // This will exit().
         }
@@ -784,7 +784,7 @@ class midcom_helper__basicnav
             }
             else if (!isset($leaf[MIDCOM_NAV_OBJECT]))
             {
-                $leaf[MIDCOM_NAV_OBJECT] = $_MIDCOM->dbfactory->get_object_by_guid($leaf[MIDCOM_NAV_GUID]);
+                $leaf[MIDCOM_NAV_OBJECT] = midcom::dbfactory()->get_object_by_guid($leaf[MIDCOM_NAV_GUID]);
             }
 
             if (!isset($leaf[MIDCOM_NAV_SORTABLE]))
@@ -828,7 +828,7 @@ class midcom_helper__basicnav
             // complete NAV_NAMES where necessary
             if ( trim($leaf[MIDCOM_NAV_NAME]) == '')
             {
-                $leaf[MIDCOM_NAV_NAME] = $_MIDCOM->i18n->get_string('unknown', 'midcom');
+                $leaf[MIDCOM_NAV_NAME] = midcom::i18n()->get_string('unknown', 'midcom');
             }
 
             // Some basic information
@@ -862,7 +862,7 @@ class midcom_helper__basicnav
     private function _update_leaflist_urls(&$leaves)
     {
         $fullprefix = "{$GLOBALS['midcom_config']['midcom_site_url']}";
-        $absoluteprefix = substr($GLOBALS['midcom_config']['midcom_site_url'], strlen($_MIDCOM->get_host_name()));
+        $absoluteprefix = substr($GLOBALS['midcom_config']['midcom_site_url'], strlen(midcom::get_host_name()));
 
         if (! is_array($leaves))
         {
@@ -870,7 +870,7 @@ class midcom_helper__basicnav
             debug_print_r("Wrong type", $leaves, MIDCOM_LOG_ERROR);
             debug_pop();
 
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Wrong type passed for navigation, see error level log for details');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Wrong type passed for navigation, see error level log for details');
             // This will exit
         }
 
@@ -885,7 +885,7 @@ class midcom_helper__basicnav
             }
             else
             {
-                $leaves[$id][MIDCOM_NAV_PERMALINK] = $_MIDCOM->permalinks->create_permalink($leaves[$id][MIDCOM_NAV_GUID]);
+                $leaves[$id][MIDCOM_NAV_PERMALINK] = midcom::permalinks()->create_permalink($leaves[$id][MIDCOM_NAV_GUID]);
             }
         }
     }
@@ -956,14 +956,14 @@ class midcom_helper__basicnav
         $mc->execute();
 
         //we always write all the subnodes to cache and filter for ACLs after the fact
-        $_MIDCOM->auth->request_sudo('midcom.helper.nav');
+        midcom::auth()->request_sudo('midcom.helper.nav');
         $result = $mc->list_keys();
 
         foreach ($result as $guid => $empty)
         {
             $subnodes[] = $mc->get_subkey($guid, 'id');
         }
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth()->drop_sudo();
 
         $cachedata = $this->_nap_cache->get_node($parent_node);
 

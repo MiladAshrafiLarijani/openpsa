@@ -254,7 +254,7 @@ class midcom_helper_datamanager2_type_image extends midcom_helper_datamanager2_t
             debug_pop();
             if ($raise_uimessage)
             {
-                $_MIDCOM->uimessages->add($this->_l10n->get('midcom.helper.datamanager2'), 'ImageMagick is required but seems not to be available, image fields may be disabled', 'error');
+                midcom::uimessages()->add($this->_l10n->get('midcom.helper.datamanager2'), 'ImageMagick is required but seems not to be available, image fields may be disabled', 'error');
             }
             $return = false;
             return $return;
@@ -353,7 +353,7 @@ class midcom_helper_datamanager2_type_image extends midcom_helper_datamanager2_t
                 )
             && !$this->imagemagick_available())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'DM2 type image requires ImageMagick for manipulation operations, see debug log for details');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'DM2 type image requires ImageMagick for manipulation operations, see debug log for details');
             // This will exit
         }
 
@@ -636,7 +636,7 @@ class midcom_helper_datamanager2_type_image extends midcom_helper_datamanager2_t
                 )
             && !$this->imagemagick_available())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'DM2 type image requires ImageMagick for manipulation operations, see debug log for details');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'DM2 type image requires ImageMagick for manipulation operations, see debug log for details');
             // This will exit
         }
 
@@ -1014,7 +1014,7 @@ class midcom_helper_datamanager2_type_image extends midcom_helper_datamanager2_t
 
         if (!$this->imagemagick_available())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'DM2 type image requires ImageMagick for manipulation operations, see debug log for details');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'DM2 type image requires ImageMagick for manipulation operations, see debug log for details');
             // This will exit
         }
         if (   $conversion

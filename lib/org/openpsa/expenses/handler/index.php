@@ -36,7 +36,7 @@ class org_openpsa_expenses_handler_index  extends midcom_baseclasses_components_
      */
     function _handler_index ($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         if (isset($args[0]))
         {
@@ -112,7 +112,7 @@ class org_openpsa_expenses_handler_index  extends midcom_baseclasses_components_
 
         $data['tasks'] =& $tasks;
 
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
         $previous_week = $data['requested_time'] - 3600 * 24 * 7;
         $next_week = $data['requested_time'] + 3600 * 24 * 7;
 
@@ -139,7 +139,7 @@ class org_openpsa_expenses_handler_index  extends midcom_baseclasses_components_
             )
         );
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -149,7 +149,7 @@ class org_openpsa_expenses_handler_index  extends midcom_baseclasses_components_
             )
         );
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -162,19 +162,19 @@ class org_openpsa_expenses_handler_index  extends midcom_baseclasses_components_
         $ui_version = $GLOBALS['midcom_config']['jquery_ui_version'];
         $min_version = '1.7.2';
 
-        $_MIDCOM->enable_jquery();
+        midcom::enable_jquery();
 
         //check if right ui-version for dropdownchecklist is available
         if(version_compare($min_version , $ui_version , "<="))
         {
-            $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.core.min.js');
-            $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.widget.min.js');
-            $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/org.openpsa.expenses/dropdown-check-list.0.9/js/ui.dropdownchecklist-min.js');
+            midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.core.min.js');
+            midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.widget.min.js');
+            midcom::add_jsfile(MIDCOM_STATIC_URL . '/org.openpsa.expenses/dropdown-check-list.0.9/js/ui.dropdownchecklist-min.js');
         }
 
         $this->_update_breadcrumb_line();
 
-        $_MIDCOM->set_pagetitle(sprintf($this->_l10n->get("expenses in week %s"), strftime("%V %Y", $this->_request_data['requested_time'])));
+        midcom::set_pagetitle(sprintf($this->_l10n->get("expenses in week %s"), strftime("%V %Y", $this->_request_data['requested_time'])));
 
         return true;
     }
@@ -193,7 +193,7 @@ class org_openpsa_expenses_handler_index  extends midcom_baseclasses_components_
             MIDCOM_NAV_NAME => sprintf($this->_l10n->get("expenses in week %s"), strftime("%V %Y", $this->_request_data['requested_time'])),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**

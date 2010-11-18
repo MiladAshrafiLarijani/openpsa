@@ -45,7 +45,7 @@ class org_openpsa_contacts_cron_duplicates_clean extends midcom_baseclasses_comp
         $results = @$qb->execute();
         foreach($results as $param)
         {
-            $obj = $_MIDCOM->dbfactory->get_object_by_guid($param->name);
+            $obj = midcom::dbfactory()->get_object_by_guid($param->name);
             if (   !is_object($obj)
                 || empty($obj->guid))
             {

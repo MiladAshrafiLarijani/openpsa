@@ -203,9 +203,9 @@ class org_openpsa_projects_viewer extends midcom_baseclasses_components_request
         $this->_request_data['project_topic'] =& $this->_topic;
 
         // Always run in uncached mode
-        $_MIDCOM->cache->content->no_cache();
+        midcom::cache()->content->no_cache();
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -215,7 +215,7 @@ class org_openpsa_projects_viewer extends midcom_baseclasses_components_request
             )
         );
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (

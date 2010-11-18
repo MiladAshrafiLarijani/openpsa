@@ -34,7 +34,7 @@
  * Prepending a component styledir:
  * 
  *     <?php
- *     $_MIDCOM->style->prepend_component_styledir('org.openpsa.calendarwidget');
+ *     midcom::style->prepend_component_styledir('org.openpsa.calendarwidget');
  *     ?>
  * 
  * ## midcom.helper.datamanager2
@@ -170,7 +170,7 @@ class org_openpsa_calendarwidget_styled_month extends org_openpsa_calendarwidget
         parent::__construct();
         
         // Ensure we get the correct styles
-        $_MIDCOM->style->prepend_component_styledir('org.openpsa.calendarwidget');
+        midcom::style->prepend_component_styledir('org.openpsa.calendarwidget');
     }
 
     /**
@@ -206,7 +206,7 @@ class org_openpsa_calendarwidget_styled_month extends org_openpsa_calendarwidget
         
         if (! $this->_datamanager)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to create a DM2 instance.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to create a DM2 instance.');
             // This will exit.
         }
         $this->_request_data['datamanager'] =& $this->_datamanager;

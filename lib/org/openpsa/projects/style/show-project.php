@@ -2,7 +2,7 @@
 $project =& $data['object'];
 $project->get_members();
 $view = $data['object_view'];
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 $nap = new midcom_helper_nav();
 $node = $nap->get_node($nap->get_current_node());
 ?>
@@ -57,7 +57,7 @@ $node = $nap->get_node($nap->get_current_node());
         if ($news_node)
         {
             echo "<div class=\"area\">\n";
-            $_MIDCOM->dynamic_load($news_node[MIDCOM_NAV_RELATIVEURL] . "latest/4");
+            midcom::dynamic_load($news_node[MIDCOM_NAV_RELATIVEURL] . "latest/4");
             echo "<p><a href=\"{$news_node[MIDCOM_NAV_RELATIVEURL]}\">" . $data['l10n']->get('news area') . "</a></p>\n";
             echo "</div>\n";
         }
@@ -68,7 +68,7 @@ $node = $nap->get_node($nap->get_current_node());
         if ($forum_node)
         {
             echo "<div class=\"area\">\n";
-            $_MIDCOM->dynamic_load($forum_node[MIDCOM_NAV_RELATIVEURL] . "latest/4");
+            midcom::dynamic_load($forum_node[MIDCOM_NAV_RELATIVEURL] . "latest/4");
             echo "</div>\n";
         }
     }
@@ -86,7 +86,7 @@ $node = $nap->get_node($nap->get_current_node());
 
     <?php
 
-    $_MIDCOM->dynamic_load($node[MIDCOM_NAV_RELATIVEURL] . "task/list/project/{$project->guid}/");
+    midcom::dynamic_load($node[MIDCOM_NAV_RELATIVEURL] . "task/list/project/{$project->guid}/");
 
     // TODO: Show help message otherwise?
     ?>

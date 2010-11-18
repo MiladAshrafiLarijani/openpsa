@@ -30,10 +30,10 @@ class midcom_admin_user_handler_list extends midcom_baseclasses_components_handl
     function _on_initialize()
     {
 
-        $this->_l10n = $_MIDCOM->i18n->get_l10n('midcom.admin.user');
+        $this->_l10n = midcom::i18n()->get_l10n('midcom.admin.user');
         $this->_request_data['l10n'] = $this->_l10n;
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -43,8 +43,8 @@ class midcom_admin_user_handler_list extends midcom_baseclasses_components_handl
             )
         );
 
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.tablesorter.pack.js');
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/midcom.admin.user/jquery.midcom_admin_user.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.tablesorter.pack.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/midcom.admin.user/jquery.midcom_admin_user.js');
 
         midgard_admin_asgard_plugin::prepare_plugin($this->_l10n->get('midcom.admin.user'),$this->_request_data);
 
@@ -60,7 +60,7 @@ class midcom_admin_user_handler_list extends midcom_baseclasses_components_handl
             MIDCOM_NAV_URL => "__mfa/asgard_midcom.admin.user/",
             MIDCOM_NAV_NAME => $this->_request_data['view_title'],
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     function _prepare_toolbar(&$data)
@@ -70,7 +70,7 @@ class midcom_admin_user_handler_list extends midcom_baseclasses_components_handl
             array
             (
                 MIDCOM_TOOLBAR_URL => "__mfa/asgard_midcom.admin.user/create/",
-                MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('create user', 'midcom.admin.user'),
+                MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('create user', 'midcom.admin.user'),
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/stock_people.png',
                 MIDCOM_TOOLBAR_ENABLED => $this->_config->get('allow_manage_accounts'),
             )
@@ -80,7 +80,7 @@ class midcom_admin_user_handler_list extends midcom_baseclasses_components_handl
             array
             (
                 MIDCOM_TOOLBAR_URL => "__mfa/asgard_midcom.admin.user/group/",
-                MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('groups', 'midcom.admin.user'),
+                MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('groups', 'midcom.admin.user'),
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/stock_person-new.png',
             )
         );
@@ -89,7 +89,7 @@ class midcom_admin_user_handler_list extends midcom_baseclasses_components_handl
             array
             (
                 MIDCOM_TOOLBAR_URL => "__mfa/asgard_midcom.admin.user/group/create/",
-                MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('create group', 'midcom.admin.user'),
+                MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('create group', 'midcom.admin.user'),
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/stock_people-new.png',
             )
         );
@@ -120,13 +120,13 @@ class midcom_admin_user_handler_list extends midcom_baseclasses_components_handl
             if (   !isset($_POST['midcom_admin_user'])
                 || count($_POST['midcom_admin_user']) === 0)
             {
-                $_MIDCOM->uimessages->add($this->_l10n->get('midcom.admin.user'), $this->_l10n->get('empty selection'));
+                midcom::uimessages()->add($this->_l10n->get('midcom.admin.user'), $this->_l10n->get('empty selection'));
             }
             else
             {
                 $get = implode('&midcom_admin_user[]=', $_POST['midcom_admin_user']);
 
-                $_MIDCOM->relocate("__mfa/asgard_midcom.admin.user/password/batch/?midcom_admin_user[]={$get}");
+                midcom::relocate("__mfa/asgard_midcom.admin.user/password/batch/?midcom_admin_user[]={$get}");
                 // This will exit
             }
         }
@@ -164,7 +164,7 @@ class midcom_admin_user_handler_list extends midcom_baseclasses_components_handl
                         $person->password = '';
                         if ($person->update())
                         {
-                            $_MIDCOM->uimessages->add($this->_l10n->get('midcom.admin.user'), sprintf($this->_l10n->get('user account revoked for %s'), $person->name));
+                            midcom::uimessages()->add($this->_l10n->get('midcom.admin.user'), sprintf($this->_l10n->get('user account revoked for %s'), $person->name));
                         }
                         break;
 
@@ -176,7 +176,7 @@ class midcom_admin_user_handler_list extends midcom_baseclasses_components_handl
                             $member->gid = (int) $_POST['midcom_admin_user_group'];
                             if ($member->create())
                             {
-                                $_MIDCOM->uimessages->add($this->_l10n->get('midcom.admin.user'), sprintf($this->_l10n->get('user %s added to group'), $person->name));
+                                midcom::uimessages()->add($this->_l10n->get('midcom.admin.user'), sprintf($this->_l10n->get('user %s added to group'), $person->name));
                             }
                         }
                         break;
@@ -218,7 +218,7 @@ class midcom_admin_user_handler_list extends midcom_baseclasses_components_handl
 
         // Used in select
         $data['groups_for_select'] = array();
-        if ($_MIDCOM->auth->admin)
+        if (midcom::auth()->admin)
         {
             $data['groups_for_select'][] = array
             (
@@ -235,7 +235,7 @@ class midcom_admin_user_handler_list extends midcom_baseclasses_components_handl
 
         $this->_update_breadcrumb();
         $this->_prepare_toolbar($data);
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
 
         return true;
     }

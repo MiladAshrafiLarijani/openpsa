@@ -46,7 +46,7 @@ class org_openpsa_invoices_handler_action extends midcom_baseclasses_components_
             $this->_object->sent = time();
             $this->_object->update();
 
-            $_MIDCOM->uimessages->add($this->_l10n->get('org.openpsa.invoices'), sprintf($this->_l10n->get('marked invoice "%s" sent'), $this->_object->get_label()), 'ok');
+            midcom::uimessages()->add($this->_l10n->get('org.openpsa.invoices'), sprintf($this->_l10n->get('marked invoice "%s" sent'), $this->_object->get_label()), 'ok');
 
             $mc = new org_openpsa_relatedto_collector($this->_object->guid, 'org_openpsa_projects_task_dba');
             $tasks = $mc->get_related_objects();
@@ -56,7 +56,7 @@ class org_openpsa_invoices_handler_action extends midcom_baseclasses_components_
             {
                 if (org_openpsa_projects_workflow::complete($task))
                 {
-                    $_MIDCOM->uimessages->add($this->_l10n->get('org.openpsa.invoices'), sprintf($this->_l10n->get('marked task "%s" finished'), $task->title), 'ok');
+                    midcom::uimessages()->add($this->_l10n->get('org.openpsa.invoices'), sprintf($this->_l10n->get('marked task "%s" finished'), $task->title), 'ok');
                 }
             }
         }
@@ -81,7 +81,7 @@ class org_openpsa_invoices_handler_action extends midcom_baseclasses_components_
             $this->_object->paid = time();
             $this->_object->update();
 
-            $_MIDCOM->uimessages->add($this->_l10n->get('org.openpsa.invoices'), sprintf($this->_l10n->get('marked invoice "%s" paid'), $this->_object->get_label()), 'ok');
+            midcom::uimessages()->add($this->_l10n->get('org.openpsa.invoices'), sprintf($this->_l10n->get('marked invoice "%s" paid'), $this->_object->get_label()), 'ok');
         }
 
         $this->_relocate();
@@ -96,10 +96,10 @@ class org_openpsa_invoices_handler_action extends midcom_baseclasses_components_
     {
         if ($_SERVER['REQUEST_METHOD'] != 'POST')
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRFORBIDDEN, 'Only POST requests are allowed here.');
+            midcom::generate_error(MIDCOM_ERRFORBIDDEN, 'Only POST requests are allowed here.');
         }
 
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         $this->_object = new org_openpsa_invoices_invoice_dba($args[0]);
         if ($this->_object->guid == "")
@@ -119,13 +119,13 @@ class org_openpsa_invoices_handler_action extends midcom_baseclasses_components_
     {
         if (isset($_GET['org_openpsa_invoices_redirect']))
         {
-            $_MIDCOM->relocate($_GET['org_openpsa_invoices_redirect']);
+            midcom::relocate($_GET['org_openpsa_invoices_redirect']);
             // This will exit
         }
         else
         {
-            $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-            $_MIDCOM->relocate("{$prefix}invoice/{$this->_object->guid}/");
+            $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+            midcom::relocate("{$prefix}invoice/{$this->_object->guid}/");
             // This will exit
         }
     }
@@ -146,11 +146,11 @@ class org_openpsa_invoices_handler_action extends midcom_baseclasses_components_
 
         $this->_prepare_output();
 
-        $relocate = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "invoice/" . $this->_object->guid . "/";
+        $relocate = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "invoice/" . $this->_object->guid . "/";
 
         if (isset($_POST['cancel']))
         {
-            $_MIDCOM->relocate($relocate);
+            midcom::relocate($relocate);
         }
         if (isset($_POST['save']))
         {
@@ -176,7 +176,7 @@ class org_openpsa_invoices_handler_action extends midcom_baseclasses_components_
             }
             $this->_create_invoice_items();
             //relocate to view
-            $_MIDCOM->relocate($relocate);
+            midcom::relocate($relocate);
         }
         //get invoice_items for this invoice
         $this->_request_data['invoice_items'] = $this->_object->get_invoice_items();
@@ -228,16 +228,16 @@ class org_openpsa_invoices_handler_action extends midcom_baseclasses_components_
     function _handler_recalculation($handler_id, $args, &$data)
     {
         $this->_object = new org_openpsa_invoices_invoice_dba($args[0]);
-        $relocate = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "invoice/itemedit/" . $this->_object->guid . "/";
+        $relocate = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "invoice/itemedit/" . $this->_object->guid . "/";
 
         $this->_object->_recalculate_invoice_items();
 
-        $_MIDCOM->relocate($relocate);
+        midcom::relocate($relocate);
     }
 
     private function _prepare_output()
     {
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -257,7 +257,7 @@ class org_openpsa_invoices_handler_action extends midcom_baseclasses_components_
             MIDCOM_NAV_URL => "invoice/" . $this->_object->guid . "/",
             MIDCOM_NAV_NAME => $this->_l10n->get('edit invoice items') . ': ' . $this->_l10n->get('invoice') . ' ' . $this->_object->get_label() ,
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         $this->_view_toolbar->add_item
         (
@@ -267,11 +267,11 @@ class org_openpsa_invoices_handler_action extends midcom_baseclasses_components_
                 MIDCOM_TOOLBAR_LABEL => $this->_l10n->get('recalculate_by_reports'),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/edit.png',
-                MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:update', $this->_object),
+                MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:update', $this->_object),
             )
         );
-        $_MIDCOM->enable_jquery();
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/org.openpsa.invoices/invoice_item.js');
+        midcom::enable_jquery();
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/org.openpsa.invoices/invoice_item.js');
     }
 }
 

@@ -243,13 +243,13 @@ class org_openpsa_calendar_viewer extends midcom_baseclasses_components_request
     function _on_handle($handler, $args)
     {
         // Always run in uncached mode
-        $_MIDCOM->cache->content->no_cache();
+        midcom::cache()->content->no_cache();
 
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
 
         $this->_request_data['view'] = 'default';
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -259,7 +259,7 @@ class org_openpsa_calendar_viewer extends midcom_baseclasses_components_request
             )
         );
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -280,11 +280,11 @@ class org_openpsa_calendar_viewer extends midcom_baseclasses_components_request
      */
     function _handler_notinitialized($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_admin_user();
+        midcom::auth->require_admin_user();
 
         if (org_openpsa_calendar_interface::find_root_event())
         {
-            $_MIDCOM->relocate('');
+            midcom::relocate('');
         }
 
         return true;
@@ -302,23 +302,23 @@ class org_openpsa_calendar_viewer extends midcom_baseclasses_components_request
 
     function _handler_frontpage($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         $selected_time = time();
         switch($this->_config->get('start_view'))
         {
             case 'day':
-                $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+                midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                 . 'day/' . date('Y-m-d', $selected_time) . '/');
                 // This will exit()
             break;
             case 'month':
-                $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+                midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                 . 'month/' . date('Y-m-d', $selected_time) . '/');
                 // This will exit()
                 break;
             default:
             case 'week':
-                $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+                midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                 . 'week/' . date('Y-m-d', $selected_time) . '/');
                 // This will exit()
                 break;

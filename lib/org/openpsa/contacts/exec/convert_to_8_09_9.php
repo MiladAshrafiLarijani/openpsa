@@ -1,11 +1,11 @@
 <?php
-$_MIDCOM->auth->require_admin_user();
+midcom::auth->require_admin_user();
 set_time_limit(50000);
 ini_set('memory_limit', "800M");
 while(@ob_end_flush());
 echo "<pre>\n";
 
-$_MIDCOM->componentloader->load('org.openpsa.invoices');
+midcom::componentloader->load('org.openpsa.invoices');
 $billing_attributes = array('invoiceStreet' => 'street', 'invoiceCity' => 'city' , 'invoicePostcode' => 'postcode' ,
     'invoiceCountry' => 'country' , 'vatNo' => 'vatNo' , 'invoiceDue' =>'due' ,
     'invoiceVat' => 'vat' , 'invoiceDistribution' => 'delivery' , 'official' => 'recipient');

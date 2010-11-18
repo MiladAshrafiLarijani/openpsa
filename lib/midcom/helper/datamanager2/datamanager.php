@@ -400,7 +400,7 @@ class midcom_helper_datamanager2_datamanager extends midcom_baseclasses_componen
             return false;
         }
         $msg = "DM2->types['{$name}'] is not set (but was present in field_order/fields array), current instance of schema '{$this->schema_name}' is somehow broken";
-        $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('midcom.helper.datamanager2', 'midcom.helper.datamanager2'), $msg, 'error');
+        midcom::uimessages()->add(midcom::i18n()->get_string('midcom.helper.datamanager2', 'midcom.helper.datamanager2'), $msg, 'error');
         $bt = debug_backtrace();
         debug_push_class($bt[1]['class'], $bt[1]['function']);
         debug_add($msg, MIDCOM_LOG_ERROR);

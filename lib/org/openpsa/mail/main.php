@@ -1215,7 +1215,7 @@ EOF;
 
     static function compose($template, $message_text, array $message_strings)
     {
-        $_MIDCOM->load_library('org.openpsa.mail');
+        midcom::load_library('org.openpsa.mail');
         foreach ($message_strings as $id => $string)
         {
             $message_text = str_replace("__{$id}__", $string, $message_text);
@@ -1227,9 +1227,9 @@ EOF;
         ob_start();
         $data = array();
         $data['email_message_text'] = $message_text;
-        $_MIDCOM->set_custom_context_data('request_data', $data);
-        $_MIDCOM->style->enter_context($_MIDCOM->get_current_context());
-        $_MIDCOM->style->show($template);
+        midcom::set_custom_context_data('request_data', $data);
+        midcom::style->enter_context(midcom::get_current_context());
+        midcom::style->show($template);
         $mail->html_body = ob_get_contents();
         ob_end_clean();
 

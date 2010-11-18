@@ -1,7 +1,7 @@
 <?php
-$_MIDCOM->auth->require_valid_user();
+midcom::auth->require_valid_user();
 
-$user = $_MIDCOM->auth->user->get_storage();
+$user = midcom::auth->user->get_storage();
 
 // Use the FireEagle PHP library from http://fireeagle.yahoo.net/developer/code/php
 require_once(MIDCOM_ROOT . '/org/routamc/positioning/lib/fireeagle.php');
@@ -39,7 +39,7 @@ if (   !$access_key
         <p><a href="<?php echo $fireeagle->getAuthorizeURL($request_token['oauth_token']); ?>" target="_blank">Authorize this application</a></p>
         <p><a href="?f=callback">And then click here</a></p>
         <?php
-        $_MIDCOM->finish();
+        midcom::finish();
         _midcom_stop_request();
     } 
     elseif (   isset($_GET['f'])
@@ -65,14 +65,14 @@ if (   !$access_key
         $user->set_parameter('net.yahoo.fireeagle', 'access_key', $access_token['oauth_token']);
         $user->set_parameter('net.yahoo.fireeagle', 'access_secret', $access_token['oauth_token_secret']);
         
-        $_MIDCOM->relocate($_SERVER['SCRIPT_NAME']);
+        midcom::relocate($_SERVER['SCRIPT_NAME']);
         // This will exit
     }
     
     ?>
     <p><a href="?f=start">Start Fire Eagle authentication</a></p>
     <?php
-    $_MIDCOM->finish();
+    midcom::finish();
     _midcom_stop_request();
 }
 

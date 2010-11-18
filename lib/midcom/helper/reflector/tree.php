@@ -61,7 +61,7 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
         {
             // Figure correct MidCOM DBA class to use and get midcom QB
             $qb = false;
-            $midcom_dba_classname = $_MIDCOM->dbclassloader->get_midcom_class_name_for_mgdschema_object($this->_dummy_object);
+            $midcom_dba_classname = midcom::dbclassloader()->get_midcom_class_name_for_mgdschema_object($this->_dummy_object);
             if (empty($midcom_dba_classname))
             {
                 debug_push_class(__CLASS__, __FUNCTION__);
@@ -70,7 +70,7 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
                 $x = false;
                 return $x;
             }
-            if (!$_MIDCOM->dbclassloader->load_mgdschema_class_handler($midcom_dba_classname))
+            if (!midcom::dbclassloader()->load_mgdschema_class_handler($midcom_dba_classname))
             {
                 debug_push_class(__CLASS__, __FUNCTION__);
                 debug_add("Failed to load the handling component for {$midcom_dba_classname}, cannot continue.", MIDCOM_LOG_ERROR);
@@ -256,7 +256,7 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
         $label_property = $ref->get_label_property();
 
         if (   is_string($label_property)
-            && $_MIDCOM->dbfactory->property_exists($this->mgdschema_class, $label_property))
+            && midcom::dbfactory()->property_exists($this->mgdschema_class, $label_property))
         {
             $qb->add_order($label_property);
         }
@@ -264,7 +264,7 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
         {
             $title_property = $ref->get_title_property(new $this->mgdschema_class());
             if (   is_string($title_property)
-                && $_MIDCOM->dbfactory->property_exists($this->mgdschema_class, $title_property))
+                && midcom::dbfactory()->property_exists($this->mgdschema_class, $title_property))
             {
                 $qb->add_order($title_property);
             }
@@ -486,10 +486,10 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
         $ref =& $this->_mgd_reflector;
         $target_class = $ref->get_link_name($property);
         $dummy_object = new $target_class();
-        $midcom_dba_classname = $_MIDCOM->dbclassloader->get_midcom_class_name_for_mgdschema_object($dummy_object);
+        $midcom_dba_classname = midcom::dbclassloader()->get_midcom_class_name_for_mgdschema_object($dummy_object);
         if (!empty($midcom_dba_classname))
         {
-            if (!$_MIDCOM->dbclassloader->load_mgdschema_class_handler($midcom_dba_classname))
+            if (!midcom::dbclassloader()->load_mgdschema_class_handler($midcom_dba_classname))
             {
                 debug_push_class(__CLASS__, __FUNCTION__);
                 debug_add("Failed to load the handling component for {$midcom_dba_classname}, cannot continue.", MIDCOM_LOG_ERROR);
@@ -566,7 +566,7 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
         $i = 0;
         foreach ($child_classes as $child_class)
         {
-            if ($_MIDCOM->dbfactory->is_a($object, $child_class))
+            if (midcom::dbfactory()->is_a($object, $child_class))
             {
                 unset($child_classes[$i]);
                 array_unshift($child_classes, $child_class);
@@ -623,7 +623,7 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
             $qb = false;
 
             // Figure correct MidCOM DBA class to use and get midcom QB
-            $midcom_dba_classname = $_MIDCOM->dbclassloader->get_midcom_class_name_for_mgdschema_object($schema_type);
+            $midcom_dba_classname = midcom::dbclassloader()->get_midcom_class_name_for_mgdschema_object($schema_type);
             if (empty($midcom_dba_classname))
             {
                 debug_push_class(__CLASS__, __FUNCTION__);
@@ -632,7 +632,7 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
                 return $qb;
             }
 
-            if (!$_MIDCOM->dbclassloader->load_component_for_class($midcom_dba_classname))
+            if (!midcom::dbclassloader()->load_component_for_class($midcom_dba_classname))
             {
                 debug_push_class(__CLASS__, __FUNCTION__);
                 debug_add("Failed to load the handling component for {$midcom_dba_classname}, cannot continue.", MIDCOM_LOG_ERROR);
@@ -1008,7 +1008,7 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
                 continue;
             }
 
-            $dba_class = $_MIDCOM->dbclassloader->get_midcom_class_name_for_mgdschema_object($schema_type);
+            $dba_class = midcom::dbclassloader()->get_midcom_class_name_for_mgdschema_object($schema_type);
             if (!$dba_class)
             {
                 // Not a MidCOM DBA object, skip
@@ -1234,7 +1234,7 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
             // Guard against QB failure
             if ($results === false)
             {
-                $_MIDCOM->auth->drop_sudo();
+                midcom::auth()->drop_sudo();
                 debug_add("Querying for siblings of class {$schema_type} failed critically, last Midgard error: " . midcom_connection::get_error_string(), MIDCOM_LOG_ERROR);
                 debug_pop();
                 unset($sibling_classes, $schema_type, $qb, $resolver);
@@ -1280,7 +1280,7 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
         }
 
         // Start the magic
-        $_MIDCOM->auth->request_sudo('midcom.helper.reflector');
+        midcom::auth()->request_sudo('midcom.helper.reflector');
         $parent = midcom_helper_reflector_tree::get_parent($object);
         if (   $parent
             && isset($parent->guid)
@@ -1296,7 +1296,7 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
             if (!$this->_name_is_unique_nonstatic_check_siblings($sibling_classes, $object, $parent))
             {
                 unset($parent, $parent_resolver, $sibling_classes);
-                $_MIDCOM->auth->drop_sudo();
+                midcom::auth()->drop_sudo();
                 return false;
             }
             unset($parent, $parent_resolver, $sibling_classes);
@@ -1309,13 +1309,13 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
             $root_classes = $this->get_root_classes();
             foreach($root_classes as $classname)
             {
-                if ($_MIDCOM->dbfactory->is_a($object, $classname))
+                if (midcom::dbfactory()->is_a($object, $classname))
                 {
                     $is_root_class = true;
                     if (!$this->_name_is_unique_nonstatic_check_roots($root_classes, $object))
                     {
                         unset($is_root_class, $root_classes);
-                        $_MIDCOM->auth->drop_sudo();
+                        midcom::auth()->drop_sudo();
                         return false;
                     }
                 }
@@ -1324,7 +1324,7 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
             if (!$is_root_class)
             {
                 // This should not happen, logging error and returning true (even though it's potentially dangerous)
-                $_MIDCOM->auth->drop_sudo();
+                midcom::auth()->drop_sudo();
                 debug_push_class(__CLASS__, __FUNCTION__);
                 debug_add("Object #{$object->guid} has no valid parent but is not listed in the root classes, don't know what to do, returning true and supposing user knows what he is doing", MIDCOM_LOG_ERROR);
                 debug_pop();
@@ -1333,7 +1333,7 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
             }
         }
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth()->drop_sudo();
         // If we get this far we know we don't have name clashes
         return true;
     }
@@ -1536,7 +1536,7 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
         }
 
         // Look for siblings with similar names and see if they have higher i.
-        $_MIDCOM->auth->request_sudo('midcom.helper.reflector');
+        midcom::auth()->request_sudo('midcom.helper.reflector');
         $parent = midcom_helper_reflector_tree::get_parent($object);
         // TODO: Refactor to reduce duplicate code with _name_is_unique_nonstatic_check_siblings
         if (   $parent
@@ -1605,7 +1605,7 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
             $root_classes = $this->get_root_classes();
             foreach($root_classes as $schema_type)
             {
-                if ($_MIDCOM->dbfactory->is_a($object, $schema_type))
+                if (midcom::dbfactory()->is_a($object, $schema_type))
                 {
                     $is_root_class = true;
                 }
@@ -1613,7 +1613,7 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
             if (!$is_root_class)
             {
                 // This should not happen, logging error and returning true (even though it's potentially dangerous)
-                $_MIDCOM->auth->drop_sudo();
+                midcom::auth()->drop_sudo();
                 debug_push_class(__CLASS__, __FUNCTION__);
                 debug_add("Object #{$object->guid} has no valid parent but is not listed in the root classes, don't know what to do, letting higher level decide", MIDCOM_LOG_ERROR);
                 debug_pop();
@@ -1673,7 +1673,7 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
                 unset($root_classes, $schema_type, $child_name_property, $sibling, $sibling_name);
             }
         }
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth()->drop_sudo();
 
         return array($i, $base_name);
     }
@@ -1691,13 +1691,13 @@ class midcom_helper_reflector_tree extends midcom_helper_reflector
         $dummy = new $schema_type();
         $title_property = $ref->get_title_property($dummy);
         if (   is_string($title_property)
-            && $_MIDCOM->dbfactory->property_exists($schema_type, $title_property))
+            && midcom::dbfactory()->property_exists($schema_type, $title_property))
         {
             $qb->add_order($title_property);
         }
         $name_property = $ref->get_name_property($dummy);
         if (   is_string($name_property)
-            && $_MIDCOM->dbfactory->property_exists($schema_type, $name_property))
+            && midcom::dbfactory()->property_exists($schema_type, $name_property))
         {
             $qb->add_order($name_property);
         }

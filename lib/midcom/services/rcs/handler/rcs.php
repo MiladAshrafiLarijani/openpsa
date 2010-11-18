@@ -99,7 +99,7 @@ class no_bergfald_rcs
         foreach ($oldest as $attribute => $oldest_value)
         {
             if (    $attribute == 'password'
-                && !$_MIDCOM->auth->admin)
+                && !midcom::auth->admin)
             {
                 return $return;
             }

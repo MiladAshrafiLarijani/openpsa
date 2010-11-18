@@ -51,16 +51,16 @@ class org_openpsa_invoices_handler_billingdata extends midcom_baseclasses_compon
     {
         //get billing_data
         $this->_billing_data = org_openpsa_invoices_billing_data_dba::get_cached($args[0]);
-        $this->_linked_object = $_MIDCOM->dbfactory->get_object_by_guid($this->_billing_data->linkGuid);
+        $this->_linked_object = midcom::dbfactory()->get_object_by_guid($this->_billing_data->linkGuid);
 
-        $_MIDCOM->set_pagetitle($_MIDCOM->i18n->get_string('edit' , 'midcom') . " " . $this->_l10n->get("billing data"));
+        midcom::set_pagetitle(midcom::i18n()->get_string('edit' , 'midcom') . " " . $this->_l10n->get("billing data"));
 
         $this->_prepare_datamanager();
         $this->_load_controller();
         $this->_process_billing_form();
 
-        $_MIDCOM->enable_jquery();
-        $_MIDCOM->add_link_head
+        midcom::enable_jquery();
+        midcom::add_link_head
         (
             array
             (
@@ -74,7 +74,7 @@ class org_openpsa_invoices_handler_billingdata extends midcom_baseclasses_compon
 
         // Add toolbar items
         org_openpsa_helpers::dm2_savecancel($this);
-        $_MIDCOM->bind_view_to_object($this->_billing_data);
+        midcom::bind_view_to_object($this->_billing_data);
 
         $this->_request_data['datamanager'] =& $this->_datamanager;
         $this->_request_data['controller'] =& $this->_controller;
@@ -91,7 +91,7 @@ class org_openpsa_invoices_handler_billingdata extends midcom_baseclasses_compon
      */
     private function _prepare_datamanager()
     {
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
         $this->_schemadb = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb_billing_data'));
 
         $fields =& $this->_schemadb[$this->_schema]->fields;
@@ -111,7 +111,7 @@ class org_openpsa_invoices_handler_billingdata extends midcom_baseclasses_compon
 
         if (!$this->_datamanager)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Datamanager could not be instantiated.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Datamanager could not be instantiated.");
             // This will exit.
         }
     }
@@ -140,7 +140,7 @@ class org_openpsa_invoices_handler_billingdata extends midcom_baseclasses_compon
         }
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
             // This will exit.
         }
 
@@ -163,7 +163,7 @@ class org_openpsa_invoices_handler_billingdata extends midcom_baseclasses_compon
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $billing_data);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to create a new billing_data, cannot continue. Error: " . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -181,7 +181,7 @@ class org_openpsa_invoices_handler_billingdata extends midcom_baseclasses_compon
 
         $tmp[] = array
         (
-            MIDCOM_NAV_URL => $_MIDCOM->permalinks->create_permalink($this->_linked_object->guid),
+            MIDCOM_NAV_URL => midcom::permalinks->create_permalink($this->_linked_object->guid),
             MIDCOM_NAV_NAME => $object_label,
         );
         $tmp[] = array
@@ -189,14 +189,14 @@ class org_openpsa_invoices_handler_billingdata extends midcom_baseclasses_compon
             MIDCOM_NAV_URL => '#',
             MIDCOM_NAV_NAME => $this->_l10n->get('billing data') . " : " . $object_label,
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     function _handler_create($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
-        $this->_linked_object = $_MIDCOM->dbfactory->get_object_by_guid($args[0]);
+        $this->_linked_object = midcom::dbfactory()->get_object_by_guid($args[0]);
         if(empty($this->_linked_object->guid))
         {
             debug_push_class(__CLASS__, __FUNCTION__);
@@ -204,15 +204,15 @@ class org_openpsa_invoices_handler_billingdata extends midcom_baseclasses_compon
             debug_pop();
         }
 
-        $_MIDCOM->set_pagetitle(($_MIDCOM->i18n->get_string('create' , 'midcom') . " " . $this->_l10n->get("billing data")));
+        midcom::set_pagetitle((midcom::i18n()->get_string('create' , 'midcom') . " " . $this->_l10n->get("billing data")));
 
         $this->_prepare_datamanager();
         $this->_load_controller();
 
         $this->_process_billing_form();
 
-        $_MIDCOM->enable_jquery();
-        $_MIDCOM->add_link_head
+        midcom::enable_jquery();
+        midcom::add_link_head
         (
             array
             (
@@ -259,10 +259,10 @@ class org_openpsa_invoices_handler_billingdata extends midcom_baseclasses_compon
                         $relocate .= 'group/' . $this->_linked_object->guid . '/';
                         break;
                     default:
-                        $relocate = $_MIDCOM->permalinks->create_permalink($this->_linked_object->guid);
+                        $relocate = midcom::permalinks->create_permalink($this->_linked_object->guid);
                         break;
                 }
-                $_MIDCOM->relocate($relocate);
+                midcom::relocate($relocate);
                 // This will exit.
         }
     }

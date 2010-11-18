@@ -70,7 +70,7 @@
  * <code>
  * if ($_SERVER['REQUEST_METHOD'] != 'post')
  * {
- *     $_MIDCOM->generate_error(MIDCOM_ERRFORBIDDEN, 'Only POST requests are allowed here.');
+ *     midcom::generate_error(MIDCOM_ERRFORBIDDEN, 'Only POST requests are allowed here.');
  * }
  * </code>
  *
@@ -221,7 +221,7 @@ class midcom_helper_toolbar
 
         if (is_null($label))
         {
-            $label = $_MIDCOM->i18n->get_string('help', 'midcom.admin.help');
+            $label = midcom::i18n()->get_string('help', 'midcom.admin.help');
         }
 
         $this->add_item
@@ -407,7 +407,7 @@ class midcom_helper_toolbar
             && ! preg_match('|^https?://|', $item[MIDCOM_TOOLBAR_URL]))
         {
             $item[MIDCOM_TOOLBAR_URL] =
-                  $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+                  midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                 . $item[MIDCOM_TOOLBAR_URL];
         }
         return $item;
@@ -461,7 +461,7 @@ class midcom_helper_toolbar
     {
         if ($index == 0)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Cannot move the top element upwards.');
             // This will exit()
         }
@@ -483,7 +483,7 @@ class midcom_helper_toolbar
     {
         if ($index == (count($this->items) - 1))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Cannot move the bottom element downwards.');
             // This will exit()
         }
@@ -574,7 +574,7 @@ class midcom_helper_toolbar
         {
             debug_add("toolbar:update_item_url: We have a relative URL, transforming it...");
             $this->items[$index][MIDCOM_TOOLBAR_URL] =
-                  $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+                  midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                 . $url;
         }
         else
@@ -702,7 +702,7 @@ class midcom_helper_toolbar
                 $new_label .= str_replace(' ', '&nbsp;', substr($label, $position + 1));
                 $label = $new_label;
             }
-            elseif ($_MIDCOM->i18n->get_current_language() == 'en')
+            elseif (midcom::i18n()->get_current_language() == 'en')
             {
                 // Try lowercase too
                 $position = strpos($label, $accesskey_lower);
@@ -918,7 +918,7 @@ class midcom_helper_toolbar
 
                 if ($raise_error)
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                    midcom::generate_error(MIDCOM_ERRCRIT,
                         "midcom_helper_toolbar::check_index - Invalid URL '{$url}', URL not found.");
                     // This will exit.
                 }
@@ -930,13 +930,13 @@ class midcom_helper_toolbar
         }
         if ($index >= count($this->items))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "midcom_helper_toolbar::check_index - Invalid index {$index}, it is off-the-end.");
             // This will exit.
         }
         if ($index < 0)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "midcom_helper_toolbar::check_index - Invalid index {$index}, it is negative.");
             // This will exit.
         }
@@ -951,7 +951,7 @@ class midcom_helper_toolbar
      */
     function bind_to(&$object)
     {
-        $_MIDCOM->toolbars->bind_toolbar_to_object($this, $object);
+        midcom::toolbars()->bind_toolbar_to_object($this, $object);
     }
 }
 ?>

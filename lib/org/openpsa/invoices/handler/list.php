@@ -57,7 +57,7 @@ class org_openpsa_invoices_handler_list extends midcom_baseclasses_components_ha
      */
     function _handler_dashboard($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         $this->_view_toolbar->add_item
         (
@@ -67,7 +67,7 @@ class org_openpsa_invoices_handler_list extends midcom_baseclasses_components_ha
                 MIDCOM_TOOLBAR_LABEL => $this->_l10n->get('create invoice'),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/printer.png',
-                MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_user_do('midgard:create', null, 'org_openpsa_invoices_invoice_dba'),
+                MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_user_do('midgard:create', null, 'org_openpsa_invoices_invoice_dba'),
             )
         );
 
@@ -79,7 +79,7 @@ class org_openpsa_invoices_handler_list extends midcom_baseclasses_components_ha
                 MIDCOM_TOOLBAR_LABEL => $this->_l10n->get('project invoicing'),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/printer.png',
-                MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_user_do('midgard:create', null, 'org_openpsa_invoices_invoice_dba'),
+                MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_user_do('midgard:create', null, 'org_openpsa_invoices_invoice_dba'),
             )
         );
 
@@ -98,7 +98,7 @@ class org_openpsa_invoices_handler_list extends midcom_baseclasses_components_ha
             );
         }
 
-        $_MIDCOM->set_pagetitle($this->_l10n->get('dashboard'));
+        midcom::set_pagetitle($this->_l10n->get('dashboard'));
 
         return true;
     }
@@ -236,7 +236,7 @@ class org_openpsa_invoices_handler_list extends midcom_baseclasses_components_ha
      */
     function _handler_customer($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         if (count($args) != 1)
         {
@@ -252,7 +252,7 @@ class org_openpsa_invoices_handler_list extends midcom_baseclasses_components_ha
 
         $data['customer'] =& $this->_customer;
 
-        if ($_MIDCOM->auth->can_user_do('midgard:create', null, 'org_openpsa_invoices_invoice_dba'))
+        if (midcom::auth->can_user_do('midgard:create', null, 'org_openpsa_invoices_invoice_dba'))
         {
             $this->_view_toolbar->add_item
             (
@@ -279,7 +279,7 @@ class org_openpsa_invoices_handler_list extends midcom_baseclasses_components_ha
                 array
                 (
                     MIDCOM_TOOLBAR_URL => "billingdata/" . $billing_data_url,
-                    MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('edit billingdata', 'org.openpsa.contacts'),
+                    MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('edit billingdata', 'org.openpsa.contacts'),
                     MIDCOM_TOOLBAR_HELPTEXT => null,
                     MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/edit.png',
                     MIDCOM_TOOLBAR_ENABLED => $this->_customer->can_do('midgard:update'),
@@ -303,7 +303,7 @@ class org_openpsa_invoices_handler_list extends midcom_baseclasses_components_ha
 
         $title = sprintf($this->_l10n->get('all invoices for customer %s'), $this->_request_data['customer']->official);
 
-        $_MIDCOM->set_pagetitle($title);
+        midcom::set_pagetitle($title);
 
         $tmp = Array();
 
@@ -313,7 +313,7 @@ class org_openpsa_invoices_handler_list extends midcom_baseclasses_components_ha
             MIDCOM_NAV_NAME => $title,
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         return true;
     }
@@ -341,7 +341,7 @@ class org_openpsa_invoices_handler_list extends midcom_baseclasses_components_ha
      */
     function _handler_deliverable($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         if (count($args) != 1)
         {
@@ -367,7 +367,7 @@ class org_openpsa_invoices_handler_list extends midcom_baseclasses_components_ha
 
         $this->_process_invoice_list($invoices);
 
-        $_MIDCOM->set_pagetitle($data['list_label']);
+        midcom::set_pagetitle($data['list_label']);
 
         return true;
     }

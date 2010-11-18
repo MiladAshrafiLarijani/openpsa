@@ -66,7 +66,7 @@ class net_nemein_wiki_handler_view extends midcom_baseclasses_components_handler
             if (   ! $this->_datamanager
                 || ! $this->_datamanager->autoset_storage($this->_page))
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for wiki page {$this->_page->guid}.");
+                midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for wiki page {$this->_page->guid}.");
                 // This will exit.
             }
         }
@@ -153,9 +153,9 @@ class net_nemein_wiki_handler_view extends midcom_baseclasses_components_handler
             )
         );
 
-        if ($_MIDCOM->auth->user)
+        if (midcom::auth->user)
         {
-            $user = $_MIDCOM->auth->user->get_storage();
+            $user = midcom::auth->user->get_storage();
             if ($this->_page->parameter('net.nemein.wiki:watch', $user->guid))
             {
                 $this->_view_toolbar->add_item
@@ -196,25 +196,25 @@ class net_nemein_wiki_handler_view extends midcom_baseclasses_components_handler
 
         if ($this->_page->can_do('midgard:update'))
         {
-            $_MIDCOM->add_link_head
+            midcom::add_link_head
             (
                 array
                 (
                     'rel' => 'alternate',
                     'type' => 'application/x-wiki',
                     'title' => $this->_request_data['l10n_midcom']->get('edit'),
-                    'href' => $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "edit/{$this->_page->name}/",
+                    'href' => midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "edit/{$this->_page->name}/",
                 )
             );        
             
         }
         
-        if ($_MIDCOM->componentloader->is_installed('org.openpsa.relatedto'))
+        if (midcom::componentloader->is_installed('org.openpsa.relatedto'))
         {
             org_openpsa_relatedto_plugin::add_button($this->_view_toolbar, $this->_page->guid);
         }
 
-        $_MIDCOM->bind_view_to_object($this->_page, $this->_datamanager->schema->name);
+        midcom::bind_view_to_object($this->_page, $this->_datamanager->schema->name);
     }
 
     function _load_page($wikiword)
@@ -266,10 +266,10 @@ class net_nemein_wiki_handler_view extends midcom_baseclasses_components_handler
             if (count($result) > 0)
             {
                 // This wiki page actually exists, so go there as "Permanent Redirect"
-                $_MIDCOM->relocate("{$node[MIDCOM_NAV_ABSOLUTEURL]}{$result[0]->name}/", 301);
+                midcom::relocate("{$node[MIDCOM_NAV_ABSOLUTEURL]}{$result[0]->name}/", 301);
             }
         }
-        $_MIDCOM->relocate("{$node[MIDCOM_NAV_ABSOLUTEURL]}notfound/" . rawurlencode($wikiword));
+        midcom::relocate("{$node[MIDCOM_NAV_ABSOLUTEURL]}notfound/" . rawurlencode($wikiword));
         // This will exit
     }
 
@@ -321,17 +321,17 @@ class net_nemein_wiki_handler_view extends midcom_baseclasses_components_handler
             {
                 // No matching redirection page found, relocate to editing
                 // TODO: Add UI message
-                $_MIDCOM->relocate("edit/{$this->_page->name}/");
+                midcom::relocate("edit/{$this->_page->name}/");
                 // This will exit
             }
 
             if ($result[0]->topic == $this->_topic->id)
             {
-                $_MIDCOM->relocate("{$result[0]->name}/");
+                midcom::relocate("{$result[0]->name}/");
             }
             else
             {
-                $_MIDCOM->relocate($_MIDCOM->permalinks->create_permalink($result[0]->guid));
+                midcom::relocate(midcom::permalinks->create_permalink($result[0]->guid));
             }
         }
 
@@ -346,12 +346,12 @@ class net_nemein_wiki_handler_view extends midcom_baseclasses_components_handler
                 MIDCOM_NAV_URL => "{$this->_page->name}/",
                 MIDCOM_NAV_NAME => $this->_page->title,
             );
-            $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+            midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
         }
 
-        $_MIDCOM->set_pagetitle($this->_page->title);
+        midcom::set_pagetitle($this->_page->title);
 
-        $_MIDCOM->set_26_request_metadata($this->_page->metadata->revised, $this->_page->guid);
+        midcom::set_26_request_metadata($this->_page->metadata->revised, $this->_page->guid);
         return true;
     }
 
@@ -362,7 +362,7 @@ class net_nemein_wiki_handler_view extends midcom_baseclasses_components_handler
      */
     function _show_view($handler_id, &$data)
     {
-        $_MIDCOM->load_library('net.nemein.tag');
+        midcom::load_library('net.nemein.tag');
 
         if ($this->_controller)
         {
@@ -396,7 +396,7 @@ class net_nemein_wiki_handler_view extends midcom_baseclasses_components_handler
         {
             return false;
         }
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
         $this->_load_datamanager();
 
         return true;
@@ -439,7 +439,7 @@ class net_nemein_wiki_handler_view extends midcom_baseclasses_components_handler
         {
             return false;
         }
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
         $this->_load_datamanager();
 
         return true;
@@ -475,19 +475,19 @@ class net_nemein_wiki_handler_view extends midcom_baseclasses_components_handler
     {
         if ($_SERVER['REQUEST_METHOD'] != 'POST')
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRFORBIDDEN, 'Only POST requests are allowed here.');
+            midcom::generate_error(MIDCOM_ERRFORBIDDEN, 'Only POST requests are allowed here.');
         }
 
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         if (!$this->_load_page($args[0]))
         {
             return false;
         }
 
-        $_MIDCOM->auth->request_sudo('net.nemein.wiki');
+        midcom::auth->request_sudo('net.nemein.wiki');
 
-        $user = $_MIDCOM->auth->user->get_storage();
+        $user = midcom::auth->user->get_storage();
 
         if (   array_key_exists('target', $_POST)
             && $_POST['target'] == 'folder')
@@ -506,23 +506,23 @@ class net_nemein_wiki_handler_view extends midcom_baseclasses_components_handler
         {
             // Subscribe to page
             $object->parameter('net.nemein.wiki:watch', $user->guid, time());
-            $_MIDCOM->uimessages->add($this->_request_data['l10n']->get('net.nemein.wiki'), sprintf($this->_request_data['l10n']->get('subscribed to changes in %s'), $target), 'ok');
+            midcom::uimessages()->add($this->_request_data['l10n']->get('net.nemein.wiki'), sprintf($this->_request_data['l10n']->get('subscribed to changes in %s'), $target), 'ok');
         }
         else
         {
             // Remove subscription
             $object->parameter('net.nemein.wiki:watch', $user->guid, '');
-            $_MIDCOM->uimessages->add($this->_request_data['l10n']->get('net.nemein.wiki'), sprintf($this->_request_data['l10n']->get('unsubscribed from changes in %s'), $target), 'ok');
+            midcom::uimessages()->add($this->_request_data['l10n']->get('net.nemein.wiki'), sprintf($this->_request_data['l10n']->get('unsubscribed from changes in %s'), $target), 'ok');
         }
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
 
         // Redirect to editing
         if ($this->_page->name == 'index')
         {
-            $_MIDCOM->relocate("");
+            midcom::relocate("");
         }
-            $_MIDCOM->relocate("{$this->_page->name}/");
+            midcom::relocate("{$this->_page->name}/");
         // This will exit
     }
 

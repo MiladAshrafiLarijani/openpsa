@@ -20,7 +20,7 @@
         ),
         'followUp' => Array
         (
-            'title' => $_MIDCOM->i18n->get_string('followUp' , 'org.openpsa.relatedto'),
+            'title' => midcom::i18n()->get_string('followUp' , 'org.openpsa.relatedto'),
             'storage' => 'followUp',
             'type' => 'date',
             'type_config' => array

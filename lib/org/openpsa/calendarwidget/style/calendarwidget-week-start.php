@@ -1,5 +1,5 @@
 <?php
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 
 $year = (int) date('Y', $data['week_start']);
 $week_no = date('Y-m-d', $data['week_start']);

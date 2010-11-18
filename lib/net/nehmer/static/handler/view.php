@@ -237,12 +237,12 @@ class net_nehmer_static_handler_view extends midcom_baseclasses_components_handl
                     if ($index_qb->count_unchecked() == 0)
                     {
                         $schemas = array_keys($this->_request_data['schemadb']);
-                        $_MIDCOM->relocate("createindex/{$schemas[0]}/");
+                        midcom::relocate("createindex/{$schemas[0]}/");
                         // This will exit.
                     }
                 }
 
-                $_MIDCOM->generate_error(MIDCOM_ERRFORBIDDEN, 'Directory index forbidden');
+                midcom::generate_error(MIDCOM_ERRFORBIDDEN, 'Directory index forbidden');
                 // This will exit.
             }
 
@@ -251,7 +251,7 @@ class net_nehmer_static_handler_view extends midcom_baseclasses_components_handl
 
         if ($handler_id == 'view_raw')
         {
-            $_MIDCOM->skip_page_style = true;
+            midcom::skip_page_style = true;
         }
 
         $this->_load_datamanager();
@@ -274,7 +274,7 @@ class net_nehmer_static_handler_view extends midcom_baseclasses_components_handl
                 MIDCOM_NAV_URL => "{$arg}/",
                 MIDCOM_NAV_NAME => $this->_article->title,
             );
-            $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+            midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
         }
 
         $this->_prepare_request_data();
@@ -292,8 +292,8 @@ class net_nehmer_static_handler_view extends midcom_baseclasses_components_handl
             );
         }
 
-        $_MIDCOM->set_26_request_metadata($this->_article->metadata->revised, $this->_article->guid);
-        $_MIDCOM->bind_view_to_object($this->_article, $this->_datamanager->schema->name);
+        midcom::set_26_request_metadata($this->_article->metadata->revised, $this->_article->guid);
+        midcom::bind_view_to_object($this->_article, $this->_datamanager->schema->name);
 
         if (   $this->_config->get('indexinnav')
             || $this->_config->get('autoindex')
@@ -305,11 +305,11 @@ class net_nehmer_static_handler_view extends midcom_baseclasses_components_handl
         if (   $this->_config->get('folder_in_title')
             && $this->_topic->extra != $this->_article->title)
         {
-            $_MIDCOM->set_pagetitle("{$this->_topic->extra}: {$this->_article->title}");
+            midcom::set_pagetitle("{$this->_topic->extra}: {$this->_article->title}");
         }
         else
         {
-            $_MIDCOM->set_pagetitle($this->_article->title);
+            midcom::set_pagetitle($this->_article->title);
         }
 
         return true;
@@ -327,7 +327,7 @@ class net_nehmer_static_handler_view extends midcom_baseclasses_components_handl
         if (   ! $this->_datamanager
             || ! $this->_datamanager->autoset_storage($this->_article))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for article {$this->_article->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for article {$this->_article->id}.");
             // This will exit.
         }
     }

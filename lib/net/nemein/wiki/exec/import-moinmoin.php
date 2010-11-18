@@ -1,5 +1,5 @@
 <?php
-$_MIDCOM->auth->require_admin_user();
+midcom::auth->require_admin_user();
 
 if (   !isset($_REQUEST['root_topic_guid'])
     || empty($_REQUEST['root_topic_guid'])
@@ -52,10 +52,10 @@ if (   !isset($_REQUEST['root_topic_guid'])
 
 // TODO: ask for dir and topic
 $wiki_root = $_REQUEST['wiki_root'];
-$root_topic = $_MIDCOM->dbfactory->get_object_by_guid($_REQUEST['root_topic_guid']);
+$root_topic = midcom::dbfactory()->get_object_by_guid($_REQUEST['root_topic_guid']);
 $import_revisions = $_REQUEST['import_revisions'];
 
-$_MIDCOM->cache->content->enable_live_mode();
+midcom::cache()->content->enable_live_mode();
 while(@ob_end_flush());
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', -1);
@@ -79,7 +79,7 @@ class net_nemein_wiki_moinmoin_importer
         $this->resolver = new net_nemein_wiki_wikipage();
         $this->_schemadb['default'] = new midcom_helper_datamanager2_schema($schemadb_path, 'default');
         $this->_datamanager = new midcom_helper_datamanager2_datamanager($this->_schemadb);
-        $this->_l10n = $_MIDCOM->i18n->get_l10n('net.nemein.wiki');
+        $this->_l10n = midcom::i18n()->get_l10n('net.nemein.wiki');
     }
 
     function import_file($title, $revision_path)

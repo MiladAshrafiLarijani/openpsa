@@ -251,7 +251,7 @@ class midcom_helper_datamanager2_schema extends midcom_baseclasses_components_pu
                     || $schema['extends']['name'] === $schema_name)
                 {
                     $snippet_path = $this->_get_snippet_link($path);
-                    $_MIDCOM->uimessages->add($this->_l10n->get('midcom.helper.datamanager2'), sprintf($this->_l10n->get('schema %s:%s extends itself'), $snippet_path, $schema_name), 'error');
+                    midcom::uimessages()->add($this->_l10n->get('midcom.helper.datamanager2'), sprintf($this->_l10n->get('schema %s:%s extends itself'), $snippet_path, $schema_name), 'error');
 
                     debug_push_class(__CLASS__, __FUNCTION__);
                     debug_add(sprintf($this->_l10n->get('schema %s:%s extends itself'), $path, $schema_name), MIDCOM_LOG_WARN);
@@ -275,7 +275,7 @@ class midcom_helper_datamanager2_schema extends midcom_baseclasses_components_pu
                 debug_pop();
 
                 $snippet_path = $this->_get_snippet_link($path);
-                $_MIDCOM->uimessages->add($this->_l10n->get('midcom.helper.datamanager2'), sprintf($this->_l10n->get('extended schema %s:%s was not found'), $snippet_path, $schema_name), 'error');
+                midcom::uimessages()->add($this->_l10n->get('midcom.helper.datamanager2'), sprintf($this->_l10n->get('extended schema %s:%s was not found'), $snippet_path, $schema_name), 'error');
                 continue;
             }
 
@@ -367,7 +367,7 @@ class midcom_helper_datamanager2_schema extends midcom_baseclasses_components_pu
             $result = eval ("\$contents = array ( {$data}\n );");
             if ($result === false)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Failed to parse the schema definition in '{$schemadb}', see above for PHP errors.");
                 // This will exit.
             }
@@ -383,7 +383,7 @@ class midcom_helper_datamanager2_schema extends midcom_baseclasses_components_pu
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('Passed schema db was:', $schemadb);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to access the schema database: Invalid variable type while constructing.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to access the schema database: Invalid variable type while constructing.');
             // This will exit.
         }
 
@@ -404,7 +404,7 @@ class midcom_helper_datamanager2_schema extends midcom_baseclasses_components_pu
         // Setup the raw schema reference
         if (! array_key_exists($name, $this->_raw_schemadb))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "The schema {$name} was not found in the schema database.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "The schema {$name} was not found in the schema database.");
             // This will exit.
         }
         $this->_raw_schema =& $this->_raw_schemadb[$name];
@@ -416,9 +416,9 @@ class midcom_helper_datamanager2_schema extends midcom_baseclasses_components_pu
         }
         else
         {
-            $l10n_name = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_COMPONENT);
+            $l10n_name = midcom::get_context_data(MIDCOM_CONTEXT_COMPONENT);
         }
-        $this->_l10n_schema = $_MIDCOM->i18n->get_l10n($l10n_name);
+        $this->_l10n_schema = midcom::i18n()->get_l10n($l10n_name);
 
         if (array_key_exists('operations', $this->_raw_schema))
         {
@@ -462,7 +462,7 @@ class midcom_helper_datamanager2_schema extends midcom_baseclasses_components_pu
                     {
                         if (!$prepended)
                         {
-                            $field['static_prepend'] = "<h3 style='clear: left;'>" . $_MIDCOM->i18n->get_string('metadata', 'midcom') . "</h3>\n" . $field['static_prepend'];
+                            $field['static_prepend'] = "<h3 style='clear: left;'>" . midcom::i18n()->get_string('metadata', 'midcom') . "</h3>\n" . $field['static_prepend'];
                             $prepended = true;
                         }
                         $this->append_field($name, $field);
@@ -491,7 +491,7 @@ class midcom_helper_datamanager2_schema extends midcom_baseclasses_components_pu
     {
         if (array_key_exists($name, $this->fields))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Duplicate field {$name} encountered, schema operation is invalid. Aborting.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Duplicate field {$name} encountered, schema operation is invalid. Aborting.");
             // This will exit.
         }
 
@@ -512,13 +512,13 @@ class midcom_helper_datamanager2_schema extends midcom_baseclasses_components_pu
         if (   !array_key_exists('type', $config)
             || empty($config['type']))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Field '{$config['name']}' in schema '{$this->name}' loaded from {$this->_schemadb_path} is missing *type* definition");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Field '{$config['name']}' in schema '{$this->name}' loaded from {$this->_schemadb_path} is missing *type* definition");
             // this will exit
         }
         if (   !array_key_exists('widget', $config)
             || empty($config['widget']))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Field '{$config['name']}' in schema '{$this->name}' loaded from {$this->_schemadb_path} is missing *widget* definition");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Field '{$config['name']}' in schema '{$this->name}' loaded from {$this->_schemadb_path} is missing *widget* definition");
             // this will exit
         }
         /* Rest of the defaults */
@@ -608,7 +608,7 @@ class midcom_helper_datamanager2_schema extends midcom_baseclasses_components_pu
             {
                 if ($rule['type'] == 'compare')
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                    midcom::generate_error(MIDCOM_ERRCRIT,
                         "Missing compare_with option for compare type rule {$key} on field {$config['name']}, this is a required option.");
                     // This will exit.
                 }
@@ -623,7 +623,7 @@ class midcom_helper_datamanager2_schema extends midcom_baseclasses_components_pu
             {
                 if (! array_key_exists('type', $rule))
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                    midcom::generate_error(MIDCOM_ERRCRIT,
                         "Missing validation rule type for rule {$key} on field {$config['name']}, this is a required option.");
                     // This will exit.
                 }
@@ -639,7 +639,7 @@ class midcom_helper_datamanager2_schema extends midcom_baseclasses_components_pu
                 {
                     if (! array_key_exists('compare_with', $rule))
                     {
-                        $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                        midcom::generate_error(MIDCOM_ERRCRIT,
                             "Missing compare_with option for compare type rule {$key} on field {$config['name']}, this is a required option.");
                         // This will exit.
                     }
@@ -715,7 +715,7 @@ class midcom_helper_datamanager2_schema extends midcom_baseclasses_components_pu
             // Bullet-proof against syntax errors
             if ($result === false)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Failed to parse the schema database loaded from '{$raw_db}', see above for PHP errors.");
                 // This will exit.
             }
@@ -725,7 +725,7 @@ class midcom_helper_datamanager2_schema extends midcom_baseclasses_components_pu
 
         if (!is_array($raw_db))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Provided DM2 schema is not in Array format.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Provided DM2 schema is not in Array format.");
         }
 
         foreach ($raw_db as $name => $raw_schema)
@@ -748,7 +748,7 @@ class midcom_helper_datamanager2_schema extends midcom_baseclasses_components_pu
         // Seems we do not need this anymore, but return key still
         return $key;
 
-        $session = $_MIDCOM->get_service('session');
+        $session = midcom::get_service('session');
         $session->set('midcom.helper.datamanager2', $key, $this->_raw_schema);
         return $key;
 

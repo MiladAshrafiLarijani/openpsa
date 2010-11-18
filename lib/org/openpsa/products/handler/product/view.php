@@ -107,7 +107,7 @@ class org_openpsa_products_handler_product_view extends midcom_baseclasses_compo
             );
         }
         
-        if ($_MIDCOM->componentloader->is_installed('org.openpsa.relatedto'))
+        if (midcom::componentloader->is_installed('org.openpsa.relatedto'))
         {
             org_openpsa_relatedto_plugin::add_button($this->_view_toolbar, $this->_product->guid);
         }
@@ -142,8 +142,8 @@ class org_openpsa_products_handler_product_view extends midcom_baseclasses_compo
             }
             else
             {
-                $allow_create_group = $_MIDCOM->auth->can_user_do('midgard:create', null, 'org_openpsa_products_product_group_dba');
-                $allow_create_product = $_MIDCOM->auth->can_user_do('midgard:create', null, 'org_openpsa_products_product_dba');
+                $allow_create_group = midcom::auth->can_user_do('midgard:create', null, 'org_openpsa_products_product_group_dba');
+                $allow_create_product = midcom::auth->can_user_do('midgard:create', null, 'org_openpsa_products_product_dba');
             }
             
             foreach (array_keys($this->_request_data['schemadb_group']) as $name)
@@ -237,7 +237,7 @@ class org_openpsa_products_handler_product_view extends midcom_baseclasses_compo
     {
         if (preg_match('/_raw$/', $handler_id))
         {
-            $_MIDCOM->skip_page_style = true;
+            midcom::skip_page_style = true;
         }
 
         $qb = org_openpsa_products_product_dba::new_query_builder();
@@ -256,7 +256,7 @@ class org_openpsa_products_handler_product_view extends midcom_baseclasses_compo
 
             if (empty($groups))
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Product group {$args[0]} not found" );
+                midcom::generate_error(MIDCOM_ERRNOTFOUND, "Product group {$args[0]} not found" );
                 // This will exit
             }
 
@@ -362,7 +362,7 @@ class org_openpsa_products_handler_product_view extends midcom_baseclasses_compo
             {
                 if (!mgd_is_guid($args[1]))
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Product {$args[1]} not found" );
+                    midcom::generate_error(MIDCOM_ERRNOTFOUND, "Product {$args[1]} not found" );
                     // This will exit
                 }
                 $this->_product = new org_openpsa_products_product_dba($args[1]);
@@ -371,7 +371,7 @@ class org_openpsa_products_handler_product_view extends midcom_baseclasses_compo
             {
                 if (!mgd_is_guid($args[0]))
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Product {$args[0]} not found" );
+                    midcom::generate_error(MIDCOM_ERRNOTFOUND, "Product {$args[0]} not found" );
                     // This will exit
                 }
                 $this->_product = new org_openpsa_products_product_dba($args[0]);
@@ -381,7 +381,7 @@ class org_openpsa_products_handler_product_view extends midcom_baseclasses_compo
             || !isset($this->_product->guid)
             || empty($this->_product->guid))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Fell through to last product sanity-check and failed");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Fell through to last product sanity-check and failed");
             // This will exit
         }
 
@@ -400,13 +400,13 @@ class org_openpsa_products_handler_product_view extends midcom_baseclasses_compo
             if (   ! $data['datamanager']
                 || ! $data['datamanager']->autoset_storage($this->_product))
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for product {$this->_product->guid}.");
+                midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for product {$this->_product->guid}.");
                 // This will exit.
             }
         }
 
         $this->_prepare_request_data();
-        $_MIDCOM->bind_view_to_object($this->_product, $data['datamanager']->schema->name);
+        midcom::bind_view_to_object($this->_product, $data['datamanager']->schema->name);
 
         if (isset($product_group))
         {
@@ -427,9 +427,9 @@ class org_openpsa_products_handler_product_view extends midcom_baseclasses_compo
 
         $breadcrumb = org_openpsa_products_viewer::update_breadcrumb_line($this->_product, $product_group);
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $breadcrumb);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $breadcrumb);
 
-        $_MIDCOM->set_26_request_metadata($this->_product->metadata->revised, $this->_product->guid);
+        midcom::set_26_request_metadata($this->_product->metadata->revised, $this->_product->guid);
 
         $title = $this->_config->get('product_page_title');
 
@@ -452,7 +452,7 @@ class org_openpsa_products_handler_product_view extends midcom_baseclasses_compo
         $title = str_replace('<PRODUCT_TITLE>', $this->_product->title, $title);
         $title = str_replace('<TOPIC_TITLE>', $this->_topic->extra, $title);
 
-        $_MIDCOM->set_pagetitle($title);
+        midcom::set_pagetitle($title);
 
         return true;
     }

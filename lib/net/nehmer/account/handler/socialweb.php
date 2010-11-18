@@ -74,23 +74,23 @@ class net_nehmer_account_handler_socialweb extends midcom_baseclasses_components
 
         if ($handler_id == 'admin_edit')
         {
-            $_MIDCOM->auth->require_admin_user();
+            midcom::auth->require_admin_user();
             $this->_account = new midcom_db_person($args[0]);
             if (   !$this->_account
                 || !$this->_account->guid)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The account '{$args[0]}' could not be loaded, reason: " . midcom_connection::get_error_string());
+                midcom::generate_error(MIDCOM_ERRNOTFOUND, "The account '{$args[0]}' could not be loaded, reason: " . midcom_connection::get_error_string());
             }
             net_nehmer_account_viewer::verify_person_privileges($this->_account);
             $return_url = "view/{$this->_account->guid}/";
         }
         else
         {
-            $_MIDCOM->auth->require_valid_user();
-            $this->_account = $_MIDCOM->auth->user->get_storage();
+            midcom::auth->require_valid_user();
+            $this->_account = midcom::auth->user->get_storage();
             net_nehmer_account_viewer::verify_person_privileges($this->_account);
-            $_MIDCOM->auth->require_do('midgard:update', $this->_account);
-            $_MIDCOM->auth->require_do('midgard:parameters', $this->_account);
+            midcom::auth->require_do('midgard:update', $this->_account);
+            midcom::auth->require_do('midgard:parameters', $this->_account);
             $return_url = '';
         }
 
@@ -100,7 +100,7 @@ class net_nehmer_account_handler_socialweb extends midcom_baseclasses_components
         {
             // Relocate back to view
 
-            $_MIDCOM->relocate($return_url);
+            midcom::relocate($return_url);
             // This will exit.
         }
 
@@ -109,7 +109,7 @@ class net_nehmer_account_handler_socialweb extends midcom_baseclasses_components
         if ($this->_controller->process_form() == 'save')
         {
             // Relocate back to view
-            $_MIDCOM->relocate($return_url);
+            midcom::relocate($return_url);
             // This will exit.
         }
 
@@ -120,12 +120,12 @@ class net_nehmer_account_handler_socialweb extends midcom_baseclasses_components
             MIDCOM_NAV_URL => 'socialweb/',
             MIDCOM_NAV_NAME => $this->_l10n->get('social web settings'),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
         $this->_view_toolbar->hide_item('socialweb/');
 
-        $_MIDCOM->bind_view_to_object($this->_account, $this->_controller->datamanager->schema->name);
-        $_MIDCOM->set_26_request_metadata(time(), $this->_topic->guid);
-        $_MIDCOM->set_pagetitle($this->_l10n->get('social web settings'));
+        midcom::bind_view_to_object($this->_account, $this->_controller->datamanager->schema->name);
+        midcom::set_26_request_metadata(time(), $this->_topic->guid);
+        midcom::set_pagetitle($this->_l10n->get('social web settings'));
 
         return true;
     }
@@ -142,7 +142,7 @@ class net_nehmer_account_handler_socialweb extends midcom_baseclasses_components
         $this->_request_data['datamanager'] =& $this->_controller;
         $this->_request_data['schema'] =& $this->_controller->datamanager->schema;
         $this->_request_data['account'] =& $this->_account;
-        $this->_request_data['profile_url'] = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+        $this->_request_data['profile_url'] = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
             . $return_url;
     }
 
@@ -154,7 +154,7 @@ class net_nehmer_account_handler_socialweb extends midcom_baseclasses_components
 
         $this->_schemadb = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb_socialweb'));
 
-        $customdata = $_MIDCOM->componentloader->get_all_manifest_customdata('net.nehmer.account.socialweb');
+        $customdata = midcom::componentloader->get_all_manifest_customdata('net.nehmer.account.socialweb');
 
         foreach ($customdata as $component => $settings)
         {
@@ -178,7 +178,7 @@ class net_nehmer_account_handler_socialweb extends midcom_baseclasses_components
 
                 if (!isset($field_config['title']))
                 {
-                    $field_config['title'] = $_MIDCOM->i18n->get_string($label, $component);;
+                    $field_config['title'] = midcom::i18n()->get_string($label, $component);;
                 }
 
                 $this->_schemadb['socialweb']->append_field(str_replace('.', '_', $component) . "_{$label}", $field_config);

@@ -212,7 +212,7 @@ class midcom_services_dbclassloader extends midcom_baseclasses_core_object
             $result = eval ("\$definition_list = Array ( {$contents} \n );");
             if ($result === false)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                                          "Failed to parse the class definition file '{$this->_class_definition_filename}', see above for PHP errors.");
                 // This will exit.
             }
@@ -220,7 +220,7 @@ class midcom_services_dbclassloader extends midcom_baseclasses_core_object
 
         if (!$this->_register_loaded_classes($definition_list, $component))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "DB Class Loader: Classes from file {$this->_class_definition_filename} couldn't be registered.");
             // This will exit.
             return false;
@@ -323,7 +323,7 @@ class midcom_services_dbclassloader extends midcom_baseclasses_core_object
         }
         else
         {
-            $this->_class_definition_filename = MIDCOM_ROOT . $_MIDCOM->componentloader->path_to_snippetpath($component) . "/config/{$filename}";
+            $this->_class_definition_filename = MIDCOM_ROOT . midcom::componentloader->path_to_snippetpath($component) . "/config/{$filename}";
         }
 
     }
@@ -344,7 +344,7 @@ class midcom_services_dbclassloader extends midcom_baseclasses_core_object
     {
         if (! file_exists($this->_class_definition_filename))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "DB Class Loader: Failed to access the file {$this->_class_definition_filename}: File does not exist.");
             // This will exit.
         }
@@ -490,7 +490,7 @@ class midcom_services_dbclassloader extends midcom_baseclasses_core_object
             }
 
             if (   !empty($component)
-                && $_MIDCOM->componentloader->is_installed($component))
+                && midcom::componentloader->is_installed($component))
             {
                 return $component;
             }
@@ -512,12 +512,12 @@ class midcom_services_dbclassloader extends midcom_baseclasses_core_object
             return false;
         }
 
-        if ($_MIDCOM->componentloader->is_loaded($component))
+        if (midcom::componentloader->is_loaded($component))
         {
             return true;
         }
 
-        return $_MIDCOM->componentloader->load_graceful($component);
+        return midcom::componentloader->load_graceful($component);
     }
 
     /**
@@ -665,7 +665,7 @@ class midcom_services_dbclassloader extends midcom_baseclasses_core_object
         if (! array_key_exists($classname, $this->_mgdschema_class_handler))
         {
             $component = $this->get_component_for_class($classname);
-            $_MIDCOM->componentloader->load($component);
+            midcom::componentloader->load($component);
             if (! array_key_exists($classname, $this->_mgdschema_class_handler))
             {
                 debug_push_class(__CLASS__, __FUNCTION__);
@@ -682,14 +682,14 @@ class midcom_services_dbclassloader extends midcom_baseclasses_core_object
             return true;
         }
 
-        if ($_MIDCOM->componentloader->is_loaded($component))
+        if (midcom::componentloader->is_loaded($component))
         {
             // Already loaded, so we're fine too.
             return true;
         }
 
         // This generate_error's on any problems.
-        $_MIDCOM->componentloader->load($component);
+        midcom::componentloader->load($component);
 
         return true;
     }
@@ -727,7 +727,7 @@ class midcom_services_dbclassloader extends midcom_baseclasses_core_object
             return $classes;
         }
 
-        foreach ($_MIDCOM->componentloader->manifests[$component]->class_definitions as $list)
+        foreach (midcom::componentloader->manifests[$component]->class_definitions as $list)
         {
             $classes = array_merge($classes, $list);
         }

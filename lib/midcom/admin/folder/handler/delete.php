@@ -22,7 +22,7 @@ class midcom_admin_folder_handler_delete extends midcom_baseclasses_components_h
     function __construct ()
     {
         parent::__construct();
-        $_MIDCOM->componentloader->load('midcom.helper.reflector');
+        midcom::componentloader()->load('midcom.helper.reflector');
     }
 
     /**
@@ -37,7 +37,7 @@ class midcom_admin_folder_handler_delete extends midcom_baseclasses_components_h
     function _handler_delete($handler_id, $args, &$data)
     {
         // Symlink support requires that we use actual URL topic object here
-        if ($urltopic = end($_MIDCOM->get_context_data(MIDCOM_CONTEXT_URLTOPICS)))
+        if ($urltopic = end(midcom::get_context_data(MIDCOM_CONTEXT_URLTOPICS)))
         {
             $this->_topic = $urltopic;
         }
@@ -47,7 +47,7 @@ class midcom_admin_folder_handler_delete extends midcom_baseclasses_components_h
 
         if (array_key_exists('f_cancel', $_REQUEST))
         {
-            $_MIDCOM->relocate('');
+            midcom::relocate('');
             // This will exit.
         }
 
@@ -58,7 +58,7 @@ class midcom_admin_folder_handler_delete extends midcom_baseclasses_components_h
 
             if ($this->_process_delete_form())
             {
-                $_MIDCOM->relocate($upper_node[MIDCOM_NAV_FULLURL]);
+                midcom::relocate($upper_node[MIDCOM_NAV_FULLURL]);
                 // This will exit.
             }
         }
@@ -70,27 +70,27 @@ class midcom_admin_folder_handler_delete extends midcom_baseclasses_components_h
         $tmp[] = array
         (
             MIDCOM_NAV_URL => '__ais/folder/delete/',
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('delete folder', 'midcom.admin.folder'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('delete folder', 'midcom.admin.folder'),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         // Hide the button in toolbar
         $this->_node_toolbar->hide_item('__ais/folder/delete/');
 
         // Set page title
-        $data['title'] = sprintf($_MIDCOM->i18n->get_string('delete folder %s', 'midcom.admin.folder'), $data['topic']->extra);
-        $_MIDCOM->set_pagetitle($data['title']);
+        $data['title'] = sprintf(midcom::i18n()->get_string('delete folder %s', 'midcom.admin.folder'), $data['topic']->extra);
+        midcom::set_pagetitle($data['title']);
 
         // Set the help object in the toolbar
-        $help_toolbar = $_MIDCOM->toolbars->get_help_toolbar();
+        $help_toolbar = midcom::toolbars()->get_help_toolbar();
         $help_toolbar->add_help_item('delete_folder', 'midcom.admin.folder', null, null, 1);
 
 
         // Ensure we get the correct styles
-        $_MIDCOM->style->prepend_component_styledir('midcom.admin.folder');
+        midcom::style()->prepend_component_styledir('midcom.admin.folder');
 
         // Add style sheet
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -159,12 +159,12 @@ class midcom_admin_folder_handler_delete extends midcom_baseclasses_components_h
         // them deleted too.
         //
         // Again we keep an eye on the script timeout.
-        $indexer = $_MIDCOM->get_service('indexer');
+        $indexer = midcom::get_service('indexer');
         foreach ($guids as $guid)
         {
             set_time_limit(60);
 
-            $object = $_MIDCOM->dbfactory->get_object_by_guid($guid);
+            $object = midcom::dbfactory()->get_object_by_guid($guid);
             if ($object)
             {
                 $atts = $object->list_attachments();
@@ -194,7 +194,7 @@ class midcom_admin_folder_handler_delete extends midcom_baseclasses_components_h
     {
         if ($GLOBALS['midcom_config']['symlinks'])
         {
-            $_MIDCOM->auth->request_sudo('midcom.admin.folder');
+            midcom::auth()->request_sudo('midcom.admin.folder');
             $qb_topic = midcom_db_topic::new_query_builder();
             $qb_topic->add_constraint('symlink', '=', $this->_topic->id);
             $symlinks = $qb_topic->execute();
@@ -208,10 +208,10 @@ class midcom_admin_folder_handler_delete extends midcom_baseclasses_components_h
                     $msg .= ' ' . $node[MIDCOM_NAV_FULLURL];
                 }
 
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, $msg);
+                midcom::generate_error(MIDCOM_ERRCRIT, $msg);
                 // This will exit
             }
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth()->drop_sudo();
         }
         $this->_delete_topic_update_index();
 
@@ -229,7 +229,7 @@ class midcom_admin_folder_handler_delete extends midcom_baseclasses_components_h
         }
 
         // Invalidate everything since we operate recursive here.
-        $_MIDCOM->cache->invalidate_all();
+        midcom::cache()->invalidate_all();
 
         debug_pop();
         return true;

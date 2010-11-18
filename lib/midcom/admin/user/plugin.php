@@ -24,11 +24,11 @@ class midcom_admin_user_plugin extends midcom_baseclasses_components_handler
      */
     function get_plugin_handlers()
     {
-        $_MIDCOM->load_library('midgard.admin.asgard');
-        $_MIDCOM->load_library('midcom.admin.user');
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midgard.admin.asgard');
+        midcom::load_library('midcom.admin.user');
+        midcom::load_library('midcom.helper.datamanager2');
 
-        $_MIDCOM->auth->require_user_do('midcom.admin.user:access', null, 'midcom_admin_user_plugin');
+        midcom::auth()->require_user_do('midcom.admin.user:access', null, 'midcom_admin_user_plugin');
 
         return array
         (

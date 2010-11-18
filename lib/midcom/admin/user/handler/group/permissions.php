@@ -30,10 +30,10 @@ class midcom_admin_user_handler_group_permissions extends midcom_baseclasses_com
     function _on_initialize()
     {
 
-        $this->_l10n = $_MIDCOM->i18n->get_l10n('midcom.admin.user');
+        $this->_l10n = midcom::i18n()->get_l10n('midcom.admin.user');
         $this->_request_data['l10n'] = $this->_l10n;
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -56,7 +56,7 @@ class midcom_admin_user_handler_group_permissions extends midcom_baseclasses_com
         $tmp[] = Array
         (
             MIDCOM_NAV_URL => "__mfa/asgard_midcom.admin.user/group/folders/{$grp->guid}/",
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('folders', 'midcom.admin.user'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('folders', 'midcom.admin.user'),
         );
 
         while ($grp)
@@ -71,11 +71,11 @@ class midcom_admin_user_handler_group_permissions extends midcom_baseclasses_com
         $tmp[] = Array
         (
             MIDCOM_NAV_URL => "__mfa/asgard_midcom.admin.user/",
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('midcom.admin.user', 'midcom.admin.user'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('midcom.admin.user', 'midcom.admin.user'),
         );
         $tmp = array_reverse($tmp);
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**
@@ -120,8 +120,8 @@ class midcom_admin_user_handler_group_permissions extends midcom_baseclasses_com
             $data['objects'][$privilege->objectguid][$privilege->privilegename] = $privilege->value;
         }
 
-        $data['view_title'] = sprintf($_MIDCOM->i18n->get_string('folders of %s', 'midcom.admin.user'), $this->_group->official);
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        $data['view_title'] = sprintf(midcom::i18n()->get_string('folders of %s', 'midcom.admin.user'), $this->_group->official);
+        midcom::set_pagetitle($data['view_title']);
 
         $this->_update_breadcrumb();
 

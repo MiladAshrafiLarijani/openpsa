@@ -143,7 +143,7 @@ class midcom_helper_datamanager2_formmanager extends midcom_baseclasses_componen
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_type('Got an object of this type:', $schema);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Invalid schema instance passed, cannot startup formmanager');
             // This will exit.
         }
@@ -231,9 +231,9 @@ class midcom_helper_datamanager2_formmanager extends midcom_baseclasses_componen
     {
         if ($name === null)
         {
-            $name = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_COMPONENT);
+            $name = midcom::get_context_data(MIDCOM_CONTEXT_COMPONENT);
             // Replace the dots in the component name with underscores
-            $name = $_MIDCOM->componentloader->path_to_prefix($name);
+            $name = midcom::componentloader()->path_to_prefix($name);
         }
         if (! $name)
         {
@@ -243,7 +243,7 @@ class midcom_helper_datamanager2_formmanager extends midcom_baseclasses_componen
 
         $this->namespace = "{$name}_";
 
-        // TODO: make configurable to get URL from $_MIDCOM->get_context_data(MIDCOM_CONTEXT_URI) instead, see #1262
+        // TODO: make configurable to get URL from midcom::get_context_data(MIDCOM_CONTEXT_URI) instead, see #1262
         $this->form = new HTML_QuickForm($name, 'post', $_SERVER['REQUEST_URI'], '_self', Array('id' => $name), true);
         $defaults = Array();
         $this->widgets = Array();
@@ -692,7 +692,7 @@ class midcom_helper_datamanager2_formmanager extends midcom_baseclasses_componen
         if ($config['read_privilege'] !== null)
         {
             if (   array_key_exists('group', $config['read_privilege'])
-                && ! $_MIDCOM->auth->is_group_member($config['read_privilege']['group']))
+                && ! midcom::auth()->is_group_member($config['read_privilege']['group']))
             {
                 return false;
             }
@@ -748,7 +748,7 @@ class midcom_helper_datamanager2_formmanager extends midcom_baseclasses_componen
         if ($config['write_privilege'] !== null)
         {
             if (   array_key_exists('group', $config['write_privilege'])
-                && ! $_MIDCOM->auth->is_group_member($config['write_privilege']['group']))
+                && ! midcom::auth()->is_group_member($config['write_privilege']['group']))
             {
                 $widget->freeze();
             }
@@ -869,7 +869,7 @@ class midcom_helper_datamanager2_formmanager extends midcom_baseclasses_componen
                 mgd_include_snippet_php($src);
                 if (! class_exists($default))
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                    midcom::generate_error(MIDCOM_ERRCRIT,
                         "The renderer class set in the DM2 configuration does not exist.");
                     // This will exit.
                 }
@@ -972,7 +972,7 @@ class midcom_helper_datamanager2_formmanager extends midcom_baseclasses_componen
     function process_form($ajax_mode = false)
     {
         // Make sure we have CSS loaded
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (

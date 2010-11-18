@@ -1,5 +1,5 @@
 <?php
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 
 // Map, stimestamps => text
 // default is 1, 3, 6 and a year
@@ -21,7 +21,7 @@ function midcom_helper_search_process_node ($node_id, &$nap, &$topics, &$compone
     if (   ! array_key_exists($node[MIDCOM_NAV_COMPONENT], $components)
         && $node[MIDCOM_NAV_COMPONENT] != 'midcom.helper.search')
     {
-        $i18n = $_MIDCOM->get_service('i18n');
+        $i18n = midcom::get_service('i18n');
         $l10n = $i18n->get_l10n($node[MIDCOM_NAV_COMPONENT]);
         $components[$node[MIDCOM_NAV_COMPONENT]] = $l10n->get($node[MIDCOM_NAV_COMPONENT]);
     }
@@ -44,7 +44,7 @@ $topics[''] = $data['l10n']->get('search anywhere');
 $components[''] = $data['l10n']->get('search all content types');
 
 midcom_helper_search_process_node($nap->get_root_node(), $nap, $topics, $components, '', $data);
-$_MIDCOM->load_library('midcom.helper.xsspreventer');
+midcom::load_library('midcom.helper.xsspreventer');
 $query = midcom_helper_xsspreventer::escape_attribute($data['query']);
 
 ?>

@@ -98,28 +98,28 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
     {
         if (!$this->_config->get('allow_change_password'))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Password changing is disabled');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Password changing is disabled');
             // This will exit()
         }
-        $_MIDCOM->auth->require_valid_user();
-        $this->_account = $_MIDCOM->auth->user->get_storage();
+        midcom::auth->require_valid_user();
+        $this->_account = midcom::auth->user->get_storage();
         net_nehmer_account_viewer::verify_person_privileges($this->_account);
-        $_MIDCOM->auth->require_do('midgard:update', $this->_account);
-        $_MIDCOM->auth->require_do('midgard:parameters', $this->_account);
+        midcom::auth->require_do('midgard:update', $this->_account);
+        midcom::auth->require_do('midgard:parameters', $this->_account);
 
         $this->_prepare_datamanager();
         $this->_prepare_pwchange_formmanager();
         $this->_process_pwchange_form();
         $this->_prepare_request_data();
 
-        $_MIDCOM->set_26_request_metadata(time(), $this->_topic->guid);
+        midcom::set_26_request_metadata(time(), $this->_topic->guid);
 
         $this->_component_data['active_leaf'] = NET_NEHMER_ACCOUNT_LEAFID_PASSWORDCHANGE;
         $this->_view_toolbar->hide_item('password/');
 
-        $_MIDCOM->bind_view_to_object($this->_account, $this->_datamanager->schema->name);
+        midcom::bind_view_to_object($this->_account, $this->_datamanager->schema->name);
 
-        $_MIDCOM->set_pagetitle($this->_l10n->get('change password'));
+        midcom::set_pagetitle($this->_l10n->get('change password'));
 
         return true;
     }
@@ -174,7 +174,7 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
                 break;
 
             case 'cancel':
-                $_MIDCOM->relocate('');
+                midcom::relocate('');
                 // This will exit.
         }
         // Still editing...
@@ -187,9 +187,9 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
     function _update_password()
     {
         $new_password = $this->_controller->datamanager->types['newpassword']->value;
-        if (! $_MIDCOM->auth->user->update_password($new_password, false))
+        if (! midcom::auth->user->update_password($new_password, false))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to update the password');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to update the password');
             // This will exit.
         }
     }
@@ -228,7 +228,7 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
         $this->_request_data['formmanager'] =& $this->_controller->formmanager;
         $this->_request_data['processing_msg'] = $this->_processing_msg;
         $this->_request_data['processing_msg_raw'] = $this->_processing_msg_raw;
-        $this->_request_data['profile_url'] = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $this->_request_data['profile_url'] = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
     }
 
     /**
@@ -270,30 +270,30 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
      */
     function _handler_username($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
-        $this->_account = $_MIDCOM->auth->user->get_storage();
+        midcom::auth->require_valid_user();
+        $this->_account = midcom::auth->user->get_storage();
         net_nehmer_account_viewer::verify_person_privileges($this->_account);
-        $_MIDCOM->auth->require_do('midgard:update', $this->_account);
-        $_MIDCOM->auth->require_do('midgard:parameters', $this->_account);
+        midcom::auth->require_do('midgard:update', $this->_account);
+        midcom::auth->require_do('midgard:parameters', $this->_account);
 
         $this->_prepare_datamanager();
         $this->_prepare_usernamechange_formmanager();
         $this->_process_usernamechange_form();
         $this->_prepare_request_data();
 
-        $_MIDCOM->set_26_request_metadata(time(), $this->_topic->guid);
+        midcom::set_26_request_metadata(time(), $this->_topic->guid);
 
         $tmp[] = array
         (
             MIDCOM_NAV_URL => 'username/',
             MIDCOM_NAV_NAME => $this->_l10n->get('change username'),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
         $this->_view_toolbar->hide_item('username/');
 
-        $_MIDCOM->bind_view_to_object($this->_account, $this->_datamanager->schema->name);
+        midcom::bind_view_to_object($this->_account, $this->_datamanager->schema->name);
 
-        $_MIDCOM->set_pagetitle($this->_l10n->get('change username'));
+        midcom::set_pagetitle($this->_l10n->get('change username'));
 
         return true;
     }
@@ -366,14 +366,14 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
                 else
                 {
                     if (   $this->_config->get('username_is_email')
-                        && $_MIDCOM->auth->request_sudo())
+                        && midcom::auth->request_sudo())
                     {
                         $person = $this->_account->get_storage();
                         $person->email = $new;
                         $person->update();
-                        $_MIDCOM->auth->drop_sudo();
+                        midcom::auth->drop_sudo();
                     }
-                    $_MIDCOM->auth->user->update_username($new);
+                    midcom::auth->user->update_username($new);
                     $this->_processing_msg = $this->_l10n->get('username changed.');
                     $this->_processing_msg_raw = 'username changed.';
                     $this->_success = true;
@@ -381,7 +381,7 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
                 break;
 
             case 'cancel':
-                $_MIDCOM->relocate('');
+                midcom::relocate('');
                 // This will exit.
         }
         // Still editing...
@@ -425,11 +425,11 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
 
         if ($this->_datamanager)
         {
-            $_MIDCOM->substyle_append($this->_datamanager->schema->name);
+            midcom::substyle_append($this->_datamanager->schema->name);
         }
-        $_MIDCOM->set_26_request_metadata(time(), $this->_topic->guid);
+        midcom::set_26_request_metadata(time(), $this->_topic->guid);
         $this->_component_data['active_leaf'] = NET_NEHMER_ACCOUNT_LEAFID_LOSTPASSWORD;
-        $_MIDCOM->set_pagetitle($this->_l10n->get('lost password'));
+        midcom::set_pagetitle($this->_l10n->get('lost password'));
 
         return true;
     }
@@ -447,20 +447,20 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
         $guid = $args[0];
         $hash = $args[1];
 
-        if (! $_MIDCOM->auth->request_sudo('net.nehmer.account'))
+        if (! midcom::auth->request_sudo('net.nehmer.account'))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to request sudo privileges for account password reset.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to request sudo privileges for account password reset.');
             // This will exit.
         }
 
         $person = new midcom_db_person($guid);
         if (!$person->guid)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, 'Invalid reset link, the person record was not found.');
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, 'Invalid reset link, the person record was not found.');
             // This will exit.
         }
 
-        $this->_account = $_MIDCOM->auth->get_user($person);
+        $this->_account = midcom::auth->get_user($person);
 
         $reset_hash = $person->get_parameter('net.nehmer.account', 'lostpassword_reset_hash');
 
@@ -469,7 +469,7 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
             if ($reset_hash)
             {
                 // wrong reset hash has been passed.
-                $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, 'Invalid reset link.');
+                midcom::generate_error(MIDCOM_ERRNOTFOUND, 'Invalid reset link.');
                 // This will exit
             }
             $this->_processing_msg = $this->_l10n->get('password already reset');
@@ -488,7 +488,7 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
             $this->_processing_msg_raw = 'password reset, mail sent.';
         }
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
 
         $this->_prepare_request_data();
 
@@ -507,19 +507,19 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
 
     function _send_lostpassword_reset_link($email, $username=false)
     {
-        if (! $_MIDCOM->auth->request_sudo('net.nehmer.account'))
+        if (! midcom::auth->request_sudo('net.nehmer.account'))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to request sudo privileges for account password reset.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to request sudo privileges for account password reset.');
             // This will exit.
         }
 
         if ($username)
         {
-            $user = $_MIDCOM->auth->get_user_by_name($username);
+            $user = midcom::auth->get_user_by_name($username);
         }
         else
         {
-            $user = $_MIDCOM->auth->get_user_by_email($email);
+            $user = midcom::auth->get_user_by_email($email);
         }
 
         if (! $user)
@@ -553,7 +553,7 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
         );
 
         // Generate the activation link
-        $reset_link = $_MIDCOM->get_host_name() . $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "lostpassword/reset/{$person->guid}/{$reset_hash}/";
+        $reset_link = midcom::get_host_name() . midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "lostpassword/reset/{$person->guid}/{$reset_hash}/";
 
         // Store the information in parameters for activation
         $person->set_parameter('net.nehmer.account', 'lostpassword_reset_hash', $reset_hash);
@@ -562,7 +562,7 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
         // Store the reset link so that it can be fetched straight from the person record
         $person->set_parameter('net.nehmer.account', 'lostpassword_reset_link', $reset_link);
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
 
         net_nehmer_account_viewer::send_password_reset_mail($person, $reset_link, $this->_config);
 
@@ -580,7 +580,7 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
         if (   isset($_POST['email'])
             && $this->_config->get('lostpassword_email_reset'))
         {
-            $user = $_MIDCOM->auth->get_user_by_email($_POST['email']);
+            $user = midcom::auth->get_user_by_email($_POST['email']);
             if (is_array($user))
             {
                 debug_push_class(__CLASS__, __FUNCTION__);
@@ -685,7 +685,7 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
                     if (isset($this->_controller->datamanager->types['username']))
                     {
                         $username = $this->_controller->datamanager->types['username']->value;
-                        $user = $_MIDCOM->auth->get_user_by_name($username);
+                        $user = midcom::auth->get_user_by_name($username);
                         if ($user)
                         {
                             $person =& $user->get_storage();
@@ -719,7 +719,7 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
                 break;
 
             case 'cancel':
-                $_MIDCOM->relocate('');
+                midcom::relocate('');
                 // This will exit.
         }
         // Still editing...
@@ -736,18 +736,18 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
      */
     function _reset_password($username)
     {
-        if (! $_MIDCOM->auth->request_sudo('net.nehmer.account'))
+        if (! midcom::auth->request_sudo('net.nehmer.account'))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Failed to request sudo privileges for account creation.');
             // This will exit.
         }
 
-        $user = $_MIDCOM->auth->get_user_by_name($username);
+        $user = midcom::auth->get_user_by_name($username);
         if (! $user)
         {
-            $_MIDCOM->auth->drop_sudo();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::auth->drop_sudo();
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "The username {$username} is unknown. For some reason the QuickForm validation failed.");
             // This will exit.
         }
@@ -758,15 +758,15 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
 
         if (! $user->update_password($password, false))
         {
-            $_MIDCOM->auth->drop_sudo();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::auth->drop_sudo();
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Could not update the password of username {$username}: " . midcom_connection::get_error_string());
             // This will exit.
         }
 
         $person = $user->get_storage();
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
 
         $this->_send_reset_mail($person, $password);
     }
@@ -836,11 +836,11 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
      */
     function _handler_cancel_membership($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
-        $this->_account = $_MIDCOM->auth->user->get_storage();
+        midcom::auth->require_valid_user();
+        $this->_account = midcom::auth->user->get_storage();
         net_nehmer_account_viewer::verify_person_privileges($this->_account);
-        $_MIDCOM->auth->require_do('midgard:update', $this->_account);
-        $_MIDCOM->auth->require_do('midgard:parameters', $this->_account);
+        midcom::auth->require_do('midgard:update', $this->_account);
+        midcom::auth->require_do('midgard:parameters', $this->_account);
 
         $this->_prepare_datamanager();
         $this->_process_cancel_membership();
@@ -853,19 +853,19 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
 
         $this->_prepare_request_data();
 
-        $_MIDCOM->set_26_request_metadata(time(), $this->_topic->guid);
+        midcom::set_26_request_metadata(time(), $this->_topic->guid);
 
         $tmp[] = Array
         (
             MIDCOM_NAV_URL => 'cancel_membership/',
             MIDCOM_NAV_NAME => $this->_l10n->get('cancel membership'),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
         $this->_view_toolbar->hide_item('cancel_membership/');
 
-        $_MIDCOM->bind_view_to_object($this->_account, $this->_datamanager->schema->name);
+        midcom::bind_view_to_object($this->_account, $this->_datamanager->schema->name);
 
-        $_MIDCOM->set_pagetitle($this->_l10n->get('cancel membership'));
+        midcom::set_pagetitle($this->_l10n->get('cancel membership'));
 
         return true;
     }
@@ -885,7 +885,7 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
             if (   ! array_key_exists('confirmation_hash', $_REQUEST)
                 || $_REQUEST['confirmation_hash'] != $confirmation_hash)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     'Invalid confirmation hash specified, mebership will not be cancelled.');
                 // This will exit.
             }
@@ -893,12 +893,12 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
             // If a callback is set, invoke it now.
             $this->_invoke_cancel_membership_callback();
             $this->_drop_account();
-            $_MIDCOM->auth->drop_login_session();
+            midcom::auth->drop_login_session();
             $this->_success = true;
         }
         else if (array_key_exists('net_nehmer_account_deletecancel', $_REQUEST))
         {
-            $_MIDCOM->relocate('');
+            midcom::relocate('');
             // This will exit.
         }
     }
@@ -920,7 +920,7 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
      */
     function _compute_cancel_membership_confirm_hash()
     {
-        $hash_source = $_MIDCOM->auth->sessionmgr->current_session_id
+        $hash_source = midcom::auth->sessionmgr->current_session_id
             . $_SERVER["REMOTE_ADDR"]
             . filectime(__FILE__)
             . __FILE__;
@@ -980,10 +980,10 @@ class net_nehmer_account_handler_maintain extends midcom_baseclasses_components_
      */
     function _drop_account()
     {
-        $user = $_MIDCOM->auth->get_user($this->_account);
+        $user = midcom::auth->get_user($this->_account);
         if (! $user->delete())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Failed to delete the user account, last Midgard error was: ' . midcom_connection::get_error_string());
             // This will exit.
         }

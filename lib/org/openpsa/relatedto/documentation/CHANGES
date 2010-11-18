@@ -32,7 +32,7 @@ TODO:
   + simple Ajax handling for the confirm/deny relation controls. (Rambo)
   + static method for populating create wikinote, document etc buttons
     to given toolbar properly relatedto:ized. (Rambo)
-  - removed $_MIDCOM->skip_page_style from renderer prototype (bergie)
+  - removed midcom::skip_page_style from renderer prototype (bergie)
 
 2006-05-11 rambo & bergie
   + interface method based system to query all components for possibly

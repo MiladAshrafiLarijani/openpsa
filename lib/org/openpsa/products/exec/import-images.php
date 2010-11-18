@@ -1,5 +1,5 @@
 <?php
-$_MIDCOM->auth->require_admin_user();
+midcom::auth->require_admin_user();
 
 if (   !isset($_POST['address'])
     || !strstr($_POST['address'], '__PRODUCT_CODE__'))
@@ -25,7 +25,7 @@ else
     @ini_set('max_execution_time', 0);
     
     // Import product images
-    $_MIDCOM->componentloader->load_graceful('org.openpsa.products');
+    midcom::componentloader->load_graceful('org.openpsa.products');
     $qb = org_openpsa_products_product_dba::new_query_builder();
     $qb->add_constraint('code', '<>', '');
     $products = $qb->execute();

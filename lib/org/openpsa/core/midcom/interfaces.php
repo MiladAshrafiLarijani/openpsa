@@ -44,10 +44,10 @@ class org_openpsa_core_interface extends midcom_baseclasses_components_interface
 
             if ($this->_data['config']->get('default_workgroup_filter') == 'me')
             {
-                if ($_MIDCOM->auth->user)
+                if (midcom::auth->user)
                 {
 
-                    $default_filter = $_MIDCOM->auth->user->id;
+                    $default_filter = midcom::auth->user->id;
                 }
                 else
                 {
@@ -128,11 +128,11 @@ class org_openpsa_core_interface extends midcom_baseclasses_components_interface
         {
             $GLOBALS['org_openpsa_core_acl_options'] = array
             (
-                ORG_OPENPSA_ACCESSTYPE_WGRESTRICTED => $_MIDCOM->i18n->get_string('workgroup restricted', $this->_component),
-                ORG_OPENPSA_ACCESSTYPE_WGPRIVATE => $_MIDCOM->i18n->get_string('workgroup private', $this->_component),
-                ORG_OPENPSA_ACCESSTYPE_PRIVATE => $_MIDCOM->i18n->get_string('private', $this->_component),
-                ORG_OPENPSA_ACCESSTYPE_PUBLIC => $_MIDCOM->i18n->get_string('public', $this->_component),
-                ORG_OPENPSA_ACCESSTYPE_AGGREGATED => $_MIDCOM->i18n->get_string('aggregated', $this->_component),
+                ORG_OPENPSA_ACCESSTYPE_WGRESTRICTED => midcom::i18n()->get_string('workgroup restricted', $this->_component),
+                ORG_OPENPSA_ACCESSTYPE_WGPRIVATE => midcom::i18n()->get_string('workgroup private', $this->_component),
+                ORG_OPENPSA_ACCESSTYPE_PRIVATE => midcom::i18n()->get_string('private', $this->_component),
+                ORG_OPENPSA_ACCESSTYPE_PUBLIC => midcom::i18n()->get_string('public', $this->_component),
+                ORG_OPENPSA_ACCESSTYPE_AGGREGATED => midcom::i18n()->get_string('aggregated', $this->_component),
             );
         }
     }

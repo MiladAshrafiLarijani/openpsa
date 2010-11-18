@@ -54,10 +54,10 @@ class midgard_admin_asgard_handler_object_metadata extends midcom_baseclasses_co
     function _on_initialize()
     {
         // Ensure we get the correct styles
-        $_MIDCOM->style->prepend_component_styledir('midgard.admin.asgard');
-        $_MIDCOM->skip_page_style = true;
+        midcom::style->prepend_component_styledir('midgard.admin.asgard');
+        midcom::skip_page_style = true;
 
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
     }
 
     /**
@@ -113,7 +113,7 @@ class midgard_admin_asgard_handler_object_metadata extends midcom_baseclasses_co
 
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for article {$this->_article->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for article {$this->_article->id}.");
             // This will exit.
         }
     }
@@ -130,17 +130,17 @@ class midgard_admin_asgard_handler_object_metadata extends midcom_baseclasses_co
      */
     function _handler_edit($handler_id, $args, &$data)
     {
-        $this->_object = $_MIDCOM->dbfactory->get_object_by_guid($args[0]);
+        $this->_object = midcom::dbfactory()->get_object_by_guid($args[0]);
         if (   !$this->_object
             || !$this->_object->guid)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The GUID '{$args[0]}' was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The GUID '{$args[0]}' was not found.");
             // This will exit.
         }
 
         // FIXME: We should modify the schema according to whether or not scheduling is used
         $this->_object->require_do('midgard:update');
-        $_MIDCOM->auth->require_user_do('midgard.admin.asgard:manage_objects', null, 'midgard_admin_asgard_plugin');
+        midcom::auth->require_user_do('midgard.admin.asgard:manage_objects', null, 'midgard_admin_asgard_plugin');
 
         if (is_a($this->_object, 'midcom_db_topic'))
         {
@@ -152,7 +152,7 @@ class midgard_admin_asgard_handler_object_metadata extends midcom_baseclasses_co
 
         if (! $this->_metadata)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to retrieve Metadata for " . get_class($this->_object) . " {$this->_object->guid}.");
             // This will exit.
         }
@@ -163,15 +163,15 @@ class midgard_admin_asgard_handler_object_metadata extends midcom_baseclasses_co
         {
             case 'save':
                 // Reindex the object
-                //$indexer = $_MIDCOM->get_service('indexer');
+                //$indexer = midcom::get_service('indexer');
                 //net_nemein_wiki_viewer::index($this->_request_data['controller']->datamanager, $indexer, $this->_topic);
                 // *** FALL-THROUGH ***
-                $_MIDCOM->cache->invalidate($this->_object->guid);
-                $_MIDCOM->relocate("__mfa/asgard/object/metadata/{$this->_object->guid}");
+                midcom::cache()->invalidate($this->_object->guid);
+                midcom::relocate("__mfa/asgard/object/metadata/{$this->_object->guid}");
                 // This will exit.
 
             case 'cancel':
-                $_MIDCOM->relocate("__mfa/asgard/object/view/{$this->_object->guid}");
+                midcom::relocate("__mfa/asgard/object/view/{$this->_object->guid}");
                 // This will exit.
         }
 

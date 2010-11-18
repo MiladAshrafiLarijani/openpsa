@@ -77,7 +77,7 @@ class org_openpsa_products_handler_productlink_view extends midcom_baseclasses_c
     {
         if (preg_match('/_raw$/', $handler_id))
         {
-            $_MIDCOM->skip_page_style = true;
+            midcom::skip_page_style = true;
         }
 
         $this->_productlink = new org_openpsa_products_product_link_dba($args[0]);
@@ -86,7 +86,7 @@ class org_openpsa_products_handler_productlink_view extends midcom_baseclasses_c
             || !isset($this->_productlink->guid)
             || empty($this->_productlink->guid))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Fell through to last product sanity-check and failed");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Fell through to last product sanity-check and failed");
             // This will exit
         }
 
@@ -95,19 +95,19 @@ class org_openpsa_products_handler_productlink_view extends midcom_baseclasses_c
         if (   ! $data['datamanager']
             || ! $data['datamanager']->autoset_storage($this->_productlink))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for productlink {$this->_productlink->guid}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for productlink {$this->_productlink->guid}.");
             // This will exit.
         }
 
         $this->_prepare_request_data();
-        $_MIDCOM->bind_view_to_object($this->_productlink, $data['datamanager']->schema->name);
+        midcom::bind_view_to_object($this->_productlink, $data['datamanager']->schema->name);
 
         $breadcrumb = org_openpsa_products_viewer::update_breadcrumb_line($this->_productlink);
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $breadcrumb);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $breadcrumb);
 
-        $_MIDCOM->set_26_request_metadata($this->_productlink->metadata->revised, $this->_productlink->guid);
+        midcom::set_26_request_metadata($this->_productlink->metadata->revised, $this->_productlink->guid);
 
-//        $_MIDCOM->set_pagetitle($this->_request_data['view_title']);
+//        midcom::set_pagetitle($this->_request_data['view_title']);
 
         return true;
     }

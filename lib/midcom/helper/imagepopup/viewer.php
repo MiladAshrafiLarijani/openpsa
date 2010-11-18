@@ -22,7 +22,7 @@ class midcom_helper_imagepopup_viewer extends midcom_baseclasses_components_requ
     
     function get_plugin_handlers()
     {
-        $_MIDCOM->load_library('midcom.helper.imagepopup');
+        midcom::load_library('midcom.helper.imagepopup');
             
         // Dumb $this on PHP5 workaround
         $object =& $this;

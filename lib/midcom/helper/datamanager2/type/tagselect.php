@@ -159,7 +159,7 @@ class midcom_helper_datamanager2_type_tagselect extends midcom_helper_datamanage
                 'color' => '8596b6'
             );
 
-            $_MIDCOM->load_library('net.nemein.tag');
+            midcom::load_library('net.nemein.tag');
         }
 
         $this->allow_multiple = true;
@@ -649,7 +649,7 @@ class midcom_helper_datamanager2_type_tagselect extends midcom_helper_datamanage
                 return explode($glue, substr($source, 1, -1));
 
             default:
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "The multiple_storagemode '{$this->multiple_storagemode}' is invalid, cannot continue.");
                 // This will exit.
         }
@@ -773,7 +773,7 @@ class midcom_helper_datamanager2_type_tagselect extends midcom_helper_datamanage
                 return "{$glue}{$options}{$glue}";
 
             default:
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "The multiple_storagemode '{$this->multiple_storagemode}' is invalid, cannot continue.");
                 // This will exit.
         }

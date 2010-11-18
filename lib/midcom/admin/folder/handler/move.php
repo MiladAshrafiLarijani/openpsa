@@ -83,20 +83,20 @@ class midcom_admin_folder_handler_move extends midcom_baseclasses_components_han
     {
         debug_push_class(__CLASS__, __FUNCTION__);
 
-        $this->_object = $_MIDCOM->dbfactory->get_object_by_guid($args[0]);
+        $this->_object = midcom::dbfactory()->get_object_by_guid($args[0]);
         if (! $this->_object)
         {
             debug_add("Object with GUID '{$args[0]}' was not found!", MIDCOM_LOG_ERROR);
             debug_pop();
 
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The GUID '{$args[0]}' was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The GUID '{$args[0]}' was not found.");
             // This will exit.
         }
 
         if (   !is_a($this->_object, 'midcom_db_topic')
             && !is_a($this->_object, 'midcom_db_article'))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Moving only topics and articles is supported.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Moving only topics and articles is supported.");
         }
 
         $this->_object->require_do('midgard:update');
@@ -109,7 +109,7 @@ class midcom_admin_folder_handler_move extends midcom_baseclasses_components_han
             if (   !$move_to_topic
                 || !$move_to_topic->guid)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to move the topic. Could not get the target topic');
+                midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to move the topic. Could not get the target topic');
                 // This will exit
             }
             
@@ -123,7 +123,7 @@ class midcom_admin_folder_handler_move extends midcom_baseclasses_components_han
                 $this->_object->up = $move_to_topic->id;
                 if (!$this->_object->update())
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to move the topic, reason ' . midcom_connection::get_error_string());
+                    midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to move the topic, reason ' . midcom_connection::get_error_string());
                     // This will exit
                 }
                 if (!midcom_admin_folder_folder_management::is_child_listing_finite($this->_object))
@@ -131,7 +131,7 @@ class midcom_admin_folder_handler_move extends midcom_baseclasses_components_han
                     $this->_object->up = $up;
                     $this->_object->name = $name;
                     $this->_object->update();
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                    midcom::generate_error(MIDCOM_ERRCRIT,
                         "Refusing to move this folder because the move would have created an " .
                         "infinite loop situation caused by the symlinks on this site. The " .
                         "whole site would have been completely and irrevocably broken if this " .
@@ -149,11 +149,11 @@ class midcom_admin_folder_handler_move extends midcom_baseclasses_components_han
                 $this->_object->topic = $move_to_topic->id;
                 if (!$this->_object->update())
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to move the article, reason ' . midcom_connection::get_error_string());
+                    midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to move the article, reason ' . midcom_connection::get_error_string());
                     // This will exit
                 }
             }
-            $_MIDCOM->relocate($_MIDCOM->permalinks->create_permalink($this->_object->guid));
+            midcom::relocate(midcom::permalinks()->create_permalink($this->_object->guid));
             // This will exit
         }
 
@@ -167,11 +167,11 @@ class midcom_admin_folder_handler_move extends midcom_baseclasses_components_han
         else
         {
             // This is a regular object, bind to view
-            $_MIDCOM->bind_view_to_object($this->_object);
+            midcom::bind_view_to_object($this->_object);
 
             $tmp[] = array
             (
-                MIDCOM_NAV_URL => $_MIDCOM->permalinks->create_permalink($this->_object->guid),
+                MIDCOM_NAV_URL => midcom::permalinks()->create_permalink($this->_object->guid),
                 MIDCOM_NAV_NAME => $this->_get_object_title($this->_object),
             );
             $this->_view_toolbar->hide_item("__ais/folder/move/{$this->_object->guid}/");
@@ -182,18 +182,18 @@ class midcom_admin_folder_handler_move extends midcom_baseclasses_components_han
         $tmp[] = Array
         (
             MIDCOM_NAV_URL => "__ais/folder/move/{$this->_object->guid}/",
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('move', 'midcom.admin.folder'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('move', 'midcom.admin.folder'),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
-        $data['title'] = sprintf($_MIDCOM->i18n->get_string('move %s', 'midcom.admin.folder'), $this->_get_object_title($this->_object));
-        $_MIDCOM->set_pagetitle($data['title']);
+        $data['title'] = sprintf(midcom::i18n()->get_string('move %s', 'midcom.admin.folder'), $this->_get_object_title($this->_object));
+        midcom::set_pagetitle($data['title']);
 
         // Ensure we get the correct styles
-        $_MIDCOM->style->prepend_component_styledir('midcom.admin.folder');
+        midcom::style()->prepend_component_styledir('midcom.admin.folder');
 
         // Add style sheet
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (

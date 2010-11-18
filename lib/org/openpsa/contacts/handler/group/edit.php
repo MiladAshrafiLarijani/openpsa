@@ -60,8 +60,8 @@ class org_openpsa_contacts_handler_group_edit extends midcom_baseclasses_compone
 
     function _on_initialize()
     {
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
-        $_MIDCOM->add_link_head
+        midcom::load_library('midcom.helper.datamanager2');
+        midcom::add_link_head
         (
             array
             (
@@ -87,7 +87,7 @@ class org_openpsa_contacts_handler_group_edit extends midcom_baseclasses_compone
         $this->_controller->set_storage($this->_group, $this->_schema);
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for contact {$this->_contact->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for contact {$this->_contact->id}.");
             // This will exit.
         }
     }
@@ -100,7 +100,7 @@ class org_openpsa_contacts_handler_group_edit extends midcom_baseclasses_compone
      */
     function _handler_edit($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         // Check if we get the group
         $this->_group = new org_openpsa_contacts_group_dba($args[0]);
         if (!$this->_group)
@@ -116,14 +116,14 @@ class org_openpsa_contacts_handler_group_edit extends midcom_baseclasses_compone
         {
             case 'save':
                 // Index the organization
-                $indexer = $_MIDCOM->get_service('indexer');
+                $indexer = midcom::get_service('indexer');
                 org_openpsa_contacts_viewer::index_group($this->_controller->datamanager, $indexer, $this->_content_topic);
 
                 // *** FALL-THROUGH ***
 
             case 'cancel':
-                $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-                $_MIDCOM->relocate($prefix . "group/" . $this->_group->guid . "/");
+                $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+                midcom::relocate($prefix . "group/" . $this->_group->guid . "/");
                 // This will exit.
         }
 
@@ -143,11 +143,11 @@ class org_openpsa_contacts_handler_group_edit extends midcom_baseclasses_compone
         $this->_request_data['group'] =& $this->_group;
 
         org_openpsa_helpers::dm2_savecancel($this);
-        $_MIDCOM->bind_view_to_object($this->_group);
+        midcom::bind_view_to_object($this->_group);
 
-        $_MIDCOM->set_pagetitle(sprintf($this->_l10n_midcom->get('edit %s'), $this->_group->official));
+        midcom::set_pagetitle(sprintf($this->_l10n_midcom->get('edit %s'), $this->_group->official));
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -179,7 +179,7 @@ class org_openpsa_contacts_handler_group_edit extends midcom_baseclasses_compone
             MIDCOM_NAV_NAME => sprintf($this->_l10n_midcom->get('edit %s'), $this->_l10n->get('organization')),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**

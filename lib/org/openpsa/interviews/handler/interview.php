@@ -78,7 +78,7 @@ class org_openpsa_interviews_handler_interview extends midcom_baseclasses_compon
         if (   ! $this->_datamanager
             || ! $this->_datamanager->autoset_storage($this->_member))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for member {$this->_member->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for member {$this->_member->id}.");
             // This will exit.
         }
     }
@@ -96,7 +96,7 @@ class org_openpsa_interviews_handler_interview extends midcom_baseclasses_compon
         $this->_controller->set_storage($this->_member);
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for article {$this->_article->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for article {$this->_article->id}.");
             // This will exit.
         }
     }
@@ -123,7 +123,7 @@ class org_openpsa_interviews_handler_interview extends midcom_baseclasses_compon
         {
             case 'save':
                 // Redirect to next interviewee
-                $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "next/{$this->_request_data['campaign']->guid}/");
+                midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "next/{$this->_request_data['campaign']->guid}/");
                 // This will exit.
 
             case 'cancel':
@@ -131,7 +131,7 @@ class org_openpsa_interviews_handler_interview extends midcom_baseclasses_compon
                 $this->_member->orgOpenpsaObtype = ORG_OPENPSA_OBTYPE_CAMPAIGN_MEMBER;
                 $this->_member->update();
 
-                $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "campaign/{$this->_request_data['campaign']->guid}/");
+                midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "campaign/{$this->_request_data['campaign']->guid}/");
                 // This will exit.
         }
 

@@ -35,12 +35,12 @@ class midcom_core_temporary_object extends midcom_core_dbaobject
 
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
 
     /**
@@ -100,9 +100,9 @@ class midcom_core_temporary_object extends midcom_core_dbaobject
      */
     function move_extensions_to_object($object)
     {
-        if (! $_MIDCOM->dbclassloader->is_midcom_db_object($object))
+        if (! midcom::dbclassloader()->is_midcom_db_object($object))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'The object passed is no valid for move_extensions_to_object.');
             // This will exit.
         }

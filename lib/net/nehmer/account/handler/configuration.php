@@ -59,7 +59,7 @@ class net_nehmer_account_handler_configuration extends midcom_baseclasses_compon
         $this->_controller->set_storage($this->_topic);
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for photo {$this->_photo->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for photo {$this->_photo->id}.");
             // This will exit.
         }
     }
@@ -80,7 +80,7 @@ class net_nehmer_account_handler_configuration extends midcom_baseclasses_compon
             MIDCOM_NAV_NAME => $this->_l10n_midcom->get('component configuration', 'midcom'),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**
@@ -100,19 +100,19 @@ class net_nehmer_account_handler_configuration extends midcom_baseclasses_compon
         switch ($this->_controller->process_form())
         {
             case 'save':
-                $_MIDCOM->uimessages->add($this->_l10n->get('net.nehmer.account'), $this->_l10n->get('configuration saved'));
-                $_MIDCOM->relocate('');
+                midcom::uimessages()->add($this->_l10n->get('net.nehmer.account'), $this->_l10n->get('configuration saved'));
+                midcom::relocate('');
                 break;
 
             case 'cancel':
-                $_MIDCOM->uimessages->add($this->_l10n->get('net.nehmer.account'), $this->_l10n->get('cancelled'));
-                $_MIDCOM->relocate('');
+                midcom::uimessages()->add($this->_l10n->get('net.nehmer.account'), $this->_l10n->get('cancelled'));
+                midcom::relocate('');
                 // This will exit.
         }
 
         $this->_prepare_request_data();
-        $_MIDCOM->set_26_request_metadata($this->_topic->metadata->revised, $this->_topic->guid);
-        $_MIDCOM->set_pagetitle("{$this->_topic->extra}: " . $this->_l10n_midcom->get('component configuration'));
+        midcom::set_26_request_metadata($this->_topic->metadata->revised, $this->_topic->guid);
+        midcom::set_pagetitle("{$this->_topic->extra}: " . $this->_l10n_midcom->get('component configuration'));
         $this->_update_breadcrumb_line($handler_id);
 
         return true;

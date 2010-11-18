@@ -23,12 +23,12 @@ class midgard_admin_asgard_objecthelper extends midgard_admin_asgard_navigation
             return;
         }
         
-        if ($_MIDCOM->dbfactory->is_a($data['object'], 'midgard_style'))
+        if (midcom::dbfactory()->is_a($data['object'], 'midgard_style'))
         {
             $help_element = midgard_admin_asgard_objecthelper::get_help_style($data);
         }
 
-        if ($_MIDCOM->dbfactory->is_a($data['object'], 'midgard_element'))
+        if (midcom::dbfactory()->is_a($data['object'], 'midgard_element'))
         {
             $help_element = midgard_admin_asgard_objecthelper::get_help_element($data);
         }
@@ -75,20 +75,20 @@ class midgard_admin_asgard_objecthelper extends midgard_admin_asgard_navigation
         
         if ($data['object']->name == 'ROOT')
         {
-            $data = $_MIDCOM->get_custom_context_data('request_data');
-            $element_path = MIDCOM_ROOT . $_MIDCOM->componentloader->path_to_snippetpath('midgard.admin.asgard') . '/documentation/ROOT.php';
+            $data = midcom::get_custom_context_data('request_data');
+            $element_path = MIDCOM_ROOT . midcom::componentloader->path_to_snippetpath('midgard.admin.asgard') . '/documentation/ROOT.php';
             $data['help_style_element'] = array
             (
                 'component' => 'midcom',
                 'default'   => file_get_contents($element_path),
             );
-            $_MIDCOM->set_custom_context_data('request_data', $data);
+            midcom::set_custom_context_data('request_data', $data);
             return 'style_element';
         }
 
         // Find the element we're looking for
-        $style_path = $_MIDCOM->style->get_style_path_from_id($data['object']->style);
-        $style_elements = $_MIDCOM->style->get_style_elements_and_nodes($style_path);
+        $style_path = midcom::style->get_style_path_from_id($data['object']->style);
+        $style_elements = midcom::style->get_style_elements_and_nodes($style_path);
         $element_path = null;
         $element_component = null;
         foreach ($style_elements['elements'] as $component => $elements)
@@ -106,13 +106,13 @@ class midgard_admin_asgard_objecthelper extends midgard_admin_asgard_navigation
             return;
         }
         
-        $data = $_MIDCOM->get_custom_context_data('request_data');
+        $data = midcom::get_custom_context_data('request_data');
         $data['help_style_element'] = array
         (
             'component' => $element_component,
             'default'   => file_get_contents($element_path),
         );
-        $_MIDCOM->set_custom_context_data('request_data', $data);
+        midcom::set_custom_context_data('request_data', $data);
         return 'style_element';
     }
     
@@ -121,10 +121,10 @@ class midgard_admin_asgard_objecthelper extends midgard_admin_asgard_navigation
      */
     public static function get_help_style_elementnames(midcom_db_style $style)
     {
-        $style_path = $_MIDCOM->style->get_style_path_from_id($style->id);
-        $data = $_MIDCOM->get_custom_context_data('request_data');
-        $data['help_style_elementnames'] = $_MIDCOM->style->get_style_elements_and_nodes($style_path);
-        $_MIDCOM->set_custom_context_data('request_data', $data);
+        $style_path = midcom::style->get_style_path_from_id($style->id);
+        $data = midcom::get_custom_context_data('request_data');
+        $data['help_style_elementnames'] = midcom::style->get_style_elements_and_nodes($style_path);
+        midcom::set_custom_context_data('request_data', $data);
         return 'style_elementnames';
     }
 }

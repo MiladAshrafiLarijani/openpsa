@@ -48,7 +48,7 @@ class org_openpsa_invoices_interface extends midcom_baseclasses_components_inter
      */
     function _on_watched_dba_delete($object)
     {
-        $_MIDCOM->auth->request_sudo();
+        midcom::auth->request_sudo();
         $qb_billing_data = org_openpsa_invoices_billing_data_dba::new_query_builder();
         $qb_billing_data->add_constraint('linkGuid' , '=' , $object->guid);
         $result = $qb_billing_data->execute();
@@ -62,7 +62,7 @@ class org_openpsa_invoices_interface extends midcom_baseclasses_components_inter
                 $billing_data->delete();
             }
         }
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
     }
       /**
       * Iterate over all invoices and create index record using the datamanager indexer
@@ -71,7 +71,7 @@ class org_openpsa_invoices_interface extends midcom_baseclasses_components_inter
     function _on_reindex($topic, $config, &$indexer)
     {
         debug_push_class(__CLASS__, __FUNCTION__);
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
 
         $qb = org_openpsa_invoices_invoice_dba::new_query_builder();
 

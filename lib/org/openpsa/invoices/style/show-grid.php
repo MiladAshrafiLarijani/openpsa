@@ -1,5 +1,5 @@
 <?php
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 $entries = array();
 
 $classes = $data['list_type'];
@@ -74,7 +74,7 @@ foreach ($data['invoices'] as $invoice)
     if ($data['list_type'] != 'paid')
     {
         $entry['action'] = '';
-        if (   $_MIDCOM->auth->can_do('midgard:update', $invoice)
+        if (   midcom::auth->can_do('midgard:update', $invoice)
             && $next_marker)
         {
             $next_marker_url = $prefix . "invoice/mark_" . $next_marker . "/" . $invoice->guid . "/";

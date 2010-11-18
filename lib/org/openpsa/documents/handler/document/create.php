@@ -63,7 +63,7 @@ class org_openpsa_documents_handler_document_create extends midcom_baseclasses_c
 
     function _on_initialize()
     {
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
         $this->_schemadb = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb_document'));
     }
 
@@ -81,7 +81,7 @@ class org_openpsa_documents_handler_document_create extends midcom_baseclasses_c
         $this->_controller->defaults =& $this->_defaults;
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
             // This will exit.
         }
     }
@@ -100,7 +100,7 @@ class org_openpsa_documents_handler_document_create extends midcom_baseclasses_c
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $document);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to create a new document, cannot continue. Error: " . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -118,7 +118,7 @@ class org_openpsa_documents_handler_document_create extends midcom_baseclasses_c
      */
     function _handler_create($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_do('midgard:create', $this->_request_data['directory']);
+        midcom::auth->require_do('midgard:create', $this->_request_data['directory']);
 
         $this->_defaults = array
         (
@@ -134,11 +134,11 @@ class org_openpsa_documents_handler_document_create extends midcom_baseclasses_c
         {
             case 'save':
                 /* Index the document */
-                $indexer = $_MIDCOM->get_service('indexer');
+                $indexer = midcom::get_service('indexer');
                 $indexer->index($this->_controller->datamanager);
 
                 // Relocate to document view
-                $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+                $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
                 if ($this->_document->topic != $this->_topic->id)
                 {
                     $nap = new midcom_helper_nav();
@@ -146,10 +146,10 @@ class org_openpsa_documents_handler_document_create extends midcom_baseclasses_c
                     $prefix = $node[MIDCOM_NAV_ABSOLUTEURL];
                 }
 
-                $_MIDCOM->relocate($prefix  . "document/" . $this->_document->guid . "/");
+                midcom::relocate($prefix  . "document/" . $this->_document->guid . "/");
                 // This will exit
             case 'cancel':
-                $_MIDCOM->relocate('');
+                midcom::relocate('');
                 // This will exit
         }
         $this->_request_data['controller'] =& $this->_controller;
@@ -165,9 +165,9 @@ class org_openpsa_documents_handler_document_create extends midcom_baseclasses_c
             MIDCOM_NAV_NAME => $this->_l10n->get('create document'),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (

@@ -29,7 +29,7 @@ class org_openpsa_directmarketing_handler_subscriber extends midcom_baseclasses_
      */
     function _handler_list($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         if (count($args) == 1)
         {
             $this->_request_data['person'] = new midcom_db_person($args[0]);
@@ -52,7 +52,7 @@ class org_openpsa_directmarketing_handler_subscriber extends midcom_baseclasses_
                     */)
                 {
                     // FIXME: use can_do check to be graceful
-                    $_MIDCOM->auth->require_do('midgard:create', $campaign);
+                    midcom::auth->require_do('midgard:create', $campaign);
 
                     $member = new org_openpsa_directmarketing_campaign_member_dba();
                     $member->orgOpenpsaObType = ORG_OPENPSA_OBTYPE_CAMPAIGN_MEMBER;
@@ -61,7 +61,7 @@ class org_openpsa_directmarketing_handler_subscriber extends midcom_baseclasses_
                     $member->create();
                     if ($member->id)
                     {
-                        $_MIDCOM->uimessages->add($this->_l10n->get('org.openpsa.directmarketing'), 
+                        midcom::uimessages()->add($this->_l10n->get('org.openpsa.directmarketing'), 
                             sprintf(
                                 $this->_l10n->get('added person %s to campaign %s'),
                                 "{$this->_request_data['person']->firstname} {$this->_request_data['person']->lastname}",
@@ -72,7 +72,7 @@ class org_openpsa_directmarketing_handler_subscriber extends midcom_baseclasses_
                     }
                     else
                     {
-                        $_MIDCOM->uimessages->add($this->_l10n->get('org.openpsa.directmarketing'), 
+                        midcom::uimessages()->add($this->_l10n->get('org.openpsa.directmarketing'), 
                             sprintf(
                                 $this->_l10n->get('Failed adding person %s to campaign %s'),
                                 "{$this->_request_data['person']->firstname} {$this->_request_data['person']->lastname}",
@@ -85,7 +85,7 @@ class org_openpsa_directmarketing_handler_subscriber extends midcom_baseclasses_
                 else
                 {
                     // FIXME: More informative error message
-                    $_MIDCOM->uimessages->add($this->_l10n->get('org.openpsa.directmarketing'), 
+                    midcom::uimessages()->add($this->_l10n->get('org.openpsa.directmarketing'), 
                         sprintf(
                             $this->_l10n->get('Failed adding person %s to campaign %s'),
                             "{$this->_request_data['person']->firstname} {$this->_request_data['person']->lastname}",
@@ -145,7 +145,7 @@ class org_openpsa_directmarketing_handler_subscriber extends midcom_baseclasses_
                 foreach ($campaigns_all as $campaign)
                 {
                     if (   !array_key_exists($campaign->id, $campaigns)
-                        && $_MIDCOM->auth->can_do('midgard:create', $campaign))
+                        && midcom::auth->can_do('midgard:create', $campaign))
                     {
                         $this->_request_data['campaigns_all'][] = $campaign;
                     }
@@ -209,17 +209,17 @@ class org_openpsa_directmarketing_handler_subscriber extends midcom_baseclasses_
     {
         if (count($args) != 1)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Missing member ID.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Missing member ID.");
             // This will exit.
         }
 
-        $_MIDCOM->auth->request_sudo();
+        midcom::auth->request_sudo();
 
         $this->_request_data['membership'] = new org_openpsa_directmarketing_campaign_member_dba($args[0]);
         if (   !is_a($this->_request_data['membership'], 'org_openpsa_directmarketing_campaign_member_dba')
             || !$this->_request_data['membership']->guid)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Membership record '{$args[0]}' not found");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Membership record '{$args[0]}' not found");
             // This will exit.
         }
 
@@ -227,7 +227,7 @@ class org_openpsa_directmarketing_handler_subscriber extends midcom_baseclasses_
         if (   !$this->_request_data['campaign']
             || $this->_request_data['campaign']->node != $this->_topic->id)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Campaign for member '{$args[0]}' not found");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Campaign for member '{$args[0]}' not found");
             // This will exit.
         }
 
@@ -236,9 +236,9 @@ class org_openpsa_directmarketing_handler_subscriber extends midcom_baseclasses_
         debug_push_class(__CLASS__, __FUNCTION__);
         debug_add("Unsubscribe status: {$this->_request_data['unsubscribe_status']}");
         debug_pop();
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         //This is often called by people who should not see anything pointing to OpenPSA, also allows full styling of the unsubscribe page
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
 
         return true;
     }
@@ -277,21 +277,21 @@ class org_openpsa_directmarketing_handler_subscriber extends midcom_baseclasses_
     {
         if (count($args) != 1)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Missing member ID.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Missing member ID.");
             // This will exit.
         }
-        $_MIDCOM->auth->request_sudo();
+        midcom::auth->request_sudo();
         $this->_request_data['membership'] = new org_openpsa_directmarketing_campaign_member_dba($args[0]);
         if (!is_a($this->_request_data['membership'], 'org_openpsa_directmarketing_campaign_member_dba'))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Membership record '{$args[0]}' not found");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Membership record '{$args[0]}' not found");
             // This will exit.
         }
         $this->_request_data['campaign'] = new org_openpsa_directmarketing_campaign_dba($this->_request_data['membership']->campaign);
         if (   !$this->_request_data['campaign']
             || $this->_request_data['campaign']->node != $this->_topic->id)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Campaign for member '{$args[0]}' not found");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Campaign for member '{$args[0]}' not found");
             // This will exit.
         }
 
@@ -302,9 +302,9 @@ class org_openpsa_directmarketing_handler_subscriber extends midcom_baseclasses_
         debug_add("Unsubscribe status: {$this->_request_data['unsubscribe_status']}");
         debug_pop();
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         //This is often called by people who should not see anything pointing to OpenPSA, also allows full styling of the unsubscribe page
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
 
         $message = new org_openpsa_helpers_ajax();
         $message->simpleReply($this->_request_data['unsubscribe_status'], "Unsubscribe failed");
@@ -335,16 +335,16 @@ class org_openpsa_directmarketing_handler_subscriber extends midcom_baseclasses_
     {
         if (count($args) < 1)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Missing member ID.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Missing member ID.");
             // This will exit.
         }
-        $_MIDCOM->auth->request_sudo();
+        midcom::auth->request_sudo();
         $this->_request_data['person'] = new org_openpsa_contacts_person_dba($args[0]);
 
         if (    !is_a($this->_request_data['person'], 'org_openpsa_contacts_person_dba')
              || !$this->_request_data['person']->id)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Membership record '{$args[0]}' not found");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Membership record '{$args[0]}' not found");
             // This will exit.
         }
         if ($handler_id === 'subscriber_unsubscribe_all_future')
@@ -365,7 +365,7 @@ class org_openpsa_directmarketing_handler_subscriber extends midcom_baseclasses_
         if ($memberships === false)
         {
             //Some error occurred with QB
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
             return false;
         }
         foreach ($memberships as $member)
@@ -379,9 +379,9 @@ class org_openpsa_directmarketing_handler_subscriber extends midcom_baseclasses_
             }
         }
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         //This is often called by people who should not see anything pointing to OpenPSA, also allows full styling of the unsubscribe page
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
 
         return true;
     }

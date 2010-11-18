@@ -44,7 +44,7 @@ class org_openpsa_directmarketing_handler_message_report extends midcom_baseclas
 
         if (!$this->_datamanager)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for messages.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for messages.");
             // This will exit.
         }
     }
@@ -54,7 +54,7 @@ class org_openpsa_directmarketing_handler_message_report extends midcom_baseclas
      */
     function _analyze_message_report(&$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         $segmentation_param = false;
         if (   isset($data['message_array']['report_segmentation'])
             && !empty($data['message_array']['report_segmentation']))
@@ -398,7 +398,7 @@ class org_openpsa_directmarketing_handler_message_report extends midcom_baseclas
             // this will exit
         }
         $campaign->schedule_update_smart_campaign_members();
-        $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+        midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
             . "campaign/edit/{$campaign->guid}/");
         // This will exit()
     }
@@ -415,7 +415,7 @@ class org_openpsa_directmarketing_handler_message_report extends midcom_baseclas
         if (   !$this->_message
             || !$this->_message->guid)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The message {$args[0]} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The message {$args[0]} was not found.");
             // This will exit.
         }
 
@@ -427,7 +427,7 @@ class org_openpsa_directmarketing_handler_message_report extends midcom_baseclas
         if (   !$this->_campaign
             || $this->_campaign->node != $this->_topic->id)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The campaign {$this->_message->campaign} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The campaign {$this->_message->campaign} was not found.");
             // This will exit.
         }
 
@@ -458,7 +458,7 @@ class org_openpsa_directmarketing_handler_message_report extends midcom_baseclas
             MIDCOM_NAV_URL => "message/report/{$this->_message->guid}/",
             MIDCOM_NAV_NAME => $this->_l10n->get('message report'),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
 
         $this->_view_toolbar->add_item
@@ -472,10 +472,10 @@ class org_openpsa_directmarketing_handler_message_report extends midcom_baseclas
                 MIDCOM_TOOLBAR_ENABLED => true,
             )
         );
-        if (   !empty($_MIDCOM->auth->user)
-            && !empty($_MIDCOM->auth->user->guid))
+        if (   !empty(midcom::auth->user)
+            && !empty(midcom::auth->user->guid))
         {
-            $preview_url = "message/compose/{$this->_message->guid}/{$_MIDCOM->auth->user->guid}/";
+            $preview_url = "message/compose/{$this->_message->guid}/{midcom::auth->user->guid}/";
         }
         else
         {

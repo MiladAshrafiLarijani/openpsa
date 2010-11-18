@@ -74,7 +74,7 @@ class org_openpsa_products_handler_product_crud extends midcom_baseclasses_compo
                 break;
         }
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $breadcrumb);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $breadcrumb);
     }
 
     public function _populate_toolbar($handler_id)

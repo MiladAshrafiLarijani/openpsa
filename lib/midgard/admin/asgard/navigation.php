@@ -65,7 +65,7 @@ class midgard_admin_asgard_navigation extends midcom_baseclasses_components_pure
             $object = $this->_object;
             if (!empty($this->_object_path))
             {
-                $object = $_MIDCOM->dbfactory->get_object_by_guid($this->_object_path[0]);
+                $object = midcom::dbfactory()->get_object_by_guid($this->_object_path[0]);
             }
 
             foreach ($this->root_types as $root_type)
@@ -266,16 +266,16 @@ class midgard_admin_asgard_navigation extends midcom_baseclasses_components_pure
 
     function _draw_plugins()
     {
-        $this->_request_data['chapter_name'] = $_MIDCOM->i18n->get_string('asgard plugins', 'midgard.admin.asgard');
+        $this->_request_data['chapter_name'] = midcom::i18n()->get_string('asgard plugins', 'midgard.admin.asgard');
         midcom_show_style('midgard_admin_asgard_navigation_chapter');
-        $customdata = $_MIDCOM->componentloader->get_all_manifest_customdata('asgard_plugin');
+        $customdata = midcom::componentloader->get_all_manifest_customdata('asgard_plugin');
         foreach ($customdata as $component => $plugin_config)
         {
             $this->_request_data['section_url'] = midcom_connection::get_url('self') . "__mfa/asgard_{$component}/";
-            $this->_request_data['section_name'] = $_MIDCOM->i18n->get_string($plugin_config['name'], $component);
+            $this->_request_data['section_name'] = midcom::i18n()->get_string($plugin_config['name'], $component);
             $class = $plugin_config['class'];
 
-            if (!$_MIDCOM->auth->can_user_do("{$component}:access", null, $class))
+            if (!midcom::auth->can_user_do("{$component}:access", null, $class))
             {
                 // Disabled plugin
                 continue;
@@ -314,7 +314,7 @@ class midgard_admin_asgard_navigation extends midcom_baseclasses_components_pure
         $css_class .= " {$ref->mgdschema_class}";
 
         // Populate common properties
-        $css_class = $_MIDCOM->metadata->get_object_classes($object, $css_class);
+        $css_class = midcom::metadata()->get_object_classes($object, $css_class);
 
         if ($this->_is_selected($object))
         {
@@ -430,12 +430,12 @@ class midgard_admin_asgard_navigation extends midcom_baseclasses_components_pure
     {
         $this->_draw_plugins();
 
-        if (!$_MIDCOM->auth->can_user_do('midgard.admin.asgard:manage_objects', null, 'midgard_admin_asgard_plugin'))
+        if (!midcom::auth->can_user_do('midgard.admin.asgard:manage_objects', null, 'midgard_admin_asgard_plugin'))
         {
             return;
         }
 
-        $this->_request_data['chapter_name'] = $_MIDCOM->i18n->get_string('midgard objects', 'midgard.admin.asgard');
+        $this->_request_data['chapter_name'] = midcom::i18n()->get_string('midgard objects', 'midgard.admin.asgard');
         midcom_show_style('midgard_admin_asgard_navigation_chapter');
 
         $label_mapping = $this->_process_root_types();
@@ -486,7 +486,7 @@ class midgard_admin_asgard_navigation extends midcom_baseclasses_components_pure
     {
         if (!empty($this->_object_path))
         {
-            $root_object = $_MIDCOM->dbfactory->get_object_by_guid($this->_object_path[0]);
+            $root_object = midcom::dbfactory()->get_object_by_guid($this->_object_path[0]);
             $this->_request_data['root_object'] =& $root_object;
             $this->_request_data['navigation_type'] = $root_object->__mgdschema_class_name__;
         }

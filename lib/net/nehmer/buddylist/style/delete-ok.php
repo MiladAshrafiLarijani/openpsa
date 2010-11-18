@@ -1,7 +1,7 @@
 <?php
 // Available request keys: NONE
 
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 ?>
 
 <h2><?php echo $data['topic']->extra; ?></h2>

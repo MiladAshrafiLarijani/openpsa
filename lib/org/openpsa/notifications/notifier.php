@@ -34,9 +34,9 @@ class org_openpsa_notifications_notifier extends midcom_baseclasses_components_p
         $notification = new org_openpsa_notifications_notification_dba();
         $notification->recipient = $this->recipient->id;
 
-        if ($_MIDCOM->auth->user)
+        if (midcom::auth->user)
         {
-            $user = $_MIDCOM->auth->user->get_storage();
+            $user = midcom::auth->user->get_storage();
             $notification->sender = $user->id;
         }
 
@@ -69,7 +69,7 @@ class org_openpsa_notifications_notifier extends midcom_baseclasses_components_p
      */
     function send_email($message)
     {
-        $_MIDCOM->load_library('org.openpsa.mail');
+        midcom::load_library('org.openpsa.mail');
         
         if (   !$this->recipient
             || empty($this->recipient->email))
@@ -92,10 +92,10 @@ class org_openpsa_notifications_notifier extends midcom_baseclasses_components_p
         if (   array_key_exists('from', $message)
             && !empty($message['from']))
         {
-            $_MIDCOM->auth->request_sudo();
-            $user = $_MIDCOM->auth->get_user($message['from']);
+            midcom::auth->request_sudo();
+            $user = midcom::auth->get_user($message['from']);
             $sender =& $user->get_storage();
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
             // Avoid double dump
             unset($message['from']);
         }
@@ -156,7 +156,7 @@ class org_openpsa_notifications_notifier extends midcom_baseclasses_components_p
         }
         else
         {
-            $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('org.openpsa.notifications', 'org.openpsa.notifications'), sprintf($_MIDCOM->i18n->get_string('notification sent to %s', 'org.openpsa.notifications'), $growl_to));
+            midcom::uimessages()->add(midcom::i18n()->get_string('org.openpsa.notifications', 'org.openpsa.notifications'), sprintf(midcom::i18n()->get_string('notification sent to %s', 'org.openpsa.notifications'), $growl_to));
         }
         return $ret;
     }

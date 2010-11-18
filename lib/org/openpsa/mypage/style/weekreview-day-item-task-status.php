@@ -8,8 +8,8 @@ if ($data['projects_url'])
     $task_label = "<a href=\"{$data['projects_url']}task/{$task->guid}/\">{$task_label}</a>";
 }
 
-$status_changer_label = $_MIDCOM->i18n->get_string('system', 'org.openpsa.projects');
-$target_person_label = $_MIDCOM->i18n->get_string('system', 'org.openpsa.projects');
+$status_changer_label = midcom::i18n()->get_string('system', 'org.openpsa.projects');
+$target_person_label = midcom::i18n()->get_string('system', 'org.openpsa.projects');
 
 $fallback_creator = midcom_db_person::get_cached(1);
 if (    $task_status->metadata->creator
@@ -25,7 +25,7 @@ if ($task_status->targetPerson)
     $target_person_label = $target_person->show_inline();
 }
 
-$message = sprintf($_MIDCOM->i18n->get_string($task_status->get_status_message(), 'org.openpsa.projects'), $status_changer_label, $target_person_label);
+$message = sprintf(midcom::i18n()->get_string($task_status->get_status_message(), 'org.openpsa.projects'), $status_changer_label, $target_person_label);
 
 
 ?>

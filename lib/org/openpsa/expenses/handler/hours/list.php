@@ -66,9 +66,9 @@ class org_openpsa_expenses_handler_hours_list extends midcom_baseclasses_compone
      */
     function _handler_list($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
-        $_MIDCOM->componentloader->load('org.openpsa.contactwidget');
+        midcom::componentloader->load('org.openpsa.contactwidget');
 
         // List hours
         $qb =& $this->_prepare_qb();
@@ -81,7 +81,7 @@ class org_openpsa_expenses_handler_hours_list extends midcom_baseclasses_compone
             "person"
         );
         //url for batch_handler
-        $this->_request_data['action_target_url'] = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "hours/task/batch/";
+        $this->_request_data['action_target_url'] = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "hours/task/batch/";
 
         switch ($handler_id)
         {
@@ -176,7 +176,7 @@ class org_openpsa_expenses_handler_hours_list extends midcom_baseclasses_compone
 
         if (!$controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller");
             // This will exit.
         }
         //get the needed widget-elements
@@ -190,7 +190,7 @@ class org_openpsa_expenses_handler_hours_list extends midcom_baseclasses_compone
 
         $this->_add_filter_widget();
 
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
         $this->_update_breadcrumb_line();
 
         return true;
@@ -204,7 +204,7 @@ class org_openpsa_expenses_handler_hours_list extends midcom_baseclasses_compone
         }
 
         //css & js needed for widget
-        $_MIDCOM->enable_jquery();
+        midcom::enable_jquery();
 
         $ui_version = $GLOBALS['midcom_config']['jquery_ui_version'];
         $min_version = '1.7.2';
@@ -212,7 +212,7 @@ class org_openpsa_expenses_handler_hours_list extends midcom_baseclasses_compone
         //check if right ui-version for dropdownchecklist is available
         if (version_compare($min_version , $ui_version , "<="))
         {
-            $_MIDCOM->add_link_head
+            midcom::add_link_head
             (
                 array
                 (
@@ -221,9 +221,9 @@ class org_openpsa_expenses_handler_hours_list extends midcom_baseclasses_compone
                     'href' => MIDCOM_STATIC_URL . "/org.openpsa.expenses/dropdown-check-list.0.9/css/ui.dropdownchecklist.css",
                 )
             );
-            $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.core.min.js');
-            $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.widget.min.js');
-            $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/org.openpsa.expenses/dropdown-check-list.0.9/js/ui.dropdownchecklist-min.js');
+            midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.core.min.js');
+            midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.widget.min.js');
+            midcom::add_jsfile(MIDCOM_STATIC_URL . '/org.openpsa.expenses/dropdown-check-list.0.9/js/ui.dropdownchecklist-min.js');
         }
     }
 
@@ -236,7 +236,7 @@ class org_openpsa_expenses_handler_hours_list extends midcom_baseclasses_compone
      */
     private function load_hour_data(&$hours, &$reports)
     {
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
         foreach($hours as $report)
         {
             if (!array_key_exists($report->person, $this->reporters))
@@ -287,7 +287,7 @@ class org_openpsa_expenses_handler_hours_list extends midcom_baseclasses_compone
             MIDCOM_NAV_NAME => $this->_request_data['breadcrumb_title'],
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
 

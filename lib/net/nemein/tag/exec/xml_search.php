@@ -13,8 +13,8 @@
 $encoding = 'UTF-8';
 
 // Common headers
-$_MIDCOM->cache->content->content_type('text/xml');
-$_MIDCOM->header('Content-type: text/xml; charset=' . $encoding);
+midcom::cache()->content->content_type('text/xml');
+midcom::header('Content-type: text/xml; charset=' . $encoding);
 echo '<?xml version="1.0" encoding="' . $encoding . '" standalone="yes"?>' . "\n";
 echo "<response>\n";
 
@@ -24,7 +24,7 @@ if (!isset($_REQUEST['search']))
     echo "    <status>0</status>\n";
     echo "    <errstr>Search term not defined</errstr>\n";
     echo "</response>\n";
-    $_MIDCOM->finish();
+    midcom::finish();
     _midcom_stop_request();
 }
 $search = str_replace('*', '%', $_REQUEST['search']);
@@ -39,7 +39,7 @@ if ($results === false)
     echo "    <status>0</status>\n";
     echo "    <errstr>Error when executing QB</errstr>\n";
     echo "</response>\n";
-    $_MIDCOM->finish();
+    midcom::finish();
     _midcom_stop_request();
 }
 

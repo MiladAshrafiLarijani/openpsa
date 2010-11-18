@@ -207,21 +207,21 @@ class midcom_helper_datamanager2_type_composite extends midcom_helper_datamanage
         if (!$this->child_class)
         {
             // TODO: We could have some smart defaults here
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'The configuration option child class must be defined for all composite types.');
             // This will exit.
         }
 
         if (!$this->child_schemadb)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'The configuration option child schema database must be defined for all composite types.');
             // This will exit.
         }
         
         if (! class_exists($this->child_class))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "The mapping class {$this->child_class} does not exist.");
             // This will exit.
         }
@@ -247,7 +247,7 @@ class midcom_helper_datamanager2_type_composite extends midcom_helper_datamanage
             return;
         }
 
-        $qb = $_MIDCOM->dbfactory->new_query_builder($this->child_class);
+        $qb = midcom::dbfactory()->new_query_builder($this->child_class);
         $parent_key = $this->parent_key_fieldname;
         $qb->add_constraint($this->child_foreign_key_fieldname, '=', $this->storage->object->$parent_key);
         
@@ -320,7 +320,7 @@ class midcom_helper_datamanager2_type_composite extends midcom_helper_datamanage
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $object);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Failed to create a new child object. Last Midgard error was: '. midcom_connection::get_error_string());
             // This will exit.
         }
@@ -406,20 +406,20 @@ class midcom_helper_datamanager2_type_composite extends midcom_helper_datamanage
             case 'view':
                 break;
             case 'ajax_delete':
-                $_MIDCOM->cache->content->content_type('text/xml');
-                $_MIDCOM->header('Content-type: text/xml; charset=utf-8');
+                midcom::cache()->content->content_type('text/xml');
+                midcom::header('Content-type: text/xml; charset=utf-8');
                 echo '<?xml version="1.0" encoding="utf-8" standalone="yes"?>' . "\n";
                 echo "<deletion id=\"{$identifier}\">\n";
                 echo '    <status>' . midcom_connection::get_error_string() . "</status>\n";
                 echo "</deletion>\n";
                 
-                $_MIDCOM->finish();
+                midcom::finish();
                 _midcom_stop_request();
             case 'ajax_saved':
                 // Notify parent of changes
                 $this->storage->object->update();
             default:
-                $_MIDCOM->finish();
+                midcom::finish();
                 _midcom_stop_request();
         }
     }
@@ -463,7 +463,7 @@ class midcom_helper_datamanager2_type_composite extends midcom_helper_datamanage
                 $this->_creation_controllers[$name]->defaults = $this->defaults;
                 if (! $this->_creation_controllers[$name]->initialize())
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
+                    midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
                     // This will exit.
                 }
             }
@@ -504,13 +504,13 @@ class midcom_helper_datamanager2_type_composite extends midcom_helper_datamanage
                 'item_count' => null,
                 'item_total' => null,
             );
-            $_MIDCOM->set_custom_context_data('midcom_helper_datamanager2_widget_composite', $request_data);
+            midcom::set_custom_context_data('midcom_helper_datamanager2_widget_composite', $request_data);
             echo "<{$this->area_element} id=\"{$form_identifier}_area\" class=\"temporary_item\" style=\"display: none;\">\n";
-            $_MIDCOM->style->show("_dm2_composite_{$this->style_element_name}_item");            
+            midcom::style()->show("_dm2_composite_{$this->style_element_name}_item");            
             echo "</{$this->area_element}>\n";
         }
         
-        $_MIDCOM->style->show("_dm2_composite_{$this->style_element_name}_footer");
+        midcom::style()->show("_dm2_composite_{$this->style_element_name}_footer");
         
         foreach (array_keys($this->_schemadb) as $name)
         {            
@@ -549,8 +549,8 @@ class midcom_helper_datamanager2_type_composite extends midcom_helper_datamanage
             'item_total' => $item_total,
         );
         
-        $_MIDCOM->set_custom_context_data('midcom_helper_datamanager2_widget_composite', $request_data);
-        $_MIDCOM->style->show("_dm2_composite_{$this->style_element_name}_header");
+        midcom::set_custom_context_data('midcom_helper_datamanager2_widget_composite', $request_data);
+        midcom::style()->show("_dm2_composite_{$this->style_element_name}_header");
        
         $item_count = 0;
         foreach ($this->objects as $identifier => $object)
@@ -564,16 +564,16 @@ class midcom_helper_datamanager2_type_composite extends midcom_helper_datamanage
             $request_data['item'] = $object;
             $request_data['item_count'] = $item_count;
 
-            $_MIDCOM->set_custom_context_data('midcom_helper_datamanager2_widget_composite', $request_data);
+            midcom::set_custom_context_data('midcom_helper_datamanager2_widget_composite', $request_data);
             echo "<{$this->area_element} id=\"{$this->_controllers[$identifier]->form_identifier}_area\">\n";
-            $_MIDCOM->style->show("_dm2_composite_{$this->style_element_name}_item");
+            midcom::style()->show("_dm2_composite_{$this->style_element_name}_item");
             echo "</{$this->area_element}>\n";
         } 
 
         //If creation data was added, the footer is already spliced in
         if (!$this->add_creation_data())
         {
-            $_MIDCOM->style->show("_dm2_composite_{$this->style_element_name}_footer");
+            midcom::style()->show("_dm2_composite_{$this->style_element_name}_footer");
         }
         
         $results = ob_get_contents();

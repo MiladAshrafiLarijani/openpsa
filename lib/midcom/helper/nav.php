@@ -54,9 +54,9 @@ class midcom_helper_nav
     {
         if ($contextid == -1)
         {
-            $contextid = $_MIDCOM->get_current_context();
+            $contextid = midcom::get_current_context();
         }
-        $this->_basicnav = $_MIDCOM->get_basic_nav($contextid);
+        $this->_basicnav = midcom::get_basic_nav($contextid);
         $this->_contextid = $contextid;
     }
 
@@ -304,7 +304,7 @@ class midcom_helper_nav
         // Fetch the object in question for a start, so that we know what to do (tm)
         // Note, that objects that cannot be resolved will still be processed using a full-scan of
         // the tree. This is, for example, used by the on-delete cache invalidation.
-        $object = $_MIDCOM->dbfactory->get_object_by_guid($guid);
+        $object = midcom::dbfactory()->get_object_by_guid($guid);
         if (   !$object
             || !$object->guid)
         {
@@ -342,7 +342,7 @@ class midcom_helper_nav
             if (! $topic)
             {
                 debug_pop();
-                $_MIDCOM->generate_error
+                midcom::generate_error
                 (
                     MIDCOM_ERRCRIT,
                     "Data inconsistency, the topic ID ({$object->topic}) of the article {$object->id} is invalid. "
@@ -634,7 +634,7 @@ class midcom_helper_nav
      *         MIDCOM_NAV_NAME => $this->_category_name,
      *     ),
      * );
-     * $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+     * midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
      * </code>
      *
      * @return array The computed breadcrumb data as outlined above.
@@ -643,7 +643,7 @@ class midcom_helper_nav
      */
     function get_breadcrumb_data ($id = null)
     {
-        $prefix = $_MIDCOM->get_context_data($this->_contextid, MIDCOM_CONTEXT_ANCHORPREFIX);
+        $prefix = midcom::get_context_data($this->_contextid, MIDCOM_CONTEXT_ANCHORPREFIX);
         $result = Array();
 
         if (! $id)
@@ -713,7 +713,7 @@ class midcom_helper_nav
             );
         }
 
-        $customdata = $_MIDCOM->get_custom_context_data('midcom.helper.nav.breadcrumb');
+        $customdata = midcom::get_custom_context_data('midcom.helper.nav.breadcrumb');
         if (is_array($customdata))
         {
             foreach ($customdata as $key => $entry)

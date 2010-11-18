@@ -102,7 +102,7 @@
             }
             else
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Tried to use RCS as wanted but failed. Please read the errorlog for more information.');
+                midcom::generate_error(MIDCOM_ERRCRIT, 'Tried to use RCS as wanted but failed. Please read the errorlog for more information.');
                 return false;
             }
         }

@@ -73,7 +73,7 @@ class net_nehmer_buddylist_interface extends midcom_baseclasses_components_inter
      */
     function _on_check_document_permissions (&$document, $config, $topic)
     {
-        return ($_MIDCOM->auth->user !== null);
+        return (midcom::auth->user !== null);
     }
 
     /**
@@ -87,7 +87,7 @@ class net_nehmer_buddylist_interface extends midcom_baseclasses_components_inter
             // "second-level views" of other topics.
             return null;
         }
-        $object = $_MIDCOM->dbfactory->get_object_by_guid($guid);
+        $object = midcom::dbfactory()->get_object_by_guid($guid);
         if (is_a($object, 'net_nehmer_buddylist_entry'))
         {
             return "entry/view/{$object->guid}.html";

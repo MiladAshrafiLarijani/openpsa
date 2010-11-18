@@ -177,8 +177,8 @@ class midcom_services__i18n_l10n {
         $this->_library_filename = MIDCOM_ROOT . $library;
         $this->_library = $library;
 
-        $this->_language_db = $_MIDCOM->i18n->get_language_db();
-        $this->_fallback_language = $_MIDCOM->i18n->get_fallback_language();
+        $this->_language_db = midcom::i18n()->get_language_db();
+        $this->_fallback_language = midcom::i18n()->get_fallback_language();
 
         if (!isset($this->_localedb[$this->_library]))
         {
@@ -187,8 +187,8 @@ class midcom_services__i18n_l10n {
 
         $this->_stringdb =& $GLOBALS['midcom_services_i18n__l10n_localedb'][$this->_library];
 
-        $this->set_language($_MIDCOM->i18n->get_current_language());
-        $this->set_charset($_MIDCOM->i18n->get_current_charset());
+        $this->set_language(midcom::i18n()->get_current_language());
+        $this->set_charset(midcom::i18n()->get_current_charset());
     }
 
     /**
@@ -205,7 +205,7 @@ class midcom_services__i18n_l10n {
             $file = fopen("{$this->_library_filename}.{$lang}.txt", 'w');
             if (!$file)
             {
-                $_MIDCOM->uimessages->add("L10N Error", "Failed to open the file '{$this->_library_filename}.{$lang}.txt' for writing.", 'error');
+                midcom::uimessages()->add("L10N Error", "Failed to open the file '{$this->_library_filename}.{$lang}.txt' for writing.", 'error');
                 debug_push_class(__CLASS__, __FUNCTION__);
                 debug_add("Failed to open the file '{$this->_library_filename}.{$lang}.txt' for writing.",MIDCOM_LOG_ERROR);
                 debug_pop();
@@ -241,7 +241,7 @@ class midcom_services__i18n_l10n {
         $filename = "{$this->_library_filename}.{$lang}.txt";
         if ($GLOBALS['midcom_config']['cache_module_memcache_backend'] != 'flatfile')
         {
-            $stringtable = $_MIDCOM->cache->memcache->get('L10N', $filename);
+            $stringtable = midcom::cache()->memcache->get('L10N', $filename);
             if (is_array($stringtable))
             {
                 $this->_stringdb[$lang] = $stringtable;
@@ -284,7 +284,7 @@ class midcom_services__i18n_l10n {
                     if (strlen($string) < 4)
                     {
                         $line++; // Array is 0-indexed
-                        $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                        midcom::generate_error(MIDCOM_ERRCRIT,
                             "L10n DB SYNTAX ERROR: An incorrect command was detected at {$filename}:{$line}");
                         // This will exit
                     }
@@ -309,7 +309,7 @@ class midcom_services__i18n_l10n {
                             if ($version != '')
                             {
                                 $line++; // Array is 0-indexed
-                                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                                midcom::generate_error(MIDCOM_ERRCRIT,
                                     "L10n DB SYNTAX ERROR: A second VERSION tag has been detected at {$filename}:{$line}");
                                 // This will exit
                             }
@@ -320,7 +320,7 @@ class midcom_services__i18n_l10n {
                             if ($language != '')
                             {
                                 $line++; // Array is 0-indexed
-                                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                                midcom::generate_error(MIDCOM_ERRCRIT,
                                     "L10n DB SYNTAX ERROR: A second LANGUAGE tag has been detected at {$filename}:{$line}");
                                 // This will exit
                             }
@@ -335,7 +335,7 @@ class midcom_services__i18n_l10n {
 
                         default:
                             $line++; // Array is 0-indexed
-                            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                            midcom::generate_error(MIDCOM_ERRCRIT,
                                 "L10n DB SYNTAX ERROR: Unknown command '{$command}' at {$filename}:{$line}");
                             // This will exit
                     }
@@ -343,7 +343,7 @@ class midcom_services__i18n_l10n {
                 else
                 {
                     $line++; // Array is 0-indexed
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                    midcom::generate_error(MIDCOM_ERRCRIT,
                         "L10n DB SYNTAX ERROR: Invalid line at {$filename}:{$line}");
                     // This will exit
                 }
@@ -372,19 +372,19 @@ class midcom_services__i18n_l10n {
 
         if ($instring)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "L10n DB SYNTAX ERROR: String constant exceeds end of file.");
             // This will exit
         }
         if (version_compare($version, $this->_version, "<"))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "L10n DB ERROR: File format version of {$filename} is too old, no update available at the moment.");
             // This will exit
         }
         if ($lang != $language)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "L10n DB ERROR: The DB language version {$language} did not match the requested {$lang}.");
             // This will exit
         }
@@ -394,7 +394,7 @@ class midcom_services__i18n_l10n {
 
         if ($GLOBALS['midcom_config']['cache_module_memcache_backend'] != 'flatfile')
         {
-            $_MIDCOM->cache->memcache->put('L10N', $filename, $stringtable);
+            midcom::cache()->memcache->put('L10N', $filename, $stringtable);
         }
     }
 
@@ -557,7 +557,7 @@ class midcom_services__i18n_l10n {
             }
         }
 
-        return $_MIDCOM->i18n->convert_from_utf8($this->_stringdb[$language][$string]);
+        return midcom::i18n()->convert_from_utf8($this->_stringdb[$language][$string]);
     }
 
     /**

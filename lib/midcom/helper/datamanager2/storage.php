@@ -77,7 +77,7 @@ class midcom_helper_datamanager2_storage extends midcom_baseclasses_components_p
     {
         if ($this->object === null)
         {
-            $this->object = $_MIDCOM->tmp->create_object();
+            $this->object = midcom::tmp()->create_object();
         }
     }
 
@@ -102,7 +102,7 @@ class midcom_helper_datamanager2_storage extends midcom_baseclasses_components_p
             {
                 if ($type_definition['required'] == true)
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to process the type array for the schema {$this->_schema->name}: "
+                    midcom::generate_error(MIDCOM_ERRCRIT, "Failed to process the type array for the schema {$this->_schema->name}: "
                         . "The type for the required field {$name} was not found.");
                     // This will exit.
                 }
@@ -179,7 +179,7 @@ class midcom_helper_datamanager2_storage extends midcom_baseclasses_components_p
             {
                 if ($type_definition['required'] == true)
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to process the type array for the schema {$this->_schema->name}: "
+                    midcom::generate_error(MIDCOM_ERRCRIT, "Failed to process the type array for the schema {$this->_schema->name}: "
                         . "The type for the required field {$name} was not found.");
                     // This will exit.
                 }
@@ -256,11 +256,11 @@ class midcom_helper_datamanager2_storage extends midcom_baseclasses_components_p
     {
         if ($this->object === null)
         {
-            return $_MIDCOM->auth->can_user_do($privilege);
+            return midcom::auth()->can_user_do($privilege);
         }
         else
         {
-            return $_MIDCOM->auth->can_do($privilege, $this->object);
+            return midcom::auth()->can_do($privilege, $this->object);
         }
     }
 }

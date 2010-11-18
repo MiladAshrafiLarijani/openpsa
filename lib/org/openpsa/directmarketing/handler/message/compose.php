@@ -50,7 +50,7 @@ class org_openpsa_directmarketing_handler_message_compose extends midcom_basecla
 
         if (!$this->_datamanager)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for messages.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for messages.");
             // This will exit.
         }
     }
@@ -67,13 +67,13 @@ class org_openpsa_directmarketing_handler_message_compose extends midcom_basecla
     function _handler_compose($handler_id, $args, &$data)
     {
         debug_push_class(__CLASS__, __FUNCTION__);
-        $_MIDCOM->auth->request_sudo();
+        midcom::auth->request_sudo();
         //Load message
         $data['message'] = new org_openpsa_directmarketing_campaign_message_dba($args[0]);
         if (   !$data['message']
             || !$data['message']->guid)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The message {$args[0]} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The message {$args[0]} was not found.");
             // This will exit.
         }
 
@@ -81,7 +81,7 @@ class org_openpsa_directmarketing_handler_message_compose extends midcom_basecla
         if (   !$data['campaign']
             || $data['campaign']->node != $this->_topic->id)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The campaign {$this->_message->campaign} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The campaign {$this->_message->campaign} was not found.");
             // This will exit.
         }
 
@@ -139,22 +139,22 @@ class org_openpsa_directmarketing_handler_message_compose extends midcom_basecla
             && !preg_match('/^builtin:/', $data['message_array']['substyle']))
         {
             debug_add("Appending substyle {$data['message_array']['substyle']}");
-            $_MIDCOM->substyle_append($data['message_array']['substyle']);
+            midcom::substyle_append($data['message_array']['substyle']);
         }
         //This isn't necessary for dynamic-loading, but is nice for "preview".
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
         debug_add('message type: ' . $data['message_obj']->orgOpenpsaObtype);
         switch($data['message_obj']->orgOpenpsaObtype)
         {
             case ORG_OPENPSA_MESSAGETYPE_EMAIL_TEXT:
             case ORG_OPENPSA_MESSAGETYPE_SMS:
                 debug_add('Forcing content type: text/plain');
-                $_MIDCOM->cache->content->content_type('text/plain');
+                midcom::cache()->content->content_type('text/plain');
             break;
             //TODO: Other content type overrides ?
         }
         debug_pop();
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         return true;
     }
 

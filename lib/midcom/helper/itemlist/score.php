@@ -58,7 +58,7 @@ class midcom_helper_itemlist_score extends midcom_helper_itemlist
         }
         if (!uasort($result, array ('midcom_helper_itemlist_score', 'sort_cmp')))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to sort the navigation');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to sort the navigation');
         }
         return $result;
     }

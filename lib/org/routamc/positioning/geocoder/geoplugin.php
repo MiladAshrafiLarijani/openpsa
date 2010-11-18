@@ -28,7 +28,7 @@ class org_routamc_positioning_geocoder_geoplugin extends org_routamc_positioning
     function __construct()
     {
          $this->_component = 'org.routamc.positioning';
-         $_MIDCOM->load_library('org.openpsa.httplib');
+         midcom::load_library('org.openpsa.httplib');
          parent::__construct();
     }
 

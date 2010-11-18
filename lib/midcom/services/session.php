@@ -85,19 +85,19 @@ class midcom_services_session
     {
         if (is_null($context))
         {
-            $this->_domain = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_COMPONENT);
+            $this->_domain = midcom::get_context_data(MIDCOM_CONTEXT_COMPONENT);
         }
         else if (is_numeric($context)
             || is_int($context))
         {
-            $this->_domain = $_MIDCOM->get_context_data($context, MIDCOM_CONTEXT_COMPONENT);
+            $this->_domain = midcom::get_context_data($context, MIDCOM_CONTEXT_COMPONENT);
         }
         else
         {
             $this->_domain = $context;
         }
         
-        $this->_sessioning = $_MIDCOM->get_service("session");
+        $this->_sessioning = midcom::get_service("session");
     }
     
     /**

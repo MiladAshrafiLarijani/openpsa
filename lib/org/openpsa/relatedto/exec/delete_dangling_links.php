@@ -11,7 +11,7 @@
  * @copyright The Midgard Project, http://www.midgard-project.org
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  */
-$_MIDCOM->auth->require_admin_user();
+midcom::auth->require_admin_user();
 
 @ini_set('max_execution_time', 0);
 while(@ob_end_flush());
@@ -30,8 +30,8 @@ $i = 0;
 foreach ($results as $result)
 {
     $i++;
-    if (   !$_MIDCOM->dbfactory->get_object_by_guid($result->fromGuid)
-        || !$_MIDCOM->dbfactory->get_object_by_guid($result->toGuid))
+    if (   !midcom::dbfactory()->get_object_by_guid($result->fromGuid)
+        || !midcom::dbfactory()->get_object_by_guid($result->toGuid))
     {
         echo $i . "/" . $total . ": Deleting relatedto #" . $result->id . "\n";
         flush();

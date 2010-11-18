@@ -123,7 +123,7 @@ abstract class midcom_baseclasses_components_handler_crud extends midcom_basecla
         if (   !$this->_object
             || !$this->_object->guid)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The object with GUID {$args[0]} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The object with GUID {$args[0]} was not found.");
             // This will exit.
         }
     }
@@ -152,7 +152,7 @@ abstract class midcom_baseclasses_components_handler_crud extends midcom_basecla
     public function _index_object(&$dm)
     {
         return;
-        $indexer = $_MIDCOM->get_service('indexer');
+        $indexer = midcom::get_service('indexer');
         $topic =& $this->_content_topic;
 
         $nav = new midcom_helper_nav();
@@ -176,7 +176,7 @@ abstract class midcom_baseclasses_components_handler_crud extends midcom_basecla
      */
     public function _get_object_url()
     {
-        return $_MIDCOM->permalinks->resolve_permalink($this->_object->guid);
+        return midcom::permalinks()->resolve_permalink($this->_object->guid);
     }
 
     /**
@@ -246,7 +246,7 @@ abstract class midcom_baseclasses_components_handler_crud extends midcom_basecla
                 break;
         }
         
-        $_MIDCOM->set_pagetitle($view_title);
+        midcom::set_pagetitle($view_title);
     }
 
     /**
@@ -311,9 +311,9 @@ abstract class midcom_baseclasses_components_handler_crud extends midcom_basecla
      */
     function _on_initialize()
     {
-        if (!$_MIDCOM->componentloader->is_loaded('midcom.helper.datamanager2'))
+        if (!midcom::componentloader()->is_loaded('midcom.helper.datamanager2'))
         {
-            $_MIDCOM->load_library('midcom.helper.datamanager2');
+            midcom::load_library('midcom.helper.datamanager2');
         }
         $this->_content_topic =& $this->_request_data['content_topic'];
     }
@@ -363,7 +363,7 @@ abstract class midcom_baseclasses_components_handler_crud extends midcom_basecla
     {
         if (!$this->_object)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "No object defined for DM2.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "No object defined for DM2.");
             // This will exit.
         }
 
@@ -372,7 +372,7 @@ abstract class midcom_baseclasses_components_handler_crud extends midcom_basecla
         if (   !$this->_datamanager
             || !$this->_datamanager->autoset_storage($this->_object))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for object {$this->_object->guid}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for object {$this->_object->guid}.");
             // This will exit.
         }
     }
@@ -399,7 +399,7 @@ abstract class midcom_baseclasses_components_handler_crud extends midcom_basecla
         {
             if (!$this->_object)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "No object defined for DM2.");
+                midcom::generate_error(MIDCOM_ERRNOTFOUND, "No object defined for DM2.");
                 // This will exit.
             }
 
@@ -408,7 +408,7 @@ abstract class midcom_baseclasses_components_handler_crud extends midcom_basecla
 
         if (!$this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for object {$this->_object->guid}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for object {$this->_object->guid}.");
             // This will exit.
         }
     }
@@ -456,7 +456,7 @@ abstract class midcom_baseclasses_components_handler_crud extends midcom_basecla
         }
         else
         {
-            $_MIDCOM->auth->require_user_do('midgard:create', null, $this->_dba_class);
+            midcom::auth()->require_user_do('midgard:create', null, $this->_dba_class);
         }        
 
         // Select schema name to use based on arguments
@@ -474,18 +474,18 @@ abstract class midcom_baseclasses_components_handler_crud extends midcom_basecla
             case 'save':
                 $this->_index_object($this->_controller->datamanager);
 
-                $_MIDCOM->relocate($this->_get_object_url());
+                midcom::relocate($this->_get_object_url());
                 // This will exit.
             case 'cancel':
                 // Redirect to parent page, if any.
                 if ($this->_parent)
                 {
-                    $_MIDCOM->relocate($_MIDCOM->permalinks->resolve_permalink($this->_parent->guid));
+                    midcom::relocate(midcom::permalinks()->resolve_permalink($this->_parent->guid));
                 }
                 // If nothing helps, try the topic's front page
                 else
                 {
-                    $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX));
+                    midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX));
                     // This will exit.
                 }
         }
@@ -500,7 +500,7 @@ abstract class midcom_baseclasses_components_handler_crud extends midcom_basecla
         if ($this->_object)
         {       
             // Let MidCOM know about the object
-            $_MIDCOM->set_26_request_metadata($this->_object->metadata->revised, $this->_object->guid);
+            midcom::set_26_request_metadata($this->_object->metadata->revised, $this->_object->guid);
             $this->_view_toolbar->bind_to($this->_object);
         }
 
@@ -563,8 +563,8 @@ abstract class midcom_baseclasses_components_handler_crud extends midcom_basecla
         $this->_update_breadcrumb($handler_id);
                 
         // Let MidCOM know about the object
-        $_MIDCOM->set_26_request_metadata($this->_object->metadata->revised, $this->_object->guid);
-        $_MIDCOM->bind_view_to_object($this->_object, $this->_datamanager->schema->name);
+        midcom::set_26_request_metadata($this->_object->metadata->revised, $this->_object->guid);
+        midcom::bind_view_to_object($this->_object, $this->_datamanager->schema->name);
         $this->_view_toolbar->bind_to($this->_object);
 
         return $this->_handler_callback($handler_id, $args, $data);
@@ -608,7 +608,7 @@ abstract class midcom_baseclasses_components_handler_crud extends midcom_basecla
 
             case 'cancel':
                 // Redirect to view page.
-                $_MIDCOM->relocate($this->_get_object_url());
+                midcom::relocate($this->_get_object_url());
                 // This will exit.
         }
 
@@ -620,8 +620,8 @@ abstract class midcom_baseclasses_components_handler_crud extends midcom_basecla
         $this->_update_breadcrumb($handler_id);
                 
         // Let MidCOM know about the object
-        $_MIDCOM->set_26_request_metadata($this->_object->metadata->revised, $this->_object->guid);
-        $_MIDCOM->bind_view_to_object($this->_object, $this->_controller->datamanager->schema->name);
+        midcom::set_26_request_metadata($this->_object->metadata->revised, $this->_object->guid);
+        midcom::bind_view_to_object($this->_object, $this->_controller->datamanager->schema->name);
         $this->_view_toolbar->bind_to($this->_object);
 
         return $this->_handler_callback($handler_id, $args, $data);
@@ -670,28 +670,28 @@ abstract class midcom_baseclasses_components_handler_crud extends midcom_basecla
             // Deletion confirmed, try doing it.
             if (!$this->_object->delete())
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to delete object {$this->_object->guid}, last Midgard error was: " . midcom_connection::get_error_string());
+                midcom::generate_error(MIDCOM_ERRCRIT, "Failed to delete object {$this->_object->guid}, last Midgard error was: " . midcom_connection::get_error_string());
                 // This will exit.
             }
 
             // Update the index
-            $indexer = $_MIDCOM->get_service('indexer');
+            $indexer = midcom::get_service('indexer');
             $indexer->delete($this->_object->guid);
 
             // Show user interface message
-            // $_MIDCOM->uimessages->add($this->_l10n->get('net.nehmer.blog'), sprintf($this->_l10n->get('object %s deleted'), $title));
+            // midcom::uimessages()->add($this->_l10n->get('net.nehmer.blog'), sprintf($this->_l10n->get('object %s deleted'), $title));
 
             // Delete ok, relocating to welcome.
-            $_MIDCOM->relocate('');
+            midcom::relocate('');
             // This will exit.
         }
 
         if (array_key_exists('midcom_baseclasses_components_handler_crud_deletecancel', $_REQUEST))
         {
-            //$_MIDCOM->uimessages->add($this->_l10n->get('net.nehmer.blog'), $this->_l10n->get('delete cancelled'));
+            //midcom::uimessages()->add($this->_l10n->get('net.nehmer.blog'), $this->_l10n->get('delete cancelled'));
 
             // Redirect to view page.
-            $_MIDCOM->relocate($this->_get_object_url());
+            midcom::relocate($this->_get_object_url());
             // This will exit
         }
 
@@ -703,8 +703,8 @@ abstract class midcom_baseclasses_components_handler_crud extends midcom_basecla
         $this->_update_breadcrumb($handler_id);
                 
         // Let MidCOM know about the object
-        $_MIDCOM->set_26_request_metadata($this->_object->metadata->revised, $this->_object->guid);
-        $_MIDCOM->bind_view_to_object($this->_object, $this->_datamanager->schema->name);
+        midcom::set_26_request_metadata($this->_object->metadata->revised, $this->_object->guid);
+        midcom::bind_view_to_object($this->_object, $this->_datamanager->schema->name);
         $this->_view_toolbar->bind_to($this->_object);
 
         return $this->_handler_callback($handler_id, $args, $data);

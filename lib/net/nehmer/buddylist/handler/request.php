@@ -71,13 +71,13 @@ class net_nehmer_buddylist_handler_request extends midcom_baseclasses_components
      */
     function _handler_request($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         // Setup.
-        $this->_buddy_user = $_MIDCOM->auth->get_user($args[0]);
+        $this->_buddy_user = midcom::auth->get_user($args[0]);
         if (! $this->_buddy_user)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The user guid {$args[0]} is unknown.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The user guid {$args[0]} is unknown.");
         }
 
         $relocate_to = '';
@@ -93,7 +93,7 @@ class net_nehmer_buddylist_handler_request extends midcom_baseclasses_components
         else
         {
             $entry = new net_nehmer_buddylist_entry();
-            $entry->account = $_MIDCOM->auth->user->guid;
+            $entry->account = midcom::auth->user->guid;
             $entry->buddy = $this->_buddy_user->guid;
             $entry->create();
             $this->_processing_msg_raw = 'buddy request sent.';
@@ -101,13 +101,13 @@ class net_nehmer_buddylist_handler_request extends midcom_baseclasses_components
 
         if ($relocate_to != '')
         {
-            $_MIDCOM->uimessages->add($this->_l10n->get('buddy request'), $this->_l10n->get($this->_processing_msg_raw), 'ok');
-            $_MIDCOM->relocate($relocate_to);
+            midcom::uimessages()->add($this->_l10n->get('buddy request'), $this->_l10n->get($this->_processing_msg_raw), 'ok');
+            midcom::relocate($relocate_to);
         }
 
         $this->_prepare_request_data();
-        $_MIDCOM->set_26_request_metadata(time(), null);
-        $_MIDCOM->set_pagetitle($this->_topic->extra);
+        midcom::set_26_request_metadata(time(), null);
+        midcom::set_pagetitle($this->_topic->extra);
         $tmp = Array
         (
             Array
@@ -116,7 +116,7 @@ class net_nehmer_buddylist_handler_request extends midcom_baseclasses_components
                 MIDCOM_NAV_NAME => $this->_l10n->get('buddy request'),
             ),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         return true;
     }

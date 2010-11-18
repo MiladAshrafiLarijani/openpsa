@@ -137,9 +137,9 @@
  *
  *     function _on_reindex($topic, $config, &$indexer)
  *     {
- *         $qb = $_MIDCOM->dbfactory->new_query_builder('midcom_db_article');
+ *         $qb = midcom::dbfactory()->new_query_builder('midcom_db_article');
  *         $qb->add_constraint('topic', '=', $topic->id);
- *         $result = $_MIDCOM->dbfactory->exec_query_builder($qb);
+ *         $result = midcom::dbfactory()->exec_query_builder($qb);
  *
  *         if ($result === false)
  *         {
@@ -328,16 +328,16 @@ class midcom_baseclasses_components_interface
     public function initialize()
     {
         // Preparation
-        $loader = $_MIDCOM->get_component_loader();
+        $loader = midcom::get_component_loader();
         $this->_component_path = MIDCOM_ROOT . $loader->path_to_snippetpath($this->_component);
-        $this->_manifest = $_MIDCOM->componentloader->manifests[$this->_component];
+        $this->_manifest = midcom::componentloader()->manifests[$this->_component];
 
         // Load libraries
         foreach ($this->_autoload_libraries as $library)
         {
-            if (! $_MIDCOM->load_library($library))
+            if (! midcom::load_library($library))
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to load library {$library} while initializing {$this->_component}");
+                midcom::generate_error(MIDCOM_ERRCRIT, "Failed to load library {$library} while initializing {$this->_component}");
                 // This will exit.
             }
         }
@@ -447,7 +447,7 @@ class midcom_baseclasses_components_interface
         $result = eval("\$data = array({$data}\n);");
         if ($result === false)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to parse content loaded from file '{$filename}', see above for PHP errors.");
             // This will exit.
         }
@@ -472,7 +472,7 @@ class midcom_baseclasses_components_interface
         $result = eval("\$data = Array({$code}\n);");
         if ($result === false)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to parse content loaded from snippet '{$snippetpath}', see above for PHP errors.");
             // This will exit.
         }
@@ -544,7 +544,7 @@ class midcom_baseclasses_components_interface
     public function can_handle($current_object, $argc, $argv, $contextid)
     {
         $data =& $this->_context_data[$contextid];
-        $loader = $_MIDCOM->get_component_loader();
+        $loader = midcom::get_component_loader();
         $class = $loader->path_to_prefix($this->_component) . '_' . $this->_site_class_suffix;
         $data['handler'] = new $class($current_object, $data['config']);
         if (is_a($data['handler'], 'midcom_baseclasses_components_request'))
@@ -602,7 +602,7 @@ class midcom_baseclasses_components_interface
     {
         if (is_null($this->_nap_instance))
         {
-            $loader = $_MIDCOM->get_component_loader();
+            $loader = midcom::get_component_loader();
             $class = $loader->path_to_prefix($this->_component) . "_{$this->_nap_class_suffix}";
             $this->_nap_instance = new $class();
             if (is_a($this->_nap_instance, 'midcom_baseclasses_components_navigation'))
@@ -674,7 +674,7 @@ class midcom_baseclasses_components_interface
      */
     public function reindex ($topic)
     {
-        return $this->_on_reindex($topic, $this->get_config_for_topic($topic), $_MIDCOM->get_service('indexer'));
+        return $this->_on_reindex($topic, $this->get_config_for_topic($topic), midcom::get_service('indexer'));
     }
 
     /**
@@ -719,7 +719,7 @@ class midcom_baseclasses_components_interface
             if (   ! is_object($orig_member)
                 || ! is_a($orig_member, 'midcom_core_user'))
             {
-                $member = $_MIDCOM->auth->get_user($orig_member);
+                $member = midcom::auth()->get_user($orig_member);
             }
 
             if (! is_a($member, 'midcom_core_user'))

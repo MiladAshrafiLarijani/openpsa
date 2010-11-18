@@ -30,12 +30,12 @@ class midgard_admin_asgard_handler_undelete extends midcom_baseclasses_component
     function _on_initialize()
     {
         // Ensure we get the correct styles
-        $_MIDCOM->style->prepend_component_styledir('midgard.admin.asgard');
-        $_MIDCOM->skip_page_style = true;
+        midcom::style->prepend_component_styledir('midgard.admin.asgard');
+        midcom::skip_page_style = true;
 
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.tablesorter.pack.js');
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/midgard.admin.asgard/jquery.batch_process.js');
-        $_MIDCOM->add_link_head
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.tablesorter.pack.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/midgard.admin.asgard/jquery.batch_process.js');
+        midcom::add_link_head
         (
             array
             (
@@ -45,7 +45,7 @@ class midgard_admin_asgard_handler_undelete extends midcom_baseclasses_component
             )
         );
 
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
     }
 
     /**
@@ -58,11 +58,11 @@ class midgard_admin_asgard_handler_undelete extends midcom_baseclasses_component
      */
     function _handler_trash($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_admin_user();
-        $_MIDCOM->cache->content->no_cache();
+        midcom::auth->require_admin_user();
+        midcom::cache()->content->no_cache();
 
         $data['view_title'] = $this->_l10n->get('trash');
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
 
         $data['asgard_toolbar'] = new midcom_helper_toolbar();
         midgard_admin_asgard_plugin::get_common_toolbar($data);
@@ -85,14 +85,14 @@ class midgard_admin_asgard_handler_undelete extends midcom_baseclasses_component
         $tmp[] = array
         (
             MIDCOM_NAV_URL => '__mfa/asgard/',
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('midgard.admin.asgard', 'midgard.admin.asgard'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('midgard.admin.asgard', 'midgard.admin.asgard'),
         );
         $tmp[] = array
         (
             MIDCOM_NAV_URL => '__mfa/asgard/trash/',
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('trash', 'midgard.admin.asgard'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('trash', 'midgard.admin.asgard'),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         return true;
     }
@@ -121,21 +121,21 @@ class midgard_admin_asgard_handler_undelete extends midcom_baseclasses_component
      */
     function _handler_trash_type($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_admin_user();
-        $_MIDCOM->cache->content->no_cache();
+        midcom::auth->require_admin_user();
+        midcom::cache()->content->no_cache();
 
         $this->type = $args[0];
         $root_types = midcom_helper_reflector_tree::get_root_classes();
 
         $data['view_title'] = midgard_admin_asgard_plugin::get_type_label($this->type);
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
 
         $data['asgard_toolbar'] = new midcom_helper_toolbar();
 
         midgard_admin_asgard_plugin::get_common_toolbar($data);
 
         $dummy = new $this->type;
-        $data['midcom_dba_classname'] = $_MIDCOM->dbclassloader->get_midcom_class_name_for_mgdschema_object($dummy);
+        $data['midcom_dba_classname'] = midcom::dbclassloader->get_midcom_class_name_for_mgdschema_object($dummy);
         $data['type'] = $this->type;
         $data['reflector'] = midcom_helper_reflector::get($data['type']);
         $data['label_property'] = $data['reflector']->get_label_property();
@@ -168,9 +168,9 @@ class midgard_admin_asgard_handler_undelete extends midcom_baseclasses_component
 
             if ($undeleted_size > 0)
             {
-                $_MIDCOM->uimessages->add($this->_l10n->get('midgard.admin.asgard'), sprintf($this->_l10n->get('in total %s undeleted'), midcom_helper_filesize_to_string($undeleted_size)), 'info');
+                midcom::uimessages()->add($this->_l10n->get('midgard.admin.asgard'), sprintf($this->_l10n->get('in total %s undeleted'), midcom_helper_filesize_to_string($undeleted_size)), 'info');
             }
-            $_MIDCOM->relocate("__mfa/asgard/trash/{$this->type}/");
+            midcom::relocate("__mfa/asgard/trash/{$this->type}/");
         }
 
         if (   isset($_POST['purge'])
@@ -204,13 +204,13 @@ class midgard_admin_asgard_handler_undelete extends midcom_baseclasses_component
 
             if ($purged_size)
             {
-                $_MIDCOM->uimessages->add($this->_l10n->get('midgard.admin.asgard'), sprintf($this->_l10n->get('in total %s purged'), midcom_helper_filesize_to_string($purged_size)), 'info');
+                midcom::uimessages()->add($this->_l10n->get('midgard.admin.asgard'), sprintf($this->_l10n->get('in total %s purged'), midcom_helper_filesize_to_string($purged_size)), 'info');
             }
 
-            $_MIDCOM->relocate("__mfa/asgard/trash/{$this->type}/");
+            midcom::relocate("__mfa/asgard/trash/{$this->type}/");
         }
 
-        $_MIDCOM->load_library('org.openpsa.qbpager');
+        midcom::load_library('org.openpsa.qbpager');
         $qb = new org_openpsa_qbpager_direct($data['type'], "{$data['type']}_trash");
         $qb->include_deleted();
         $qb->add_constraint('metadata.deleted', '=', true);
@@ -223,7 +223,7 @@ class midgard_admin_asgard_handler_undelete extends midcom_baseclasses_component
         $tmp[] = array
         (
             MIDCOM_NAV_URL => '__mfa/asgard/',
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('midgard.admin.asgard', 'midgard.admin.asgard'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('midgard.admin.asgard', 'midgard.admin.asgard'),
         );
         $tmp[] = array
         (
@@ -233,9 +233,9 @@ class midgard_admin_asgard_handler_undelete extends midcom_baseclasses_component
         $tmp[] = array
         (
             MIDCOM_NAV_URL => "__mfa/asgard/trash/{$this->type}/",
-            MIDCOM_NAV_NAME => sprintf($_MIDCOM->i18n->get_string('%s trash', 'midgard.admin.asgard'), midgard_admin_asgard_plugin::get_type_label($data['type'])),
+            MIDCOM_NAV_NAME => sprintf(midcom::i18n()->get_string('%s trash', 'midgard.admin.asgard'), midgard_admin_asgard_plugin::get_type_label($data['type'])),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         return true;
     }

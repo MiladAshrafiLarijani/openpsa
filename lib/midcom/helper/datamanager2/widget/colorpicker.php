@@ -48,10 +48,10 @@ class midcom_helper_datamanager2_widget_colorpicker extends midcom_helper_datama
      */
     function _on_initialize()
     {
-        $_MIDCOM->enable_jquery();
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/colorpicker/colorpicker.js');
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/jquery.widget.colorpicker.js');
-        $_MIDCOM->add_link_head(
+        midcom::enable_jquery();
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/colorpicker/colorpicker.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/jquery.widget.colorpicker.js');
+        midcom::add_link_head(
             array
             (
                 'rel' => 'stylesheet',

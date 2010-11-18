@@ -123,9 +123,9 @@ class midcom_helper_datamanager2_widget_jsdate extends midcom_helper_datamanager
         $executed = true;
 
         $prefix = MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/jscript-calendar';
-        $_MIDCOM->add_jsfile("{$prefix}/calendar_stripped.js");
+        midcom::add_jsfile("{$prefix}/calendar_stripped.js");
 
-        $lang = $_MIDCOM->i18n->get_current_language();
+        $lang = midcom::i18n()->get_current_language();
         /*
          * The calender doesn't have all lang files and some are named differently
          * Since a missing lang file causes the calendar to break, let's make extra sure
@@ -133,20 +133,20 @@ class midcom_helper_datamanager2_widget_jsdate extends midcom_helper_datamanager
          */
         if (!file_exists(MIDCOM_STATIC_ROOT . "/midcom.helper.datamanager2/jscript-calendar/lang/calendar-{$lang}.js"))
         {
-            $lang = $_MIDCOM->i18n->get_fallback_language();
+            $lang = midcom::i18n()->get_fallback_language();
             if (!file_exists(MIDCOM_STATIC_ROOT . "/midcom.helper.datamanager2/jscript-calendar/lang/calendar-{$lang}.js"))
             {
                 $lang = 'en';
             }
         }
 
-        $_MIDCOM->add_jsfile("{$prefix}/lang/calendar-{$lang}.js");
-        $_MIDCOM->add_jsfile("{$prefix}/calendar-setup.js");
+        midcom::add_jsfile("{$prefix}/lang/calendar-{$lang}.js");
+        midcom::add_jsfile("{$prefix}/calendar-setup.js");
 
 
         $attributes = Array('rel' => 'stylesheet', 'type' => 'text/css');
         $attributes['href'] = "{$prefix}/calendar-win2k-1.css";
-        $_MIDCOM->add_link_head($attributes);
+        midcom::add_link_head($attributes);
     }
 
     /**

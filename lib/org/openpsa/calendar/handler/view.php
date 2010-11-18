@@ -59,8 +59,8 @@ class org_openpsa_calendar_handler_view extends midcom_baseclasses_components_ha
      */
     function _on_initialize()
     {
-        $_MIDCOM->load_library('org.openpsa.calendarwidget');
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('org.openpsa.calendarwidget');
+        midcom::load_library('midcom.helper.datamanager2');
 
         // Load schema database
         $schemadb = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb'));
@@ -81,7 +81,7 @@ class org_openpsa_calendar_handler_view extends midcom_baseclasses_components_ha
         // 'New event' should always be in toolbar
         $nap = new midcom_helper_nav();
         $this_node = $nap->get_node($nap->get_current_node());
-        if ($_MIDCOM->auth->can_do('midgard:create', $this->_root_event))
+        if (midcom::auth->can_do('midgard:create', $this->_root_event))
         {
             $this->_view_toolbar->add_item
             (
@@ -144,19 +144,19 @@ class org_openpsa_calendar_handler_view extends midcom_baseclasses_components_ha
             );
         }
 
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
         $static_prefix = MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/jscript-calendar';
-        $lang = $_MIDCOM->i18n->get_current_language();
+        $lang = midcom::i18n()->get_current_language();
 
-        $_MIDCOM->add_jsfile("{$static_prefix}/calendar_stripped.js");
-        $_MIDCOM->add_jsfile("{$static_prefix}/lang/calendar-{$lang}.js");
-        $_MIDCOM->add_jsfile("{$static_prefix}/calendar-setup.js");
+        midcom::add_jsfile("{$static_prefix}/calendar_stripped.js");
+        midcom::add_jsfile("{$static_prefix}/lang/calendar-{$lang}.js");
+        midcom::add_jsfile("{$static_prefix}/calendar-setup.js");
 
         $dateopts = date('Y', $this->_selected_time).', ';
         $dateopts .= date('n', $this->_selected_time) - 1;
         $dateopts .= ', ' . date('j', $this->_selected_time);
 
-        $_MIDCOM->add_jscript('
+        midcom::add_jscript('
 var openPsaShowMonthSelectorCalendarShown = false;
 var openPsaShowMonthSelectorCalendarInitialized = false;
 function openPsaShowMonthSelectorHandler(calendar)
@@ -327,7 +327,7 @@ function openPsaShowMonthSelector()
                 $label = $event->$label_field;
                 if ($label_field == 'creator')
                 {
-                    $user = $_MIDCOM->auth->get_user($event->metadata->creator);
+                    $user = midcom::auth->get_user($event->metadata->creator);
                     $label = $user->name;
                 }
 
@@ -362,7 +362,7 @@ function openPsaShowMonthSelector()
     {
         $shown_persons = array();
 
-        $user = $_MIDCOM->auth->user->get_storage();
+        $user = midcom::auth->user->get_storage();
 
         if (   $this->_config->get('always_show_self')
             || $user->parameter('org_openpsa_calendar_show', $user->guid))
@@ -387,7 +387,7 @@ function openPsaShowMonthSelector()
         if ($this->_config->get('always_show_group'))
         {
             // Add this group to display as well
-            $additional_group = & $_MIDCOM->auth->get_group($this->_config->get('always_show_group'));
+            $additional_group = & midcom::auth->get_group($this->_config->get('always_show_group'));
             if ($additional_group)
             {
                 $members = $additional_group->list_members();
@@ -497,7 +497,7 @@ function openPsaShowMonthSelector()
      */
     function _handler_month($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         if (count($args) == 1)
         {
             // Go to the chosen week instead of current one
@@ -552,7 +552,7 @@ function openPsaShowMonthSelector()
         (
             'onclick' => org_openpsa_calendar_interface::calendar_editevent_js('__GUID__', $this_node),
         );
-        if ($_MIDCOM->auth->can_do('midgard:create', $this->_root_event))
+        if (midcom::auth->can_do('midgard:create', $this->_root_event))
         {
             $this->_calendar->free_div_options = array
             (
@@ -579,9 +579,9 @@ function openPsaShowMonthSelector()
             MIDCOM_NAV_NAME => strftime('%B', $this->_selected_time),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
-        $_MIDCOM->set_pagetitle(strftime("%B %Y", $this->_selected_time));
+        midcom::set_pagetitle(strftime("%B %Y", $this->_selected_time));
 
         return true;
     }
@@ -610,7 +610,7 @@ function openPsaShowMonthSelector()
      */
     function _handler_week($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         if (count($args) == 1)
         {
             // Go to the chosen week instead of current one
@@ -667,7 +667,7 @@ function openPsaShowMonthSelector()
         (
             'onclick' => org_openpsa_calendar_interface::calendar_editevent_js('__GUID__', $this_node),
         );
-        if ($_MIDCOM->auth->can_do('midgard:create', $this->_root_event))
+        if (midcom::auth->can_do('midgard:create', $this->_root_event))
         {
             $this->_calendar->free_div_options = array
             (
@@ -702,9 +702,9 @@ function openPsaShowMonthSelector()
             MIDCOM_NAV_NAME => sprintf($this->_l10n->get("week #%s %s"), strftime("%W", $week_start), strftime("%Y", $week_start)),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
-        $_MIDCOM->set_pagetitle(sprintf($this->_l10n->get("week #%s %s"), strftime("%W", $this->_selected_time), strftime("%Y", $this->_selected_time)));
+        midcom::set_pagetitle(sprintf($this->_l10n->get("week #%s %s"), strftime("%W", $this->_selected_time), strftime("%Y", $this->_selected_time)));
 
         return true;
     }
@@ -735,7 +735,7 @@ function openPsaShowMonthSelector()
      */
     function _handler_day($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         if (count($args) == 1)
         {
             // Go to the chosen week instead of current one
@@ -790,7 +790,7 @@ function openPsaShowMonthSelector()
         $nap = new midcom_helper_nav();
         $this_node = $nap->get_node($nap->get_current_node());
 
-        if ($_MIDCOM->auth->can_do('midgard:create', $this->_root_event))
+        if (midcom::auth->can_do('midgard:create', $this->_root_event))
         {
             $this->_calendar->reservation_div_options = array
             (
@@ -825,9 +825,9 @@ function openPsaShowMonthSelector()
             MIDCOM_NAV_URL => "day/{$args[0]}/",
             MIDCOM_NAV_NAME => strftime('%x', $this->_selected_time),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
-        $_MIDCOM->set_pagetitle(strftime("%x", $this->_selected_time));
+        midcom::set_pagetitle(strftime("%x", $this->_selected_time));
 
         return true;
     }
@@ -857,7 +857,7 @@ function openPsaShowMonthSelector()
     function _handler_event($handler_id, $args, &$data)
     {
         // We're using a popup here
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
 
         // Get the requested event object
         $this->_request_data['event'] = $this->_load_event($args[0]);
@@ -894,7 +894,7 @@ function openPsaShowMonthSelector()
         // Reload parent if needed
         if (array_key_exists('reload', $_GET))
         {
-            $_MIDCOM->add_jsonload('window.opener.location.reload();');
+            midcom::add_jsonload('window.opener.location.reload();');
         }
 
         // Add toolbar items
@@ -908,7 +908,7 @@ function openPsaShowMonthSelector()
                     MIDCOM_TOOLBAR_LABEL => $this->_l10n_midcom->get('edit'),
                     MIDCOM_TOOLBAR_HELPTEXT => null,
                     MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/edit.png',
-                    MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:update', $this->_request_data['event']),
+                    MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:update', $this->_request_data['event']),
                     MIDCOM_TOOLBAR_ACCESSKEY => 'e',
                 )
             );
@@ -920,7 +920,7 @@ function openPsaShowMonthSelector()
                     MIDCOM_TOOLBAR_LABEL => $this->_l10n_midcom->get('delete'),
                     MIDCOM_TOOLBAR_HELPTEXT => null,
                     MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/trash.png',
-                    MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:delete', $this->_request_data['event']),
+                    MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:delete', $this->_request_data['event']),
                 )
             );
             $this->_view_toolbar->add_item
@@ -941,9 +941,9 @@ function openPsaShowMonthSelector()
 
             $relatedto_button_settings = null;
 
-            if ($_MIDCOM->auth->user)
+            if (midcom::auth->user)
             {
-                $user = $_MIDCOM->auth->user->get_storage();
+                $user = midcom::auth->user->get_storage();
                 $relatedto_button_settings = array
                 (
                     'wikinote'      => array

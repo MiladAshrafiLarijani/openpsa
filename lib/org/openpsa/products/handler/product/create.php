@@ -101,7 +101,7 @@ class org_openpsa_products_handler_product_create extends midcom_baseclasses_com
         $this->_controller->callback_object =& $this;
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
             // This will exit.
         }
     }
@@ -124,7 +124,7 @@ class org_openpsa_products_handler_product_create extends midcom_baseclasses_com
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $this->_product);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to create a new product under product group #{$this->_request_data['up']}, cannot continue. Error: " . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -186,7 +186,7 @@ class org_openpsa_products_handler_product_create extends midcom_baseclasses_com
 
         if ($this->_request_data['up'] == 0)
         {
-            $_MIDCOM->auth->require_user_do('midgard:create', null, 'org_openpsa_products_product_dba');
+            midcom::auth->require_user_do('midgard:create', null, 'org_openpsa_products_product_dba');
         }
         else
         {
@@ -222,23 +222,23 @@ class org_openpsa_products_handler_product_create extends midcom_baseclasses_com
                 if ($this->_config->get('index_products'))
                 {
                     // Index the product
-                    $indexer = $_MIDCOM->get_service('indexer');
+                    $indexer = midcom::get_service('indexer');
                     org_openpsa_products_viewer::index($this->_controller->datamanager, $indexer, $this->_topic);
                 }
 
-                $_MIDCOM->cache->invalidate($this->_product->guid);
+                midcom::cache()->invalidate($this->_product->guid);
 
-                $_MIDCOM->relocate("product/{$this->_product->guid}/");
+                midcom::relocate("product/{$this->_product->guid}/");
                 // This will exit.
 
             case 'cancel':
                 if ($this->_request_data['up'] == 0)
                 {
-                    $_MIDCOM->relocate('');
+                    midcom::relocate('');
                 }
                 else
                 {
-                    $_MIDCOM->relocate("{$this->_request_data['up']}/");
+                    midcom::relocate("{$this->_request_data['up']}/");
                 }
                 // This will exit.
         }
@@ -250,10 +250,10 @@ class org_openpsa_products_handler_product_create extends midcom_baseclasses_com
         
         if ($this->_product)
         {
-            $_MIDCOM->set_26_request_metadata($this->_product->metadata->revised, $this->_product->guid);
+            midcom::set_26_request_metadata($this->_product->metadata->revised, $this->_product->guid);
         }
         $this->_request_data['view_title'] = sprintf($this->_l10n_midcom->get('create %s'), $this->_l10n->get($this->_schemadb[$this->_schema]->description));
-        $_MIDCOM->set_pagetitle($this->_request_data['view_title']);
+        midcom::set_pagetitle($this->_request_data['view_title']);
 
         $this->_update_breadcrumb_line();
 
@@ -326,7 +326,7 @@ class org_openpsa_products_handler_product_create extends midcom_baseclasses_com
             }
         }
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', array_reverse($tmp));
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', array_reverse($tmp));
     }
 }
 ?>

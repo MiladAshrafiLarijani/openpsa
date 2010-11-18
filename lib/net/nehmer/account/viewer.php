@@ -319,7 +319,7 @@ class net_nehmer_account_viewer extends midcom_baseclasses_components_request
             );
         }
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -529,7 +529,7 @@ class net_nehmer_account_viewer extends midcom_baseclasses_components_request
             return;
         }
 
-        if ($_MIDCOM->auth->admin)
+        if (midcom::auth->admin)
         {
             $qb = midcom_db_person::new_query_builder();
 
@@ -558,21 +558,21 @@ class net_nehmer_account_viewer extends midcom_baseclasses_components_request
     function verify_person_privileges($person)
     {
         debug_push_class(__CLASS__, __FUNCTION__);
-        $person_user = $_MIDCOM->auth->get_user($person->id);
+        $person_user = midcom::auth->get_user($person->id);
 
         if (!is_a($person, 'midcom_db_person'))
         {
-            $_MIDCOM->auth->request_sudo();
+            midcom::auth->request_sudo();
             $person = new midcom_db_person($person->id);
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
         }
 
         debug_add("Checking privilege midgard:owner for person #{$person->id}");
 
-        if (!$_MIDCOM->auth->can_do('midgard:owner', $person, $person_user))
+        if (!midcom::auth->can_do('midgard:owner', $person, $person_user))
         {
             debug_add("Person #{$person->id} lacks privilege midgard:owner, adding");
-            $_MIDCOM->auth->request_sudo();
+            midcom::auth->request_sudo();
             if (!$person->set_privilege('midgard:owner', $person_user, MIDCOM_PRIVILEGE_ALLOW))
             {
                 debug_add("\$person->set_privilege('midgard:owner', \$person_user, MIDCOM_PRIVILEGE_ALLOW) failed, errstr: " . midcom_connection::get_error_string(), MIDCOM_LOG_WARN);
@@ -582,7 +582,7 @@ class net_nehmer_account_viewer extends midcom_baseclasses_components_request
                 debug_add("Added privilege 'midgard:owner' for person #{$person->id}", MIDCOM_LOG_INFO);
             }
 
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
         }
 
         debug_pop();
@@ -600,7 +600,7 @@ class net_nehmer_account_viewer extends midcom_baseclasses_components_request
      */
     function send_registration_mail(&$person, $password, $activation_link, $config)
     {
-        $_MIDCOM->load_library('org.openpsa.mail');
+        midcom::load_library('org.openpsa.mail');
         $mail = new org_openpsa_mail();
         $mail->from = $config->get('activation_mail_sender');
 
@@ -609,8 +609,8 @@ class net_nehmer_account_viewer extends midcom_baseclasses_components_request
             $mail->from = $person->email;
         }
 
-        $mail->subject = $_MIDCOM->i18n->get_string($config->get('activation_mail_subject'), 'net.nehmer.account');
-        $mail->body = $_MIDCOM->i18n->get_string($config->get('activation_mail_body'), 'net.nehmer.account');
+        $mail->subject = midcom::i18n()->get_string($config->get('activation_mail_subject'), 'net.nehmer.account');
+        $mail->body = midcom::i18n()->get_string($config->get('activation_mail_body'), 'net.nehmer.account');
         $mail->to = $person->email;
 
         // Get the commonly used parameters
@@ -652,7 +652,7 @@ class net_nehmer_account_viewer extends midcom_baseclasses_components_request
      */
     function send_password_reset_mail($person, $link, &$config)
     {
-        $_MIDCOM->load_library('org.openpsa.mail');
+        midcom::load_library('org.openpsa.mail');
         $mail = new org_openpsa_mail();
         $mail->from = $config->get('password_reset_mail_sender');
 
@@ -661,15 +661,15 @@ class net_nehmer_account_viewer extends midcom_baseclasses_components_request
             $mail->from = $person->email;
         }
 
-        $mail->subject = $_MIDCOM->i18n->get_string($config->get('lost_password_reset_mail_subject'), 'net.nehmer.account');
-        $mail->body = $_MIDCOM->i18n->get_string($config->get('lost_password_reset_mail_body'), 'net.nehmer.account');
+        $mail->subject = midcom::i18n()->get_string($config->get('lost_password_reset_mail_subject'), 'net.nehmer.account');
+        $mail->body = midcom::i18n()->get_string($config->get('lost_password_reset_mail_body'), 'net.nehmer.account');
         $mail->to = $person->email;
 
         // Get the commonly used parameters
         $parameters = net_nehmer_account_viewer::get_mail_parameters($person);
 
         // Extra parameters
-        $prefix = $_MIDCOM->get_host_name() . $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $prefix = midcom::get_host_name() . midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
         $parameters['CURRENTADDRESS'] = "{$prefix}lostpassword/reset/";
 
         $parameters['USERNAME'] = $person->username;
@@ -708,7 +708,7 @@ class net_nehmer_account_viewer extends midcom_baseclasses_components_request
     function get_mail_parameters($person)
     {
         // Prefix
-        $prefix = $_MIDCOM->get_host_name() . $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $prefix = midcom::get_host_name() . midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 
         // Set the variable parameters
         $parameters = array

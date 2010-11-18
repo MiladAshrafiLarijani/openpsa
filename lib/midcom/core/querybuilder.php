@@ -29,7 +29,7 @@ class midcom_core_querybuilder_cached
     {
         if ($cache === FALSE)
         {
-            $this->cache = $_MIDCOM->cache->memcache;
+            $this->cache = midcom::cache()->memcache;
         }
         else
         {
@@ -228,7 +228,7 @@ class midcom_core_querybuilder extends midcom_baseclasses_core_object
 
         if (!class_exists($classname))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Cannot create a midcom_core_querybuilder instance for the type {$classname}: Class does not exist.");
             // This will exit.
         }
@@ -245,7 +245,7 @@ class midcom_core_querybuilder extends midcom_baseclasses_core_object
             // Validate the class, we check for a single callback representatively only
             if (!method_exists($classname, '_on_prepare_new_query_builder'))
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Cannot create a midcom_core_querybuilder instance for the type {$classname}: Does not seem to be a DBA class name.");
                 // This will exit.
             }
@@ -258,7 +258,7 @@ class midcom_core_querybuilder extends midcom_baseclasses_core_object
 
         $this->_qb = new midgard_query_builder($mgdschemaclass);
         /* Force read only mode when in anonymous mode */
-        if (!$_MIDCOM->auth->is_valid_user())
+        if (!midcom::auth()->is_valid_user())
         {
             $this->toggle_read_only(true);
         }

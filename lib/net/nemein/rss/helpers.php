@@ -28,7 +28,7 @@ class net_nemein_rss_helpers extends midcom_baseclasses_components_purecode
         (
             'rss_enable' => array
             (
-                'title' => $_MIDCOM->i18n->get_string('rss_enable', 'net.nemein.rss'),
+                'title' => midcom::i18n()->get_string('rss_enable', 'net.nemein.rss'),
                 'storage' => array
                 (
                     'location' => 'configuration',
@@ -48,12 +48,12 @@ class net_nemein_rss_helpers extends midcom_baseclasses_components_purecode
                 'widget' => 'select',
                 'start_fieldgroup' => array
                 (
-                    'title' =>  $_MIDCOM->i18n->get_string('rss export settings', 'net.nemein.rss'),
+                    'title' =>  midcom::i18n()->get_string('rss export settings', 'net.nemein.rss'),
                 ),
             ),
             'rss_count' => array
             (
-                'title' => $_MIDCOM->i18n->get_string('rss_count', 'net.nemein.rss'),
+                'title' => midcom::i18n()->get_string('rss_count', 'net.nemein.rss'),
                 'storage' => array
                 (
                     'location' => 'configuration',
@@ -65,7 +65,7 @@ class net_nemein_rss_helpers extends midcom_baseclasses_components_purecode
             ),
             'rss_title' => array
             (
-                'title' => $_MIDCOM->i18n->get_string('rss_title', 'net.nemein.rss'),
+                'title' => midcom::i18n()->get_string('rss_title', 'net.nemein.rss'),
                 'storage' => array
                 (
                     'location' => 'configuration',
@@ -77,7 +77,7 @@ class net_nemein_rss_helpers extends midcom_baseclasses_components_purecode
             ),
             'rss_description' => array
             (
-                'title' => $_MIDCOM->i18n->get_string('rss_description', 'net.nemein.rss'),
+                'title' => midcom::i18n()->get_string('rss_description', 'net.nemein.rss'),
                 'storage' => array
                 (
                     'location' => 'configuration',
@@ -89,7 +89,7 @@ class net_nemein_rss_helpers extends midcom_baseclasses_components_purecode
             ),
             'rss_webmaster' => array
             (
-                'title' => $_MIDCOM->i18n->get_string('rss_webmaster', 'net.nemein.rss'),
+                'title' => midcom::i18n()->get_string('rss_webmaster', 'net.nemein.rss'),
                 'storage' => array
                 (
                     'location' => 'configuration',
@@ -101,7 +101,7 @@ class net_nemein_rss_helpers extends midcom_baseclasses_components_purecode
             ),
             'rss_language' => array
             (
-                'title' => $_MIDCOM->i18n->get_string('rss_language', 'net.nemein.rss'),
+                'title' => midcom::i18n()->get_string('rss_language', 'net.nemein.rss'),
                 'storage' => array
                 (
                     'location' => 'configuration',

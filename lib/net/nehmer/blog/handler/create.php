@@ -105,7 +105,7 @@ class net_nehmer_blog_handler_create extends midcom_baseclasses_components_handl
     {
         $this->_schemadb =& $this->_request_data['schemadb'];
         if (   $this->_config->get('simple_name_handling')
-            && ! $_MIDCOM->auth->create)
+            && ! midcom::auth->create)
         {
             foreach (array_keys($this->_schemadb) as $name)
             {
@@ -129,7 +129,7 @@ class net_nehmer_blog_handler_create extends midcom_baseclasses_components_handl
         $this->_controller->callback_object =& $this;
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
             // This will exit.
         }
     }
@@ -147,7 +147,7 @@ class net_nehmer_blog_handler_create extends midcom_baseclasses_components_handl
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $this->_article);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Failed to create a new article, cannot continue. Last Midgard error was: '. midcom_connection::get_error_string());
             // This will exit.
         }
@@ -210,22 +210,22 @@ class net_nehmer_blog_handler_create extends midcom_baseclasses_components_handl
                     $this->_article->update();
                 }
                 // Index the article
-                $indexer = $_MIDCOM->get_service('indexer');
+                $indexer = midcom::get_service('indexer');
                 net_nehmer_blog_viewer::index($this->_controller->datamanager, $indexer, $this->_content_topic);
                 // *** FALL THROUGH ***
 
             case 'cancel':
-                $_MIDCOM->relocate('');
+                midcom::relocate('');
                 // This will exit.
         }
 
         $this->_prepare_request_data();
         if ( $this->_article != null )
         {
-            $_MIDCOM->set_26_request_metadata($this->_article->metadata->revised, $this->_article->guid);
+            midcom::set_26_request_metadata($this->_article->metadata->revised, $this->_article->guid);
         }
         $title = sprintf($this->_l10n_midcom->get('create %s'), $this->_schemadb[$this->_schema]->description);
-        $_MIDCOM->set_pagetitle("{$this->_topic->extra}: {$title}");
+        midcom::set_pagetitle("{$this->_topic->extra}: {$title}");
         $this->_update_breadcrumb_line($handler_id);
 
         return true;
@@ -246,7 +246,7 @@ class net_nehmer_blog_handler_create extends midcom_baseclasses_components_handl
             MIDCOM_NAV_NAME => sprintf($this->_l10n_midcom->get('create %s'), $this->_schemadb[$this->_schema]->description),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**

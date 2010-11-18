@@ -23,17 +23,17 @@ class org_openpsa_contacts_buddy_dba extends midcom_core_dbaobject
 
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
     
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
     
     function get_parent_guid_uncached()
@@ -49,7 +49,7 @@ class org_openpsa_contacts_buddy_dba extends midcom_core_dbaobject
         else
         {
             // Not saved buddy, return user himself
-            return $_MIDCOM->auth->user->get_storage();
+            return midcom::auth->user->get_storage();
         }
         return null;
     }
@@ -63,11 +63,11 @@ class org_openpsa_contacts_buddy_dba extends midcom_core_dbaobject
      */
     function _on_created()
     {
-    	if ($user = $_MIDCOM->auth->get_user($this->buddy))
+    	if ($user = midcom::auth->get_user($this->buddy))
     	{
 	        $this->set_privilege('midgard:owner', $user);
     	}
-    	if ($user = $_MIDCOM->auth->get_user($this->account))
+    	if ($user = midcom::auth->get_user($this->account))
     	{    	
 	        $this->set_privilege('midgard:owner', $user);
     	}

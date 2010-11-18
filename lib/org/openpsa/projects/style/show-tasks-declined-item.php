@@ -1,5 +1,5 @@
 <?php
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 $task =& $data['task'];
 echo "<dt><a href=\"{$prefix}task/{$task->guid}/\">{$task->title}</a>";
 if ($task->up)

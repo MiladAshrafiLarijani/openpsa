@@ -38,11 +38,11 @@
             }
             if ($entry->closed)
             {
-                echo ",closed:\"" . $_MIDCOM->i18n->get_string('finished', 'org.openpsa.relatedto') . "\"";
+                echo ",closed:\"" . midcom::i18n()->get_string('finished', 'org.openpsa.relatedto') . "\"";
             }
             else
             {
-                echo ",closed:\"" . $_MIDCOM->i18n->get_string('open', 'org.openpsa.relatedto') . "\"";
+                echo ",closed:\"" . midcom::i18n()->get_string('open', 'org.openpsa.relatedto') . "\"";
             }
             echo "}";
         }
@@ -86,11 +86,11 @@
             <?php
                 //index is needed for sorting
                 echo "'index_name',";
-                echo "'" . $_MIDCOM->i18n->get_string('entry title', 'org.openpsa.relatedto') ."',";
-                echo "'" . $_MIDCOM->i18n->get_string('entry text', 'org.openpsa.relatedto') . "',";
+                echo "'" . midcom::i18n()->get_string('entry title', 'org.openpsa.relatedto') ."',";
+                echo "'" . midcom::i18n()->get_string('entry text', 'org.openpsa.relatedto') . "',";
                 echo "'index_date',";
-                echo "'" . $_MIDCOM->i18n->get_string('followUp', 'org.openpsa.relatedto') . "',";
-                echo "'" . $_MIDCOM->i18n->get_string('status', 'org.openpsa.relatedto') . "'";
+                echo "'" . midcom::i18n()->get_string('followUp', 'org.openpsa.relatedto') . "',";
+                echo "'" . midcom::i18n()->get_string('status', 'org.openpsa.relatedto') . "'";
             ?>
             ],
             colModel:[
@@ -129,7 +129,7 @@
             },
             pager : "#p_journal_entry_grid",
             loadonce: true
-            //caption: "<?php echo $_MIDCOM->i18n->get_string('journal entries', 'org.openpsa.relatedto');?>",
+            //caption: "<?php echo midcom::i18n()->get_string('journal entries', 'org.openpsa.relatedto');?>",
          });
          jqgrid_resize();
 

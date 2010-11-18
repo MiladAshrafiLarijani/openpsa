@@ -29,7 +29,7 @@ if (!function_exists('list_object_properties'))
         $skip_properties[] = 'orgOpenpsaAccesstype';
         $skip_properties[] = 'orgOpenpsaWgtype';
 
-        if ($_MIDCOM->dbfactory->is_a($object, 'org_openpsa_person'))
+        if (midcom::dbfactory()->is_a($object, 'org_openpsa_person'))
         {
             // The info field is a special case
             $skip_properties[] = 'info';
@@ -42,7 +42,7 @@ if (!function_exists('list_object_properties'))
             // Duh
             $skip_properties[] = 'password';
         }
-        if ($_MIDCOM->dbfactory->is_a($object, 'midgard_member'))
+        if (midcom::dbfactory()->is_a($object, 'midgard_member'))
         {
             // The info field is a special case
             $skip_properties[] = 'info';

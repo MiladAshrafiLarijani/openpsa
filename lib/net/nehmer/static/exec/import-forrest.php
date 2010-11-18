@@ -1,7 +1,7 @@
 <?php
-$_MIDCOM->auth->require_admin_user();
+midcom::auth->require_admin_user();
 // Get us to full live mode
-$_MIDCOM->cache->content->enable_live_mode();
+midcom::cache()->content->enable_live_mode();
 while(@ob_end_flush());
 ?>
 <h1>Import content from Apache Forrest XML files</h1>

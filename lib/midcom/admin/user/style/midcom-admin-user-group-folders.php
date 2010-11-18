@@ -1,15 +1,15 @@
 <?php
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 ?>
 <h1><?php echo $data['view_title']; ?></h1>
 
 <table>
     <thead>
         <?php
-        echo "<th>" . $_MIDCOM->i18n->get_string('folders', 'midcom.admin.user') . "</th>\n";        
+        echo "<th>" . midcom::i18n()->get_string('folders', 'midcom.admin.user') . "</th>\n";        
         foreach ($data['privileges'] as $privilege)
         {
-            echo "<th>" . $_MIDCOM->i18n->get_string($privilege, 'midgard.admin.asgard') . "</th>\n";
+            echo "<th>" . midcom::i18n()->get_string($privilege, 'midgard.admin.asgard') . "</th>\n";
         }
         ?>
     </thead>
@@ -17,7 +17,7 @@ $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
         <?php
         foreach ($data['objects'] as $guid => $privs)
         {
-            $object = $_MIDCOM->dbfactory->get_object_by_guid($guid);
+            $object = midcom::dbfactory()->get_object_by_guid($guid);
             if (!is_a($object, 'midcom_db_topic'))
             {
                 continue;
@@ -36,11 +36,11 @@ $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
                 
                 if ($privs[$privilege] == 1)
                 {
-                    echo $_MIDCOM->i18n->get_string('yes', 'midcom');
+                    echo midcom::i18n()->get_string('yes', 'midcom');
                 }
                 elseif ($privs[$privilege] == 2)
                 {
-                    echo $_MIDCOM->i18n->get_string('no', 'midcom');
+                    echo midcom::i18n()->get_string('no', 'midcom');
                 }
                 
                 echo "</td>\n";

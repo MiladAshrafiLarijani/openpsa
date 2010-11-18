@@ -64,7 +64,7 @@ class midcom_core_handler_configdm2 extends midcom_baseclasses_components_handle
      */
     function _on_initialize()
     {
-        $_MIDCOM->componentloader->load('midcom.helper.datamanager2');
+        midcom::componentloader()->load('midcom.helper.datamanager2');
     }
     
     /**
@@ -89,7 +89,7 @@ class midcom_core_handler_configdm2 extends midcom_baseclasses_components_handle
             debug_add('No configuration schema defined', MIDCOM_LOG_ERROR);
             debug_pop();
             
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "No configuration schema defined");
+            midcom::generate_error(MIDCOM_ERRCRIT, "No configuration schema defined");
             // This will exit
         }
         
@@ -101,7 +101,7 @@ class midcom_core_handler_configdm2 extends midcom_baseclasses_components_handle
             debug_add('Failed to load the schemadb', MIDCOM_LOG_ERROR);
             debug_pop();
             
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to load configuration schemadb');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to load configuration schemadb');
             // This will exit
         }
         
@@ -116,7 +116,7 @@ class midcom_core_handler_configdm2 extends midcom_baseclasses_components_handle
             debug_add('Failed to initialize the configuration controller');
             debug_pop();
             
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for photo {$this->_photo->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for photo {$this->_photo->id}.");
             // This will exit.
         }
         
@@ -139,7 +139,7 @@ class midcom_core_handler_configdm2 extends midcom_baseclasses_components_handle
         $this->_topic->require_do('midcom:component_config');
         
         // Add DM2 link head
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -158,7 +158,7 @@ class midcom_core_handler_configdm2 extends midcom_baseclasses_components_handle
                 array
                 (
                     MIDCOM_TOOLBAR_URL => 'config/recreate/',
-                    MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('recreate images', 'midcom'),
+                    MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('recreate images', 'midcom'),
                     MIDCOM_TOOLBAR_HELPTEXT => null,
                     // TODO: better icon
                     MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/recurring.png',
@@ -178,14 +178,14 @@ class midcom_core_handler_configdm2 extends midcom_baseclasses_components_handle
         switch ($this->_controller->process_form())
         {
             case 'save':
-                $_MIDCOM->uimessages->add($this->_l10n_midcom->get('component configuration'), $this->_l10n_midcom->get('configuration saved'));
-                $_MIDCOM->relocate('');
+                midcom::uimessages()->add($this->_l10n_midcom->get('component configuration'), $this->_l10n_midcom->get('configuration saved'));
+                midcom::relocate('');
                 // This will exit
                 break;
             
             case 'cancel':
-                $_MIDCOM->uimessages->add($this->_l10n_midcom->get('component configuration'), $this->_l10n_midcom->get('cancelled'));
-                $_MIDCOM->relocate('');
+                midcom::uimessages()->add($this->_l10n_midcom->get('component configuration'), $this->_l10n_midcom->get('cancelled'));
+                midcom::relocate('');
                 // This will exit
                 break;
             
@@ -198,10 +198,10 @@ class midcom_core_handler_configdm2 extends midcom_baseclasses_components_handle
             MIDCOM_NAV_URL => 'config/',
             MIDCOM_NAV_NAME => $this->_l10n_midcom->get('component configuration'),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
-        $data['component'] = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_COMPONENT);        
-        $data['title'] = sprintf($_MIDCOM->i18n->get_string('component %s configuration for folder %s', 'midcom'), $_MIDCOM->i18n->get_string($data['component'], $data['component']), $data['topic']->extra);
-        $_MIDCOM->set_pagetitle($data['title']);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        $data['component'] = midcom::get_context_data(MIDCOM_CONTEXT_COMPONENT);        
+        $data['title'] = sprintf(midcom::i18n()->get_string('component %s configuration for folder %s', 'midcom'), midcom::i18n()->get_string($data['component'], $data['component']), $data['topic']->extra);
+        midcom::set_pagetitle($data['title']);
         
         return true;
     }
@@ -251,13 +251,13 @@ class midcom_core_handler_configdm2 extends midcom_baseclasses_components_handle
     {
         if (!method_exists($this, '_load_datamanagers'))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, '_load_datamanagers method not available, recreation support disabled.');
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, '_load_datamanagers method not available, recreation support disabled.');
             // This will exit.
         }
 
         if (!method_exists($this, '_load_objects'))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, '_load_objects method not available, recreation support disabled.');
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, '_load_objects method not available, recreation support disabled.');
             // This will exit.
         }
     
@@ -267,13 +267,13 @@ class midcom_core_handler_configdm2 extends midcom_baseclasses_components_handle
 
         if (array_key_exists('midcom_core_handler_configdm2_recreatecancel', $_POST))
         {
-            $_MIDCOM->relocate('config/');
+            midcom::relocate('config/');
             // This will exit.
         }
 
         if (!array_key_exists('midcom_core_handler_configdm2_recreateok', $_POST))
         {
-            $_MIDCOM->relocate('config/');
+            midcom::relocate('config/');
             // This will exit.
         }
         
@@ -291,10 +291,10 @@ class midcom_core_handler_configdm2 extends midcom_baseclasses_components_handle
             MIDCOM_NAV_URL => 'config/recreate/',
             MIDCOM_NAV_NAME => $this->_l10n_midcom->get('recreate images'),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
-        $data['component'] = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_COMPONENT);        
-        $data['title'] = sprintf($_MIDCOM->i18n->get_string('recreate images for folder %s', 'midcom'), $data['topic']->extra);
-        $_MIDCOM->set_pagetitle($data['title']);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        $data['component'] = midcom::get_context_data(MIDCOM_CONTEXT_COMPONENT);        
+        $data['title'] = sprintf(midcom::i18n()->get_string('recreate images for folder %s', 'midcom'), $data['topic']->extra);
+        midcom::set_pagetitle($data['title']);
         
         return true;
     }
@@ -324,7 +324,7 @@ class midcom_core_handler_configdm2 extends midcom_baseclasses_components_handle
 
         echo "<h1>{$data['title']}</h1>\n";
         
-        echo "<p>" . $_MIDCOM->i18n->get_string('recreating', 'midcom') . "</p>\n";
+        echo "<p>" . midcom::i18n()->get_string('recreating', 'midcom') . "</p>\n";
 
         echo "<pre>\n";
         $objects = $this->_load_objects();
@@ -333,18 +333,18 @@ class midcom_core_handler_configdm2 extends midcom_baseclasses_components_handle
             $type = get_class($object);
             if (!isset($data['datamanagers'][$type]))
             {
-                echo sprintf($_MIDCOM->i18n->get_string('not recreating object %s %s, reason %s', 'midcom'), $type, $object->guid, 'No datamanager defined') . "\n";
+                echo sprintf(midcom::i18n()->get_string('not recreating object %s %s, reason %s', 'midcom'), $type, $object->guid, 'No datamanager defined') . "\n";
                 continue;
             }
 
             if (   !$object->can_do('midgard:update')
                 || !$object->can_do('midgard:attachments'))
             {
-                echo sprintf($_MIDCOM->i18n->get_string('not recreating object %s %s, reason %s', 'midcom'), $type, $object->guid, 'Insufficient privileges') . "\n";
+                echo sprintf(midcom::i18n()->get_string('not recreating object %s %s, reason %s', 'midcom'), $type, $object->guid, 'Insufficient privileges') . "\n";
                 continue;
             }
 
-            echo sprintf($_MIDCOM->i18n->get_string('recreating object %s %s', 'midcom'), $type, $object->guid) . ': ';
+            echo sprintf(midcom::i18n()->get_string('recreating object %s %s', 'midcom'), $type, $object->guid) . ': ';
             $data['datamanagers'][$type]->autoset_storage($object);
             if (!$data['datamanagers'][$type]->recreate())
             {
@@ -357,7 +357,7 @@ class midcom_core_handler_configdm2 extends midcom_baseclasses_components_handle
         }
         echo "</pre>\n";
         
-        echo "<p>" . $_MIDCOM->i18n->get_string('done', 'midcom') . "</p>\n";        
+        echo "<p>" . midcom::i18n()->get_string('done', 'midcom') . "</p>\n";        
     }
 }
 ?>

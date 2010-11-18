@@ -80,7 +80,7 @@ class net_nehmer_account_interface extends midcom_baseclasses_components_interfa
      */
     function _on_resolve_permalink($topic, $config, $guid)
     {    
-        $person = $_MIDCOM->auth->get_user($guid);
+        $person = midcom::auth->get_user($guid);
         if (   !$person
             || !$person->guid)
         {

@@ -1,6 +1,6 @@
 <?php
-$inviter = $_MIDCOM->auth->get_user($data['invite']->metadata->creator);
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$inviter = midcom::auth->get_user($data['invite']->metadata->creator);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 ?>
 <h1><?php echo $data['l10n']->get('register'); ?></h1>
 

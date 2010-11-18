@@ -1,6 +1,6 @@
 <?php
 $history = $data['history'];
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 $guid = $data['guid'];
 
 if (count($history) == 0)
@@ -41,11 +41,11 @@ echo $data['rcs_toolbar']->render();
 
                 if ($history['user'])
                 {
-                    $user = $_MIDCOM->auth->get_user($history['user']);
+                    $user = midcom::auth->get_user($history['user']);
                     if(is_object($user))
                     {
                         $person = $user->get_storage();
-                        if ($_MIDCOM->load_library('org.openpsa.contactwidget'))
+                        if (midcom::load_library('org.openpsa.contactwidget'))
                         {
                             $user_card = new org_openpsa_contactwidget($person);
                             $person_label = $user_card->show_inline();

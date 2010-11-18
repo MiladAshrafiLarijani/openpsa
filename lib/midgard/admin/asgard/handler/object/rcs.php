@@ -102,7 +102,7 @@ class midgard_admin_asgard_handler_object_rcs extends midcom_baseclasses_compone
             case 'sid':
                 return false;
             case 'password':
-                return $_MIDCOM->auth->admin;
+                return midcom::auth->admin;
             default:
                 return true;
         }
@@ -114,9 +114,9 @@ class midgard_admin_asgard_handler_object_rcs extends midcom_baseclasses_compone
     function _on_initialize()
     {
         // Ensure we get the correct styles
-        $_MIDCOM->style->prepend_component_styledir('midgard.admin.asgard');
-        $_MIDCOM->skip_page_style = true;
-        $_MIDCOM->add_link_head(array
+        midcom::style->prepend_component_styledir('midgard.admin.asgard');
+        midcom::skip_page_style = true;
+        midcom::add_link_head(array
             (
                 'rel' => 'stylesheet',
                 'type' => 'text/css',
@@ -124,11 +124,11 @@ class midgard_admin_asgard_handler_object_rcs extends midcom_baseclasses_compone
             )
         );
 
-        $this->_l10n = $_MIDCOM->i18n->get_l10n('midgard.admin.asgard');
+        $this->_l10n = midcom::i18n()->get_l10n('midgard.admin.asgard');
         $this->_request_data['l10n'] =& $this->_l10n;
 
         // Load the helper class
-        $_MIDCOM->componentloader->load('midcom.helper.xml');
+        midcom::componentloader->load('midcom.helper.xml');
     }
 
     /**
@@ -137,28 +137,28 @@ class midgard_admin_asgard_handler_object_rcs extends midcom_baseclasses_compone
     function _load_object()
     {
         debug_push_class(__CLASS__, __FUNCTION__);
-        $this->_object = $_MIDCOM->dbfactory->get_object_by_guid($this->_guid);
+        $this->_object = midcom::dbfactory()->get_object_by_guid($this->_guid);
         if (   !$this->_object
             || !$this->_object->guid)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The GUID '{$this->_guid}' was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The GUID '{$this->_guid}' was not found.");
             // This will exit
         }
 
         if (   !$GLOBALS['midcom_config']['midcom_services_rcs_enable']
             || !$this->_object->_use_rcs)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Revision control not supported for " . get_class($this->_object) . ".");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Revision control not supported for " . get_class($this->_object) . ".");
             // This will exit
         }
 
         // Load RCS service from core.
-        $rcs = $_MIDCOM->get_service('rcs');
+        $rcs = midcom::get_service('rcs');
         $this->_backend = $rcs->load_handler($this->_object);
 
         if (get_class($this->_object) != 'midcom_db_topic')
         {
-            $_MIDCOM->bind_view_to_object($this->_object);
+            midcom::bind_view_to_object($this->_object);
         }
 
         debug_pop();
@@ -170,7 +170,7 @@ class midgard_admin_asgard_handler_object_rcs extends midcom_baseclasses_compone
         midgard_admin_asgard_plugin::bind_to_object($this->_object, $handler_id, $this->_request_data);
         midgard_admin_asgard_plugin::get_common_toolbar($this->_request_data);
 
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
     }
 
     /**
@@ -180,7 +180,7 @@ class midgard_admin_asgard_handler_object_rcs extends midcom_baseclasses_compone
      */
     function _rcs_toolbar($args = null)
     {
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 
         $keys = array_keys($this->_backend->list_history());
 
@@ -421,7 +421,7 @@ class midgard_admin_asgard_handler_object_rcs extends midcom_baseclasses_compone
             );
         }
 
-        $_MIDCOM->bind_view_to_object($this->_object);
+        midcom::bind_view_to_object($this->_object);
     }
     /**
      * Show the changes done to the object
@@ -434,14 +434,14 @@ class midgard_admin_asgard_handler_object_rcs extends midcom_baseclasses_compone
     function _handler_history($handler_id, $args, &$data)
     {
         $data['args'] = $args;
-        $_MIDCOM->auth->require_user_do('midgard.admin.asgard:manage_objects', null, 'midgard_admin_asgard_plugin');
+        midcom::auth->require_user_do('midgard.admin.asgard:manage_objects', null, 'midgard_admin_asgard_plugin');
 
         // Check if the comparison request is valid
         if (isset($_REQUEST['compare']))
         {
             if (count($_REQUEST['compare']) !== 2)
             {
-                $_MIDCOM->uimessages->add($this->_l10n->get('midgard.admin.asgard'), $this->_l10n->get('select exactly two choices'));
+                midcom::uimessages()->add($this->_l10n->get('midgard.admin.asgard'), $this->_l10n->get('select exactly two choices'));
             }
             else
             {
@@ -456,8 +456,8 @@ class midgard_admin_asgard_handler_object_rcs extends midcom_baseclasses_compone
                     $last = $_REQUEST['compare'][0];
                 }
 
-                $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-                $_MIDCOM->relocate("{$prefix}__mfa/asgard/object/rcs/diff/{$args[0]}/{$first}/{$last}/");
+                $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+                midcom::relocate("{$prefix}__mfa/asgard/object/rcs/diff/{$args[0]}/{$first}/{$last}/");
                 // This will exit
             }
         }
@@ -477,9 +477,9 @@ class midgard_admin_asgard_handler_object_rcs extends midcom_baseclasses_compone
         $this->_rcs_toolbar();
         midgard_admin_asgard_plugin::get_common_toolbar($data);
 
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/midgard.admin.asgard/rcs.js');
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.tablesorter.pack.js');
-        $_MIDCOM->add_jscript("jQuery(document).ready(function()
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/midgard.admin.asgard/rcs.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.tablesorter.pack.js');
+        midcom::add_jscript("jQuery(document).ready(function()
         {
             jQuery('#midgard_admin_asgard_rcs_version_compare table').tablesorter({
                 headers:
@@ -533,7 +533,7 @@ class midgard_admin_asgard_handler_object_rcs extends midcom_baseclasses_compone
      */
     function _handler_diff($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_user_do('midgard.admin.asgard:manage_objects', null, 'midgard_admin_asgard_plugin');
+        midcom::auth->require_user_do('midgard.admin.asgard:manage_objects', null, 'midgard_admin_asgard_plugin');
         $this->_guid = $args[0];
         $this->_load_object();
 
@@ -543,7 +543,7 @@ class midgard_admin_asgard_handler_object_rcs extends midcom_baseclasses_compone
         if (   !$this->_backend->version_exists($args[1])
             || !$this->_backend->version_exists($args[2]) )
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "One of the revisions {$args[1]} or {$args[2]} does not exist.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "One of the revisions {$args[1]} or {$args[2]} does not exist.");
         }
 
         if (!class_exists('Text_Diff'))
@@ -582,7 +582,7 @@ class midgard_admin_asgard_handler_object_rcs extends midcom_baseclasses_compone
         $this->_request_data['guid'] = $args[0];
 
         $this->_request_data['view_title'] = sprintf($this->_l10n->get('changes done in revision %s to %s'), $this->_request_data['latest_revision'], $this->_resolve_object_title());
-        $_MIDCOM->set_pagetitle($this->_request_data['view_title']);
+        midcom::set_pagetitle($this->_request_data['view_title']);
 
         $this->_prepare_request_data($handler_id);
 
@@ -618,7 +618,7 @@ class midgard_admin_asgard_handler_object_rcs extends midcom_baseclasses_compone
      */
     function _handler_preview($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_user_do('midgard.admin.asgard:manage_objects', null, 'midgard_admin_asgard_plugin');
+        midcom::auth->require_user_do('midgard.admin.asgard:manage_objects', null, 'midgard_admin_asgard_plugin');
         $this->_guid = $args[0];
         $data['args'] = $args;
 
@@ -631,7 +631,7 @@ class midgard_admin_asgard_handler_object_rcs extends midcom_baseclasses_compone
         $this->_view_toolbar->hide_item("__mfa/asgard/object/rcs/preview/{$this->_guid}/{$revision}/");
 
         $this->_request_data['view_title'] = sprintf($this->_l10n->get('viewing version %s of %s'), $revision, $this->_resolve_object_title());
-        $_MIDCOM->set_pagetitle($this->_request_data['view_title']);
+        midcom::set_pagetitle($this->_request_data['view_title']);
 
         $this->_prepare_request_data($handler_id);
 
@@ -662,7 +662,7 @@ class midgard_admin_asgard_handler_object_rcs extends midcom_baseclasses_compone
      */
     function _handler_restore($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_user_do('midgard.admin.asgard:manage_objects', null, 'midgard_admin_asgard_plugin');
+        midcom::auth->require_user_do('midgard.admin.asgard:manage_objects', null, 'midgard_admin_asgard_plugin');
         $this->_guid = $args[0];
         $data['args'] = $args;
         $this->_load_object();
@@ -678,12 +678,12 @@ class midgard_admin_asgard_handler_object_rcs extends midcom_baseclasses_compone
         if (   $this->_backend->version_exists($args[1])
             && $this->_backend->restore_to_revision($args[1]))
         {
-            $_MIDCOM->uimessages->add($this->_l10n->get('no.bergfald.rcs'), sprintf($this->_l10n->get('restore to version %s successful'), $args[1]));
-            $_MIDCOM->relocate("__mfa/asgard/object/view/{$this->_guid}/");
+            midcom::uimessages()->add($this->_l10n->get('no.bergfald.rcs'), sprintf($this->_l10n->get('restore to version %s successful'), $args[1]));
+            midcom::relocate("__mfa/asgard/object/view/{$this->_guid}/");
         }
         else
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, sprintf($this->_l10n->get('restore to version %s failed, reason %s'), $args[1], $this->_backend->get_error()));
+            midcom::generate_error(MIDCOM_ERRCRIT, sprintf($this->_l10n->get('restore to version %s failed, reason %s'), $args[1], $this->_backend->get_error()));
         }
 
         // Load the toolbars

@@ -38,7 +38,7 @@ class net_nemein_rss_interface extends midcom_baseclasses_components_interface
         //define('MAGPIE_CACHE_AGE', 1800);
 
         // Get correct encoding for magpie
-        $encoding = $_MIDCOM->i18n->get_current_charset();
+        $encoding = midcom::i18n()->get_current_charset();
         // PHP's XML parser supports UTF-8 and ISO-LATIN-1
         if ($encoding == 'ISO-8859-15') 
         {

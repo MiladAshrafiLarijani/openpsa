@@ -57,16 +57,16 @@ if (! defined('MIDCOM_STATIC_URL'))
 require(MIDCOM_ROOT . '/midcom.php');
 
 // Start request processing
-$_MIDCOM->codeinit();
+midcom::codeinit();
 
 // Run Midgard1-compatible pseudo-templating
 $template = mgd_preparse('<(ROOT)>');
 $template_parts = explode('<(content)>', $template);
 eval('?>' . $template_parts[0]);
-$_MIDCOM->content();
+midcom::content();
 if (isset($template_parts[1]))
 {
     eval('?>' . $template_parts[1]);
 }
-$_MIDCOM->finish();
+midcom::finish();
 ?>

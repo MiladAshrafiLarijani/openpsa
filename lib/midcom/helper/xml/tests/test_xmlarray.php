@@ -12,7 +12,7 @@
  * Run it through the midcom.tests component.
  */ 
 
-$_MIDCOM->load_library('midcom.helper.xml');
+midcom::load_library('midcom.helper.xml');
 $GLOBALS['testclasses'] = array ('midcom_helper_xml_toarray_test' => 0);
  
 

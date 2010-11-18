@@ -18,33 +18,33 @@ $ip_sudo = false;
 if (   $ips 
     && in_array($_SERVER['REMOTE_ADDR'], $ips))
 {
-    if (! $_MIDCOM->auth->request_sudo('midcom.services.indexer'))
+    if (! midcom::auth()->request_sudo('midcom.services.indexer'))
     {
-        $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to acquire SUDO rights. Aborting.');
+        midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to acquire SUDO rights. Aborting.');
     }
     $ip_sudo = true;
 }
 else
 {
-    $_MIDCOM->auth->require_valid_user('basic');
-    $_MIDCOM->auth->require_admin_user();
+    midcom::auth()->require_valid_user('basic');
+    midcom::auth()->require_admin_user();
 }
 
 if ($GLOBALS['midcom_config']['indexer_backend'] === false)
 {
-    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'No indexer backend has been defined. Aborting.');
+    midcom::generate_error(MIDCOM_ERRCRIT, 'No indexer backend has been defined. Aborting.');
 }
 
 if (   !isset($_REQUEST['nodeid'])
     || empty($_REQUEST['nodeid']))
 {
-    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "\$_REQUEST['nodeid'] must be set to valid node ID");
+    midcom::generate_error(MIDCOM_ERRCRIT, "\$_REQUEST['nodeid'] must be set to valid node ID");
 }
 
 //check if language is passed & set language if needed
 if(isset($_REQUEST['language']))
 {
-    $_MIDCOM->i18n->set_language($_REQUEST['language']);
+    midcom::i18n()->set_language($_REQUEST['language']);
 }
 debug_push('exec-reindex_singlenode');
 
@@ -54,15 +54,15 @@ ignore_user_abort(true);
 debug_add("Setting Memorylimit to configured value of {$GLOBALS['midcom_config']['indexer_reindex_memorylimit']} MB");
 ini_set('memory_limit', "{$GLOBALS['midcom_config']['indexer_reindex_memorylimit']}M");
 
-$loader = $_MIDCOM->get_component_loader();
-$indexer = $_MIDCOM->get_service('indexer');
+$loader = midcom::get_component_loader();
+$indexer = midcom::get_service('indexer');
 
 $nap = new midcom_helper_nav();
 $nodeid =& $_REQUEST['nodeid'];
 $node = $nap->get_node($nodeid);
 if (empty($node))
 {
-    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Could not get node {$_REQUEST['nodeid']}");
+    midcom::generate_error(MIDCOM_ERRCRIT, "Could not get node {$_REQUEST['nodeid']}");
 }
 
 debug_dump_mem("Initial Memory Usage");
@@ -83,7 +83,7 @@ if (is_null($interface))
     $msg = "Failed to retrieve an interface class for the node {$nodeid} which is of {$node[MIDCOM_NAV_COMPONENT]}.";
     debug_add($msg, MIDCOM_LOG_ERROR);
     debug_print_r('NAP record was:', $node);
-    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, $msg);
+    midcom::generate_error(MIDCOM_ERRCRIT, $msg);
     // this will exit
 }
 
@@ -93,7 +93,7 @@ $existing_documents = $indexer->query("__TOPIC_GUID:{$node[MIDCOM_NAV_OBJECT]->g
 if ($existing_documents === false)
 {
     $msg = "Query '__TOPIC_GUID:{$node[MIDCOM_NAV_OBJECT]->guid}' returned false, indicating problem with indexer";
-    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, $msg);
+    midcom::generate_error(MIDCOM_ERRCRIT, $msg);
     // this will exit
 }
 
@@ -119,7 +119,7 @@ if (!$interface->reindex($node[MIDCOM_NAV_OBJECT]))
     $msg = "Failed to reindex the node {$nodeid} which is of {$node[MIDCOM_NAV_COMPONENT]}.";
     debug_add($msg, MIDCOM_LOG_ERROR);
     debug_print_r('NAP record was:', $node);
-    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, $msg);
+    midcom::generate_error(MIDCOM_ERRCRIT, $msg);
     // this will exit
 }
 flush();
@@ -131,7 +131,7 @@ ignore_user_abort(false);
 
 if ($ip_sudo)
 {
-    $_MIDCOM->auth->drop_sudo();
+    midcom::auth()->drop_sudo();
 }
 
 debug_pop();

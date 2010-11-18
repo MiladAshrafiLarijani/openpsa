@@ -83,7 +83,7 @@ class midcom_core_group extends midcom_baseclasses_core_object
 
         if (is_null($id))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'The class midcom_core_group is not default constructible.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'The class midcom_core_group is not default constructible.');
             // This will exit.
         }
 

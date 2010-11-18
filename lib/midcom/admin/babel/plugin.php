@@ -14,10 +14,10 @@ class midcom_admin_babel_plugin extends midcom_baseclasses_components_handler
     function get_plugin_handlers()
     {
 
-        $_MIDCOM->load_library('midgard.admin.asgard');
-        $_MIDCOM->load_library('midcom.admin.babel');
+        midcom::load_library('midgard.admin.asgard');
+        midcom::load_library('midcom.admin.babel');
 
-        $_MIDCOM->auth->require_user_do('midcom.admin.babel:access', null, 'midcom_admin_babel_plugin');
+        midcom::auth()->require_user_do('midcom.admin.babel:access', null, 'midcom_admin_babel_plugin');
 
         return array
         (
@@ -50,9 +50,9 @@ class midcom_admin_babel_plugin extends midcom_baseclasses_components_handler
     function calculate_language_status($lang)
     {
         if (       in_array('midcom_admin_babel_lang_status', $GLOBALS['midcom_config']['cache_module_memcache_data_groups'])
-             && $_MIDCOM->cache->memcache->exists('midcom_admin_babel_lang_status', $lang))
+             && midcom::cache()->memcache->exists('midcom_admin_babel_lang_status', $lang))
         {
-            return $_MIDCOM->cache->memcache->get('midcom_admin_babel_lang_status', $lang);
+            return midcom::cache()->memcache->get('midcom_admin_babel_lang_status', $lang);
         }
         $status = array
         (
@@ -78,16 +78,16 @@ class midcom_admin_babel_plugin extends midcom_baseclasses_components_handler
         $components = array('midcom');
 
         // Load translation status of each component
-        foreach ($_MIDCOM->componentloader->manifests as $manifest)
+        foreach (midcom::componentloader()->manifests as $manifest)
         {
             $components[] = $manifest->name;
         }
 
         foreach ($components as $component)
         {
-            $component_l10n = $_MIDCOM->i18n->get_l10n($component);
+            $component_l10n = midcom::i18n()->get_l10n($component);
 
-            if ($_MIDCOM->componentloader->is_core_component($component))
+            if (midcom::componentloader()->is_core_component($component))
             {
                 $string_array = 'components_core';
             }
@@ -121,7 +121,7 @@ class midcom_admin_babel_plugin extends midcom_baseclasses_components_handler
                     $status[$string_array][$component]['translated']++;
                     $status['strings_all']['translated']++;
 
-                    if ($_MIDCOM->componentloader->is_core_component($component))
+                    if (midcom::componentloader()->is_core_component($component))
                     {
                         $status['strings_core']['translated']++;
                     }
@@ -135,22 +135,22 @@ class midcom_admin_babel_plugin extends midcom_baseclasses_components_handler
 
         if (in_array('midcom_admin_babel_lang_status', $GLOBALS['midcom_config']['cache_module_memcache_data_groups']))
         {
-            $_MIDCOM->cache->memcache->put('midcom_admin_babel_lang_status', $lang, $status);
+            midcom::cache()->memcache->put('midcom_admin_babel_lang_status', $lang, $status);
         }
         return $status;
     }
 
     function navigation()
     {
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-        $languages = $_MIDCOM->i18n->get_language_db();
-        $curlang = $_MIDCOM->i18n->get_current_language();
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $languages = midcom::i18n()->get_language_db();
+        $curlang = midcom::i18n()->get_current_language();
 
         echo "<ul class=\"midgard_admin_asgard_navigation\">\n";
 
         foreach ($languages as $language => $language_info)
         {
-            $language_name = $_MIDCOM->i18n->get_string($language_info['enname'], 'midcom.admin.babel');
+            $language_name = midcom::i18n()->get_string($language_info['enname'], 'midcom.admin.babel');
 
             // Calculate status
             $state = midcom_admin_babel_plugin::calculate_language_status($language);

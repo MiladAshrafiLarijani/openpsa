@@ -1,5 +1,5 @@
 <?php
-$_MIDCOM->auth->require_valid_user();
+midcom::auth->require_valid_user();
 error_reporting(E_ALL);
 ini_set('max_execution_time', 0);
 
@@ -24,8 +24,8 @@ function render_breadcrumb(&$crumbs)
     }
 }
 
-$site_root = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ROOTTOPIC);
-$host_prefix = $_MIDCOM->get_host_prefix();
+$site_root = midcom::get_context_data(MIDCOM_CONTEXT_ROOTTOPIC);
+$host_prefix = midcom::get_host_prefix();
 $nap = new midcom_helper_nav();
 
 $qb = midcom_db_topic::new_query_builder();

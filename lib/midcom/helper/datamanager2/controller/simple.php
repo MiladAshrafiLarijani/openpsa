@@ -32,13 +32,13 @@ class midcom_helper_datamanager2_controller_simple extends midcom_helper_dataman
         
         if (count($this->schemadb) == 0)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'You must set a schema database before initializing midcom_helper_datamanager2_controller_simple.');
             // This will exit.
         }
         if ($this->datamanager === null)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'You must set the datamanager member before initializing midcom_helper_datamanager2_controller_simple.');
             // This will exit.
         }
@@ -82,7 +82,7 @@ class midcom_helper_datamanager2_controller_simple extends midcom_helper_dataman
     {
         if ($this->formmanager === null)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'You must initialize a controller class before using it.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'You must initialize a controller class before using it.');
         }
 
         $metadata = $this->datamanager->storage->object->metadata;
@@ -96,16 +96,16 @@ class midcom_helper_datamanager2_controller_simple extends midcom_helper_dataman
             {
                 if (!$metadata->unlock())
                 {
-                    $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('midcom.helper.datamanager2', 'midcom.helper.datamanager2'), sprintf($_MIDCOM->i18n->get_string('failed to unlock, reason %s', 'midcom.helper.datamanager2'), midcom_connection::get_error_string()), 'error');
+                    midcom::uimessages()->add(midcom::i18n()->get_string('midcom.helper.datamanager2', 'midcom.helper.datamanager2'), sprintf(midcom::i18n()->get_string('failed to unlock, reason %s', 'midcom.helper.datamanager2'), midcom_connection::get_error_string()), 'error');
                 }
             }
             else
             {
-                $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('midcom.helper.datamanager2', 'midcom.helper.datamanager2'), $_MIDCOM->i18n->get_string('permission denied', 'midcom'), 'error');
+                midcom::uimessages()->add(midcom::i18n()->get_string('midcom.helper.datamanager2', 'midcom.helper.datamanager2'), midcom::i18n()->get_string('permission denied', 'midcom'), 'error');
             }
             
             // Make sure we have CSS loaded
-            $_MIDCOM->add_link_head
+            midcom::add_link_head
             (
                 array
                 (
@@ -157,7 +157,7 @@ class midcom_helper_datamanager2_controller_simple extends midcom_helper_dataman
                 debug_add("Failed to save object, type validation failed:\n" . implode("\n", $this->datamanager->validation_errors), MIDCOM_LOG_ERROR);
                 debug_pop();
                 
-                $dm2_label = $_MIDCOM->i18n->get_string('midcom.helper.datamanager2', 'midcom.helper.datamanager2');
+                $dm2_label = midcom::i18n()->get_string('midcom.helper.datamanager2', 'midcom.helper.datamanager2');
                 
                 $var = $this->formmanager->_schema->_l10n_schema;
                 
@@ -172,10 +172,10 @@ class midcom_helper_datamanager2_controller_simple extends midcom_helper_dataman
                         $label = $this->formmanager->_schema->translate_schema_string($this->formmanager->_schema->fields[$name]['title']);
                     }
                     
-                    $_MIDCOM->uimessages->add
+                    midcom::uimessages()->add
                     (
                         $dm2_label,
-                        sprintf($_MIDCOM->i18n->get_string('validation failed for field %s: %s', 'midcom.helper.datamanager2'), $label, $message),
+                        sprintf(midcom::i18n()->get_string('validation failed for field %s: %s', 'midcom.helper.datamanager2'), $label, $message),
                         'error'
                     );
                 }
@@ -198,7 +198,7 @@ class midcom_helper_datamanager2_controller_simple extends midcom_helper_dataman
                     else
                     {
                         // It seems to be a critical error.
-                        $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                        midcom::generate_error(MIDCOM_ERRCRIT,
                             'Failed to save the data to disk, last Midgard error: ' . midcom_connection::get_error_string() . '. Check the debug level log for more information.');
                         // This will exit.
                     }

@@ -298,7 +298,7 @@ class midcom_core_group_midgard extends midcom_core_group
                 return null;
             }
 
-            $this->_cached_parent_group = $_MIDCOM->auth->get_group($parent);
+            $this->_cached_parent_group = midcom::auth()->get_group($parent);
 
             debug_pop();
         }

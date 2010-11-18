@@ -46,17 +46,17 @@ class midcom_db_member extends midcom_core_dbaobject
      */
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
 
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
 
     /**
@@ -99,7 +99,7 @@ class midcom_db_member extends midcom_core_dbaobject
         {
             return;
         }
-        $_MIDCOM->cache->invalidate($person->guid);
+        midcom::cache()->invalidate($person->guid);
     }
 
     function _on_creating()
@@ -107,7 +107,7 @@ class midcom_db_member extends midcom_core_dbaobject
         // Allow root group membership creation only for admins
         if ($this->gid == 0)
         {
-            if (!$_MIDCOM->auth->admin)
+            if (!midcom::auth()->admin)
             {
                 debug_push_class(__CLASS__, __FUNCTION__);
                 debug_add("Group #0 membership creation only allowed for admins");
@@ -128,7 +128,7 @@ class midcom_db_member extends midcom_core_dbaobject
         // Allow root group membership creation only for admins (check update as well to avoid sneaky bastards
         if ($this->gid == 0)
         {
-            if ($_MIDCOM->auth->admin)
+            if (midcom::auth()->admin)
             {
                 debug_push_class(__CLASS__, __FUNCTION__);
                 debug_add("Group #0 membership creation only allowed for admins");
@@ -152,7 +152,7 @@ class midcom_db_member extends midcom_core_dbaobject
     {
         $this->_invalidate_person_cache();
 
-        if (!$_MIDCOM->auth->request_sudo('midcom'))
+        if (!midcom::auth()->request_sudo('midcom'))
         {
             return parent::_on_created();
         }
@@ -164,19 +164,19 @@ class midcom_db_member extends midcom_core_dbaobject
         $activity->target = $target->guid;
         $activity->actor = $actor->id;   
         $this->verb = 'http://activitystrea.ms/schema/1.0/join';
-        if (   isset($_MIDCOM->auth->user)
-            && isset($_MIDCOM->auth->user->guid)
-            && $actor->guid == $_MIDCOM->auth->user->guid)
+        if (   isset(midcom::auth()->user)
+            && isset(midcom::auth()->user->guid)
+            && $actor->guid == midcom::auth()->user->guid)
         {
-            $this->summary = sprintf($_MIDCOM->i18n->get_string('%s joined group %s', 'midcom'), $actor->name, $target->official);
+            $this->summary = sprintf(midcom::i18n()->get_string('%s joined group %s', 'midcom'), $actor->name, $target->official);
         }
         else
         {
-            $this->summary = sprintf($_MIDCOM->i18n->get_string('%s was added to group %s', 'midcom'), $actor->name, $target->official);
+            $this->summary = sprintf(midcom::i18n()->get_string('%s was added to group %s', 'midcom'), $actor->name, $target->official);
         }
         $activity->create();
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth()->drop_sudo();
     }
 
     function _on_updated()
@@ -188,7 +188,7 @@ class midcom_db_member extends midcom_core_dbaobject
     {
         $this->_invalidate_person_cache();
 
-        if (!$_MIDCOM->auth->request_sudo('midcom'))
+        if (!midcom::auth()->request_sudo('midcom'))
         {
             return parent::_on_created();
         }
@@ -200,17 +200,17 @@ class midcom_db_member extends midcom_core_dbaobject
         $activity->target = $target->guid;
         $activity->actor = $actor->id;   
         $activity->verb = 'http://community-equity.org/schema/1.0/leave';
-        if ($actor->guid == $_MIDCOM->auth->user->guid)
+        if ($actor->guid == midcom::auth()->user->guid)
         {
-            $activity->summary = sprintf($_MIDCOM->i18n->get_string('%s left group %s', 'midcom'), $actor->name, $target->official);
+            $activity->summary = sprintf(midcom::i18n()->get_string('%s left group %s', 'midcom'), $actor->name, $target->official);
         }
         else
         {
-            $activity->summary = sprintf($_MIDCOM->i18n->get_string('%s was removed from group %s', 'midcom'), $actor->name, $target->official);
+            $activity->summary = sprintf(midcom::i18n()->get_string('%s was removed from group %s', 'midcom'), $actor->name, $target->official);
         }
         $activity->create();
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth()->drop_sudo();
     }
 }
 ?>

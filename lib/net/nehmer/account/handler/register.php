@@ -146,7 +146,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
         $this->_schemadb = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb_account_creation'));
 
         // Prepare the request information, filter down to allowed types if necessary
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
         $this->_request_data['types'] = Array();
         $open_types = $this->_config->get('register_allow_types');
 
@@ -162,7 +162,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
         // If there is only one type, relocate to there immediately.
         if (! $this->_request_data['types'])
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, 'No account types are currently open for registration.');
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, 'No account types are currently open for registration.');
             // This will exit.
         }
 
@@ -177,13 +177,13 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
         {
             reset($this->_request_data['types']);
             $dest = key($this->_request_data['types']);
-            $_MIDCOM->relocate($dest);
+            midcom::relocate($dest);
             // This will exit.
         }
 
 
-        $_MIDCOM->set_26_request_metadata(time(), $this->_topic->guid);
-        $_MIDCOM->set_pagetitle($this->_l10n->get('account registration') . ': ' . $this->_l10n->get('select account type'));
+        midcom::set_26_request_metadata(time(), $this->_topic->guid);
+        midcom::set_pagetitle($this->_l10n->get('account registration') . ': ' . $this->_l10n->get('select account type'));
 
 
         return true;
@@ -207,7 +207,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
     function _handler_register_invitation($handler_id, $args, &$data)
     {
         $hash = $args[0];
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
         $keep_sent_invites = $this->_config->get('keep_sent_invites');
         $current_time = time();
 
@@ -239,7 +239,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
             $schema_name = $this->_config->get('invreg_schema');
             $dest = "{$prefix}register/{$schema_name}/";
 
-            $_MIDCOM->relocate($dest);
+            midcom::relocate($dest);
 
         }
 
@@ -255,7 +255,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
                 $invite->delete();
             }
 
-            $_MIDCOM->relocate($prefix);
+            midcom::relocate($prefix);
         }
 
         return true;
@@ -301,7 +301,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
         if (   $open_types
             && ! in_array($this->_account_type, $open_types))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND,
+            midcom::generate_error(MIDCOM_ERRNOTFOUND,
                 "The account type '{$this->_account_type} is currently not open for registration.");
             // This will exit.
         }
@@ -346,13 +346,13 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
 
             default:
                 // Tried form-spoofing?
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "The stage {$this->_stage} is invalid, cannot continue. Please restart registration.");
+                midcom::generate_error(MIDCOM_ERRCRIT, "The stage {$this->_stage} is invalid, cannot continue. Please restart registration.");
                 // This will exit.
         }
 
         // Prepare output
         $this->_prepare_request_data();
-        $_MIDCOM->set_26_request_metadata(time(), $this->_topic->guid);
+        midcom::set_26_request_metadata(time(), $this->_topic->guid);
         $this->_component_data['active_leaf'] = NET_NEHMER_ACCOUNT_LEAFID_REGISTER;
 
         switch($this->_stage)
@@ -360,7 +360,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
             // We have to switch again as the current stage can change during
             // processing.
             case 'input':
-                $_MIDCOM->set_pagetitle($this->_l10n->get('account registration') . ': ' . $this->_l10n->get('enter account details'));
+                midcom::set_pagetitle($this->_l10n->get('account registration') . ': ' . $this->_l10n->get('enter account details'));
                 break;
 
             case 'confirm':
@@ -372,8 +372,8 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
                     MIDCOM_NAV_NAME => $this->_l10n->get('confirm account details'),
                 );
 
-                $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
-                $_MIDCOM->set_pagetitle($this->_l10n->get('confirm account details') . ': ' . $this->_l10n->get('confirm account details'));
+                midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+                midcom::set_pagetitle($this->_l10n->get('confirm account details') . ': ' . $this->_l10n->get('confirm account details'));
                 break;
 
             case 'success':
@@ -385,8 +385,8 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
                     MIDCOM_NAV_NAME => $this->_l10n->get('registration finished'),
                 );
 
-                $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
-                $_MIDCOM->set_pagetitle($this->_l10n->get('account registration') . ': ' . $this->_l10n->get('registration successful'));
+                midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+                midcom::set_pagetitle($this->_l10n->get('account registration') . ': ' . $this->_l10n->get('registration successful'));
                 break;
 
         }
@@ -415,7 +415,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
                 // *** FALL THROUGH ***
             case 'cancel':
                 // Return to the account type selection
-                $_MIDCOM->relocate('register/');
+                midcom::relocate('register/');
                 // This will exit.
         }
 
@@ -442,14 +442,14 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
 
     function _add_inviter_as_buddy($inviter_guid)
     {
-        if (!$_MIDCOM->componentloader->is_loaded('net.nehmer.buddylist'))
+        if (!midcom::componentloader->is_loaded('net.nehmer.buddylist'))
         {
-            $_MIDCOM->componentloader->load_graceful('net.nehmer.buddylist');
+            midcom::componentloader->load_graceful('net.nehmer.buddylist');
         }
 
         if (class_exists('net_nehmer_buddylist_entry'))
         {
-            $buddy_user = $_MIDCOM->auth->get_user($inviter_guid);
+            $buddy_user = midcom::auth->get_user($inviter_guid);
             if (!$buddy_user)
             {
                 return;
@@ -482,7 +482,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
         // expensive creation process.
         if (midcom_helper_datamanager2_formmanager::get_clicked_button() == 'cancel')
         {
-            $_MIDCOM->relocate('register/');
+            midcom::relocate('register/');
             // This will exit.
         }
 
@@ -496,7 +496,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
                 // Create the user account
                 if (!$this->_create_account())
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to create the user account, please contact the system administrator');
+                    midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to create the user account, please contact the system administrator');
                     // This will exit
                 }
 
@@ -660,9 +660,9 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
      */
     function _create_account()
     {
-        if (! $_MIDCOM->auth->request_sudo('net.nehmer.account'))
+        if (! midcom::auth->request_sudo('net.nehmer.account'))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Failed to request sudo privileges for account creation.');
             // This will exit.
         }
@@ -674,12 +674,12 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
         // Error handling
         if (! $this->_person->create())
         {
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
 
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_add('Failed to create a person record, last error was: ' . midcom_connection::get_error_string(), MIDCOM_LOG_ERROR);
             debug_print_r('Tried to create this record:', $this->_person);
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Failed to create a person record, last error was: ' . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -732,7 +732,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
                     MIDCOM_NAV_NAME => $this->_l10n->get('registration finished'),
                 );
 
-                $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+                midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
                 break;
 
             default:
@@ -740,12 +740,12 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
                 // unless something was tampered with. We bail out therefore and throw a critical
                 // error.
                 $this->_person->delete();
-                $_MIDCOM->auth->drop_sudo();
+                midcom::auth->drop_sudo();
 
                 debug_push_class(__CLASS__, __FUNCTION__);
                 debug_print_r('Original person record we tried to update:', $this->_person);
                 debug_print_r('Request data passed to us:', $controller->formmanager->form->getSubmitValues());
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Failed to store the data into the newly created record, this indicates tampering with the request data");
                 // This will exit.
 
@@ -773,7 +773,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
         );
 
         // Generate the activation link
-        $activation_link = $_MIDCOM->get_host_name() . $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "register/activate/{$this->_person->guid}/{$activation_hash}/";
+        $activation_link = midcom::get_host_name() . midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "register/activate/{$this->_person->guid}/{$activation_hash}/";
 
         // Store the information in parameters for activation
         $this->_person->set_parameter('net.nehmer.account', 'password', $password);
@@ -830,7 +830,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
             $session->remove('invite_hash');
         }
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
 
         return true;
     }
@@ -843,7 +843,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
      */
     function _send_activation_pending_mail()
     {
-        $_MIDCOM->load_library('org.openpsa.mail');
+        midcom::load_library('org.openpsa.mail');
         $mail = new org_openpsa_mail();
         $mail->from = $this->_config->get('activation_mail_sender');
 
@@ -877,7 +877,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
      */
     function _send_activation_request_mail()
     {
-        $_MIDCOM->load_library('org.openpsa.mail');
+        midcom::load_library('org.openpsa.mail');
         $mail = new org_openpsa_mail();
         $mail->from = $this->_config->get('activation_mail_sender');
 
@@ -891,7 +891,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
         $mail->to = $this->_config->get('administrator_email');
 
         // Get the commonly used parameters
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
         $parameters = net_nehmer_account_viewer::get_mail_parameters($this->_person);
         $parameters['APPROVALURI'] = "{$prefix}pending/{$this->_person->guid}/";
 
@@ -924,7 +924,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
         $this->_person = new midcom_db_person($guid);
         if (!$this->_person)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, 'Invalid activation link, the person record was not found.');
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, 'Invalid activation link, the person record was not found.');
             // This will exit.
         }
 
@@ -936,10 +936,10 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
             return true;
         }
 
-        $this->_account = $_MIDCOM->auth->get_user($this->_person);
+        $this->_account = midcom::auth->get_user($this->_person);
 
         // Set the default return URL, this might get overridden by activate_account
-        $data['return_url'] = $_MIDCOM->get_page_prefix() . 'midcom-login-';
+        $data['return_url'] = midcom::get_page_prefix() . 'midcom-login-';
 
         $activation_hash = $this->_person->get_parameter('net.nehmer.account', 'activation_hash');
         if ($activation_hash != $hash)
@@ -947,7 +947,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
             if ($activation_hash)
             {
                 // wrong activation hash has been passed.
-                $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, 'Invalid activation link.');
+                midcom::generate_error(MIDCOM_ERRNOTFOUND, 'Invalid activation link.');
                 // This will exit
             }
             $this->_processing_msg = $this->_l10n->get('your account has already been activated.');
@@ -960,9 +960,9 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
 
         // Prepare the output
         $this->_prepare_request_data();
-        $_MIDCOM->set_26_request_metadata(time(), $this->_topic->guid);
+        midcom::set_26_request_metadata(time(), $this->_topic->guid);
         $this->_component_data['active_leaf'] = NET_NEHMER_ACCOUNT_LEAFID_REGISTER;
-        $_MIDCOM->set_pagetitle($this->_l10n->get('account registration') . ': ' . $this->_l10n->get('activation successful'));
+        midcom::set_pagetitle($this->_l10n->get('account registration') . ': ' . $this->_l10n->get('activation successful'));
 
         $this->activated = true;
         return true;
@@ -1006,9 +1006,9 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
     function _activate_account()
     {
         debug_push_class(__CLASS__, __FUNCTION__);
-        if (! $_MIDCOM->auth->request_sudo('net.nehmer.account'))
+        if (! midcom::auth->request_sudo('net.nehmer.account'))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Failed to request sudo privileges for account activation.');
             // This will exit.
         }
@@ -1024,12 +1024,12 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
         }
         if (! $this->_person->update())
         {
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
 
             debug_add('Failed to update a person record, last error was: ' . midcom_connection::get_error_string(), MIDCOM_LOG_ERROR);
             debug_print_r('Tried to update this record:', $this->_person);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Failed to update a person record, last error was: ' . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -1048,16 +1048,16 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
         $this->_person->delete_parameter('net.nehmer.account', 'activation_hash');
         $this->_person->delete_parameter('net.nehmer.account', 'activation_hash_created');
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
 
         $auto_login = $this->_config->get('auto_login_on_activation');
         if ($auto_login)
         {
             $password = str_replace("*","",$password);
-            if ($_MIDCOM->auth->login("{$this->_person->username}", $password))
+            if (midcom::auth->login("{$this->_person->username}", $password))
             {
                 $this->logged_in = true;
-                $_MIDCOM->auth->_sync_user_with_backend();
+                midcom::auth->_sync_user_with_backend();
                 debug_add("Initated a login session for the user");
             }
 
@@ -1067,7 +1067,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
             }
         }
 
-        $_MIDCOM->auth->request_sudo('net.nehmer.account');
+        midcom::auth->request_sudo('net.nehmer.account');
 
         // Trigger post-activation hooks
         $this->_send_welcome_mail();
@@ -1082,13 +1082,13 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
             $this->_person->delete_parameter('net.nehmer.account', 'activation_returnto');
         }
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
 
         $relocate_to = $this->_config->get('relocate_after_activation');
         if ($relocate_to)
         {
             debug_pop();
-            $_MIDCOM->relocate($relocate_to);
+            midcom::relocate($relocate_to);
         }
 
         debug_pop();
@@ -1185,7 +1185,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
             debug_pop();
             return;
         }
-        if (! $_MIDCOM->componentloader->load_graceful('net.nehmer.mail'))
+        if (! midcom::componentloader->load_graceful('net.nehmer.mail'))
         {
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_add('Failed to load net.nehmer.mail, either install the component or disable the integration.', MIDCOM_ERRCRIT);
@@ -1197,7 +1197,7 @@ class net_nehmer_account_handler_register extends midcom_baseclasses_components_
 
         if (!empty($sender_guid))
         {
-            $sender = $_MIDCOM->auth->get_user($sender_guid);
+            $sender = midcom::auth->get_user($sender_guid);
             if (! $sender)
             {
                 debug_push_class(__CLASS__, __FUNCTION__);

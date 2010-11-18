@@ -7,7 +7,7 @@ echo "<?xml version=\"1.0\"?>\n";
     <head>
         <title></title>
         <?php
-        $_MIDCOM->print_head_elements();
+        midcom::print_head_elements();
         ?>
     </head>
     <body>

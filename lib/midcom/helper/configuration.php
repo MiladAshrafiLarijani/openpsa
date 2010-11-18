@@ -111,7 +111,7 @@ class midcom_helper_configuration
         }
         else
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'midcom_helper_configuration: Default constructor not allowed.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'midcom_helper_configuration: Default constructor not allowed.');
         }
     }
 
@@ -135,9 +135,9 @@ class midcom_helper_configuration
         $array = array();
 
         // Cast to DBA type.
-        if (! $_MIDCOM->dbclassloader->is_midcom_db_object($this->_object))
+        if (! midcom::dbclassloader()->is_midcom_db_object($this->_object))
         {
-            $this->_object = $_MIDCOM->dbfactory->convert_midgard_to_midcom($this->_object);
+            $this->_object = midcom::dbfactory()->convert_midgard_to_midcom($this->_object);
         }
 
         $array = $this->_object->list_parameters($this->_path);

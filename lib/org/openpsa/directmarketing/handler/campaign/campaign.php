@@ -42,7 +42,7 @@ class org_openpsa_directmarketing_handler_campaign_campaign extends midcom_basec
 
         if (!$this->_datamanager)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for campaigns.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for campaigns.");
             // This will exit.
         }
     }
@@ -57,12 +57,12 @@ class org_openpsa_directmarketing_handler_campaign_campaign extends midcom_basec
         if (   !$this->_campaign
             || $this->_campaign->node != $this->_topic->id)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The campaign {$args[0]} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The campaign {$args[0]} was not found.");
             // This will exit.
         }
 
-        $_MIDCOM->load_library('org.openpsa.qbpager');
-        $_MIDCOM->load_library('org.openpsa.contactwidget');
+        midcom::load_library('org.openpsa.qbpager');
+        midcom::load_library('org.openpsa.contactwidget');
 
         $this->_load_datamanager();
         $this->_datamanager->autoset_storage($this->_campaign);
@@ -122,7 +122,7 @@ class org_openpsa_directmarketing_handler_campaign_campaign extends midcom_basec
                     MIDCOM_TOOLBAR_LABEL => $this->_l10n->get('import subscribers'),
                     MIDCOM_TOOLBAR_HELPTEXT => null,
                     MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/stock_people.png',
-                    MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_user_do('midgard:create', null, 'org_openpsa_contacts_person_dba'),
+                    MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_user_do('midgard:create', null, 'org_openpsa_contacts_person_dba'),
                 )
             );
         }
@@ -153,11 +153,11 @@ class org_openpsa_directmarketing_handler_campaign_campaign extends midcom_basec
         }
 
         // Populate calendar events for the campaign
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 
-        $_MIDCOM->bind_view_to_object($this->_campaign, $this->_datamanager->schema->name);
-        $_MIDCOM->set_26_request_metadata($this->_campaign->metadata->revised, $this->_campaign->guid);
-        $_MIDCOM->set_pagetitle($this->_campaign->title);
+        midcom::bind_view_to_object($this->_campaign, $this->_datamanager->schema->name);
+        midcom::set_26_request_metadata($this->_campaign->metadata->revised, $this->_campaign->guid);
+        midcom::set_pagetitle($this->_campaign->title);
 
         return true;
     }

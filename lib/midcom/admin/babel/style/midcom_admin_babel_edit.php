@@ -5,10 +5,10 @@ $prefix = $data['plugin_anchorprefix'];
 $languages = $data['l10n']->_language_db;
 // available compoments
 
-$components = array_keys($_MIDCOM->componentloader->manifests);
+$components = array_keys(midcom::componentloader()->manifests);
 asort($components);
 
-$fallback_language = $_MIDCOM->i18n->get_fallback_language();
+$fallback_language = midcom::i18n()->get_fallback_language();
 $deflang = $data['l10n']->get($languages[$fallback_language]['enname']);
 $editlang = $data['l10n']->get($languages[$data['view_lang']]['enname']);
 ?>

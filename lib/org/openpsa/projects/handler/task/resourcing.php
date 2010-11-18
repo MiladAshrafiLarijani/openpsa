@@ -69,10 +69,10 @@ class org_openpsa_projects_handler_task_resourcing extends midcom_baseclasses_co
      */
     function _on_initialize()
     {
-        $_MIDCOM->load_library('org.openpsa.calendarwidget');
-        $_MIDCOM->load_library('org.openpsa.contactwidget');
+        midcom::load_library('org.openpsa.calendarwidget');
+        midcom::load_library('org.openpsa.contactwidget');
 
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . "/org.openpsa.projects/projectbroker.js");
+        midcom::add_jsfile(MIDCOM_STATIC_URL . "/org.openpsa.projects/projectbroker.js");
     }
 
     /**
@@ -89,7 +89,7 @@ class org_openpsa_projects_handler_task_resourcing extends midcom_baseclasses_co
             MIDCOM_NAV_NAME => $this->_l10n->get('resourcing'),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**
@@ -105,7 +105,7 @@ class org_openpsa_projects_handler_task_resourcing extends midcom_baseclasses_co
         $this->_task = new org_openpsa_projects_task_dba($args[0]);
         if (! $this->_task)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The task {$args[0]} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The task {$args[0]} was not found.");
             // This will exit.
         }
         $this->_task->require_do('midgard:create');
@@ -162,19 +162,19 @@ class org_openpsa_projects_handler_task_resourcing extends midcom_baseclasses_co
                     // TODO: error handling
                 }
             }
-            $_MIDCOM->relocate("task/{$this->_task->guid}/");
+            midcom::relocate("task/{$this->_task->guid}/");
             // This will exit.
         }
         else if (   array_key_exists('cancel', $_POST)
                 && $_POST['cancel'])
         {
-            $_MIDCOM->relocate("task/{$this->_task->guid}/");
+            midcom::relocate("task/{$this->_task->guid}/");
             // This will exit.
         }
 
         $this->_prepare_request_data($handler_id);
-        $_MIDCOM->set_pagetitle($this->_task->title);
-        $_MIDCOM->bind_view_to_object($this->_task);
+        midcom::set_pagetitle($this->_task->title);
+        midcom::bind_view_to_object($this->_task);
         $this->_update_breadcrumb_line();
 
         return true;
@@ -203,7 +203,7 @@ class org_openpsa_projects_handler_task_resourcing extends midcom_baseclasses_co
         $this->_task = new org_openpsa_projects_task_dba($args[0]);
         if (! $this->_task)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The task {$args[0]} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The task {$args[0]} was not found.");
             // This will exit.
         }
         $this->_task->require_do('midgard:create');
@@ -217,10 +217,10 @@ class org_openpsa_projects_handler_task_resourcing extends midcom_baseclasses_co
         $qb->add_order('orgOpenpsaObtype');
         $data['prospects'] = $qb->execute();
 
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
 
-        $_MIDCOM->cache->content->content_type("text/xml; charset=UTF-8");
-        $_MIDCOM->header("Content-type: text/xml; charset=UTF-8");
+        midcom::cache()->content->content_type("text/xml; charset=UTF-8");
+        midcom::header("Content-type: text/xml; charset=UTF-8");
 
         return true;
     }
@@ -246,21 +246,21 @@ class org_openpsa_projects_handler_task_resourcing extends midcom_baseclasses_co
         $data['prospect'] = new org_openpsa_projects_task_resource_dba($args[0]);
         if (!$data['prospect'])
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Prospect {$args[0]} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Prospect {$args[0]} was not found.");
             // This will exit.
         }
 
         $data['person'] = new org_openpsa_contacts_person_dba($data['prospect']->person);
         if (! $data['person'])
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Person #{$data['prospect']->person} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Person #{$data['prospect']->person} was not found.");
             // This will exit.
         }
 
         $this->_task = new org_openpsa_projects_task_dba($data['prospect']->task);
         if (! $this->_task)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Task #{$data['prospect']->task} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Task #{$data['prospect']->task} was not found.");
             // This will exit.
         }
         $this->_task->require_do('midgard:create');
@@ -268,7 +268,7 @@ class org_openpsa_projects_handler_task_resourcing extends midcom_baseclasses_co
         $projectbroker = new org_openpsa_projects_projectbroker();
         $data['slots'] = $projectbroker->resolve_person_timeslots($data['person'], $this->_task);
 
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
 
         return true;
     }

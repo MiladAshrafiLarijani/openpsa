@@ -55,7 +55,7 @@ class org_openpsa_contacts_handler_person_view extends midcom_baseclasses_compon
 
     function _on_initialize()
     {
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
     }
 
     /**
@@ -115,7 +115,7 @@ class org_openpsa_contacts_handler_person_view extends midcom_baseclasses_compon
             MIDCOM_NAV_NAME => $this->_contact->name,
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**
@@ -141,7 +141,7 @@ class org_openpsa_contacts_handler_person_view extends midcom_baseclasses_compon
         if ($data['person_rss_url'])
         {
             // We've autoprobed that this contact has a RSS feed available, link it
-            $_MIDCOM->add_link_head
+            midcom::add_link_head
             (
                 array
                 (
@@ -153,14 +153,14 @@ class org_openpsa_contacts_handler_person_view extends midcom_baseclasses_compon
             );
         }
         // This handler uses Ajax, include the javascript
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . "/org.openpsa.helpers/ajaxutils.js");
+        midcom::add_jsfile(MIDCOM_STATIC_URL . "/org.openpsa.helpers/ajaxutils.js");
         //enable ui_tab
         org_openpsa_core_ui::enable_ui_tab();
 
         $this->_populate_toolbar($handler_id);
-        $_MIDCOM->bind_view_to_object($this->_contact, $this->_controller->datamanager->schema->name);
+        midcom::bind_view_to_object($this->_contact, $this->_controller->datamanager->schema->name);
         $this->_update_breadcrumb_line();
-        $_MIDCOM->set_pagetitle($this->_contact->name);
+        midcom::set_pagetitle($this->_contact->name);
 
         return true;
     }
@@ -184,8 +184,8 @@ class org_openpsa_contacts_handler_person_view extends midcom_baseclasses_compon
                 MIDCOM_TOOLBAR_ACCESSKEY => 'e',
             )
         );
-        if (   $_MIDCOM->componentloader->is_installed('org.openpsa.invoices')
-            && $_MIDCOM->auth->can_user_do('midgard:create', null, 'org_openpsa_invoices_invoice_dba'))
+        if (   midcom::componentloader->is_installed('org.openpsa.invoices')
+            && midcom::auth->can_user_do('midgard:create', null, 'org_openpsa_invoices_invoice_dba'))
         {
             $billing_data_url = "create/" . $this->_contact->guid ."/";
             $qb_billing_data = org_openpsa_invoices_billing_data_dba::new_query_builder();
@@ -220,7 +220,7 @@ class org_openpsa_contacts_handler_person_view extends midcom_baseclasses_compon
                     MIDCOM_TOOLBAR_LABEL => $this->_l10n->get('edit account'),
                     MIDCOM_TOOLBAR_HELPTEXT => null,
                     MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/properties.png',
-                    MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:update', $this->_contact),
+                    MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:update', $this->_contact),
                 )
             );
             $this->_view_toolbar->add_item
@@ -231,7 +231,7 @@ class org_openpsa_contacts_handler_person_view extends midcom_baseclasses_compon
                     MIDCOM_TOOLBAR_LABEL => $this->_l10n->get("permissions"),
                     MIDCOM_TOOLBAR_HELPTEXT => null,
                     MIDCOM_TOOLBAR_ICON => 'midgard.admin.asgard/permissions-16.png',
-                    MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:privileges', $this->_contact),
+                    MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:privileges', $this->_contact),
                 )
             );
         }
@@ -245,7 +245,7 @@ class org_openpsa_contacts_handler_person_view extends midcom_baseclasses_compon
                     MIDCOM_TOOLBAR_LABEL => $this->_l10n->get('create account'),
                     MIDCOM_TOOLBAR_HELPTEXT => null,
                     MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/properties.png',
-                    MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:update', $this->_contact),
+                    MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:update', $this->_contact),
                 )
             );
         }
@@ -263,7 +263,7 @@ class org_openpsa_contacts_handler_person_view extends midcom_baseclasses_compon
         );
 
         $qb = org_openpsa_contacts_buddy_dba::new_query_builder();
-        $user = $_MIDCOM->auth->user->get_storage();
+        $user = midcom::auth->user->get_storage();
         $qb->add_constraint('account', '=', $user->guid);
         $qb->add_constraint('buddy', '=', $this->_contact->guid);
         $qb->add_constraint('blacklisted', '=', false);
@@ -279,7 +279,7 @@ class org_openpsa_contacts_handler_person_view extends midcom_baseclasses_compon
                     MIDCOM_TOOLBAR_LABEL => $this->_l10n->get('remove buddy'),
                     MIDCOM_TOOLBAR_HELPTEXT => null,
                     MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/trash.png',
-                    MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:delete', $buddies[0]),
+                    MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:delete', $buddies[0]),
                 )
             );
         }
@@ -294,7 +294,7 @@ class org_openpsa_contacts_handler_person_view extends midcom_baseclasses_compon
                     MIDCOM_TOOLBAR_LABEL => $this->_l10n->get('add buddy'),
                     MIDCOM_TOOLBAR_HELPTEXT => null,
                     MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/stock_person.png',
-                    MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:create', $user),
+                    MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:create', $user),
                 )
             );
         }

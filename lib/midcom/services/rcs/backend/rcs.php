@@ -61,9 +61,9 @@ class midcom_services_rcs_backend_rcs extends midcom_services_rcs_backend
     function update(&$object, $updatemessage = null)
     {
         // Store user identifier and IP address to the update string
-        if ($_MIDCOM->auth->user)
+        if (midcom::auth->user)
         {
-            $update_string = "{$_MIDCOM->auth->user->id}|{$_SERVER['REMOTE_ADDR']}";
+            $update_string = "{midcom::auth->user->id}|{$_SERVER['REMOTE_ADDR']}";
         }
         else
         {
@@ -73,9 +73,9 @@ class midcom_services_rcs_backend_rcs extends midcom_services_rcs_backend
         // Generate update message if needed
         if (!$updatemessage)
         {
-            if ($_MIDCOM->auth->user !== null)
+            if (midcom::auth->user !== null)
             {
-                $updatemessage = sprintf("Updated on %s by %s", strftime("%x %X"), $_MIDCOM->auth->user->name);
+                $updatemessage = sprintf("Updated on %s by %s", strftime("%x %X"), midcom::auth->user->name);
             }
             else
             {
@@ -157,7 +157,7 @@ class midcom_services_rcs_backend_rcs extends midcom_services_rcs_backend
     */
     function get_revision( $revision)
     {
-        $object = $_MIDCOM->dbfactory->get_object_by_guid($this->_guid);
+        $object = midcom::dbfactory()->get_object_by_guid($this->_guid);
 
         $filepath = $this->_generate_rcs_filename($object);
         $return = array();
@@ -299,7 +299,7 @@ class midcom_services_rcs_backend_rcs extends midcom_services_rcs_backend
      */
     function list_history()
     {
-        $object = $_MIDCOM->dbfactory->get_object_by_guid($this->_guid);
+        $object = midcom::dbfactory()->get_object_by_guid($this->_guid);
         $filepath = $this->_generate_rcs_filename($object);
         if (is_null($filepath))
         {
@@ -429,7 +429,7 @@ class midcom_services_rcs_backend_rcs extends midcom_services_rcs_backend
         {
             return false;
         }
-        $object = $_MIDCOM->dbfactory->get_object_by_guid($guid);
+        $object = midcom::dbfactory()->get_object_by_guid($guid);
         $filename = $this->_generate_rcs_filename($object);
         if (is_null($filename))
         {
@@ -449,7 +449,7 @@ class midcom_services_rcs_backend_rcs extends midcom_services_rcs_backend
     function rcs_readfile ($guid)
     {
 
-        $object = $_MIDCOM->dbfactory->get_object_by_guid($guid);
+        $object = midcom::dbfactory()->get_object_by_guid($guid);
         $filename = $this->_generate_rcs_filename($object);
         if (is_null($filename))
         {
@@ -687,7 +687,7 @@ class midcom_services_rcs_backend_rcs extends midcom_services_rcs_backend
     {
         $new = $this->get_revision($revision);
 
-        $object = $_MIDCOM->dbfactory->get_object_by_guid($this->_guid);
+        $object = midcom::dbfactory()->get_object_by_guid($this->_guid);
         if (   !is_object($object)
             || !$object->guid)
         {

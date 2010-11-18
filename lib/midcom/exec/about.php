@@ -1,6 +1,6 @@
 <?php
 echo '<?'.'xml version="1.0" encoding="UTF-8"?'.">\n";
-$_MIDCOM->add_link_head
+midcom::add_link_head
 (
     array
     (
@@ -10,14 +10,14 @@ $_MIDCOM->add_link_head
     )
 );
 $title = 'About Midgard';
-$_MIDCOM->auth->require_valid_user();
+midcom::auth()->require_valid_user();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
     <head>
         <title>Midgard CMS - <?php echo $title; ?></title>
-        <?php echo $_MIDCOM->print_head_elements(); ?>
+        <?php echo midcom::print_head_elements(); ?>
         <style type="text/css">
             <!--
             #content

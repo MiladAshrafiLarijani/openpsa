@@ -11,7 +11,7 @@
  * midcom_exception_handler
  *
  * Class for intercepting PHP errors and unhandled exceptions. Each fault is caught
- * and converted into Exception handled by $_MIDCOM->generate_error() with
+ * and converted into Exception handled by midcom::generate_error() with
  * code 500 thus can be customized and make user friendly.
  *
  * @package midcom
@@ -49,7 +49,7 @@ class midcom_exception_handler
 
         debug_print_r('Exception occured, generating error, exception trace:', $trace, MIDCOM_LOG_INFO);
         debug_pop();
-        $_MIDCOM->generate_error(MIDCOM_ERRCRIT, $e->getMessage() . ". See the debug log for more details");
+        midcom::generate_error(MIDCOM_ERRCRIT, $e->getMessage() . ". See the debug log for more details");
         // This will exit
     }
 
@@ -132,11 +132,11 @@ class midcom_exception_handler
                 break;
 
             case MIDCOM_ERRFORBIDDEN:
-                if (!is_null($_MIDCOM->auth))
+                if (!is_null(midcom::auth()))
                 {
                     // The auth service is running, we relay execution to it so that it can
                     // correctly display an authentication field.
-                    $_MIDCOM->auth->access_denied($message);
+                    midcom::auth()->access_denied($message);
                     // This will exit().
                 }
                 $header = "HTTP/1.0 403 Forbidden";
@@ -214,8 +214,8 @@ if (!empty($stacktrace))
         }
         debug_add("Error Page output finished, exiting now", MIDCOM_LOG_DEBUG);
         debug_pop();
-        $_MIDCOM->cache->content->no_cache();
-        $_MIDCOM->finish();
+        midcom::cache()->content->no_cache();
+        midcom::finish();
         _midcom_stop_request();
     }
 
@@ -257,7 +257,7 @@ if (!empty($stacktrace))
                 return;
             }
 
-            if (!$_MIDCOM->componentloader->is_installed('org.openpsa.mail'))
+            if (!midcom::componentloader()->is_installed('org.openpsa.mail'))
             {
                 debug_push_class(__CLASS__, __FUNCTION__);
                 debug_add("Email sending library org.openpsa.mail, used for error notifications is not installed", MIDCOM_LOG_WARN);
@@ -265,7 +265,7 @@ if (!empty($stacktrace))
                 return;
             }
 
-            $_MIDCOM->load_library('org.openpsa.mail');
+            midcom::load_library('org.openpsa.mail');
 
             $mail = new org_openpsa_mail();
             $mail->to = $GLOBALS['midcom_config']['error_actions'][$httpcode]['email'];

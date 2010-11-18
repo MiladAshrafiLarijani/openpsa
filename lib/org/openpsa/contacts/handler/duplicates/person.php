@@ -30,7 +30,7 @@ class org_openpsa_contacts_handler_duplicates_person extends midcom_baseclasses_
     function _handler_sidebyside($handler_id, $args, &$data)
     {
         $this->_component_data['active_leaf'] = 'persons_merge';
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         // Process the selection if present.
         if (   isset($_POST['org_openpsa_contacts_handler_duplicates_person_keep'])
@@ -47,8 +47,8 @@ class org_openpsa_contacts_handler_duplicates_person extends midcom_baseclasses_
                 switch(true)
                 {
                     case ($keep == 'both'):
-                        $_MIDCOM->auth->require_do('midgard:update', $option1);
-                        $_MIDCOM->auth->require_do('midgard:update', $option2);
+                        midcom::auth->require_do('midgard:update', $option1);
+                        midcom::auth->require_do('midgard:update', $option2);
                         if (   !$option1->parameter('org.openpsa.contacts.duplicates:not_duplicate', $option2->guid, time())
                             || !$option2->parameter('org.openpsa.contacts.duplicates:not_duplicate', $option1->guid, time())
                             )
@@ -59,7 +59,7 @@ class org_openpsa_contacts_handler_duplicates_person extends midcom_baseclasses_
                             $option2->parameter('org.openpsa.contacts.duplicates:not_duplicate', $option1->guid, '');
 
                             // TODO: Localize
-                            $_MIDCOM->uimessages->add($this->_l10n->get('org.openpsa.contacts'), "Failed to mark #{$option1->id} and # {$option2->id} as not duplicates, errstr: {$errstr}", 'error');
+                            midcom::uimessages()->add($this->_l10n->get('org.openpsa.contacts'), "Failed to mark #{$option1->id} and # {$option2->id} as not duplicates, errstr: {$errstr}", 'error');
 
                             // Switch is a "loop" so we continue 2 levels to get out of the foreach as well
                             continue(2);
@@ -69,7 +69,7 @@ class org_openpsa_contacts_handler_duplicates_person extends midcom_baseclasses_
                         $option2->parameter('org.openpsa.contacts.duplicates:possible_duplicate', $option1->guid, '');
 
                         // TODO: Localize
-                        $_MIDCOM->uimessages->add($this->_l10n->get('org.openpsa.contacts'), "Keeping both \"{$option1->name}\" and \"{$option2->name}\", they will not be marked as duplicates in the future", 'ok');
+                        midcom::uimessages()->add($this->_l10n->get('org.openpsa.contacts'), "Keeping both \"{$option1->name}\" and \"{$option2->name}\", they will not be marked as duplicates in the future", 'ok');
 
                         // Switch is a "loop" so we continue 2 levels to get out of the foreach as well
                         continue(2);
@@ -88,8 +88,8 @@ class org_openpsa_contacts_handler_duplicates_person extends midcom_baseclasses_
                         return false;
                         // This will exit
                 }
-                $_MIDCOM->auth->require_do('midgard:update', $person1);
-                $_MIDCOM->auth->require_do('midgard:delete', $person2);
+                midcom::auth->require_do('midgard:update', $person1);
+                midcom::auth->require_do('midgard:delete', $person2);
 
                 // TODO: Merge person2 data to person1 and then delete person2
 
@@ -97,7 +97,7 @@ class org_openpsa_contacts_handler_duplicates_person extends midcom_baseclasses_
                 if (!$merger->merge_delete($person1, $person2))
                 {
                     // TODO: Localize
-                    $_MIDCOM->uimessages->add($this->_l10n->get('org.openpsa.contacts'), 'Merge failed, errstr: ' . $merger->errstr(), 'error');
+                    midcom::uimessages()->add($this->_l10n->get('org.openpsa.contacts'), 'Merge failed, errstr: ' . $merger->errstr(), 'error');
                 }
 
             }
@@ -143,12 +143,12 @@ class org_openpsa_contacts_handler_duplicates_person extends midcom_baseclasses_
             // Make sure we actually have enough rights to do this
             if (   !is_object($person1)
                 || !$person1->guid
-                || !$_MIDCOM->auth->can_do('midgard:update', $person1)
-                || !$_MIDCOM->auth->can_do('midgard:delete', $person1)
+                || !midcom::auth->can_do('midgard:update', $person1)
+                || !midcom::auth->can_do('midgard:delete', $person1)
                 || !is_object($person2)
                 || !$person2->guid
-                || !$_MIDCOM->auth->can_do('midgard:update', $person2)
-                || !$_MIDCOM->auth->can_do('midgard:delete', $person2)
+                || !midcom::auth->can_do('midgard:update', $person2)
+                || !midcom::auth->can_do('midgard:delete', $person2)
                 )
             {
                 debug_add("Insufficient rights to merge these two, continuing to see if we have more");
@@ -183,7 +183,7 @@ class org_openpsa_contacts_handler_duplicates_person extends midcom_baseclasses_
     {
         if (!$this->_request_data['notfound'])
         {
-            $_MIDCOM->load_library('org.openpsa.contactwidget');        
+            midcom::load_library('org.openpsa.contactwidget');        
             midcom_show_style('show-duplicate-persons');
         }
         else

@@ -38,7 +38,7 @@ class org_openpsa_products_handler_group_edit extends midcom_baseclasses_compone
     {
         $this->_request_data['group'] =& $this->_group;
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -102,7 +102,7 @@ class org_openpsa_products_handler_group_edit extends midcom_baseclasses_compone
             MIDCOM_NAV_NAME => $this->_l10n_midcom->get('edit'),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**
@@ -129,7 +129,7 @@ class org_openpsa_products_handler_group_edit extends midcom_baseclasses_compone
         $this->_request_data['controller']->set_storage($this->_group);
         if (! $this->_request_data['controller']->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for product {$this->_group->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for product {$this->_group->id}.");
             // This will exit.
         }
 
@@ -140,11 +140,11 @@ class org_openpsa_products_handler_group_edit extends midcom_baseclasses_compone
                 if ($this->_config->get('index_groups'))
                 {
                     // Index the group
-                    $indexer = $_MIDCOM->get_service('indexer');
+                    $indexer = midcom::get_service('indexer');
                     org_openpsa_products_viewer::index($this->_request_data['controller']->datamanager, $indexer, $this->_topic);
                 }
             case 'cancel':
-                $_MIDCOM->relocate("{$this->_group->guid}/");
+                midcom::relocate("{$this->_group->guid}/");
                 // This will exit.
         }
 
@@ -155,8 +155,8 @@ class org_openpsa_products_handler_group_edit extends midcom_baseclasses_compone
         org_openpsa_helpers::dm2_savecancel($this);
         $this->_view_toolbar->bind_to($this->_group);
 
-        $_MIDCOM->set_26_request_metadata($this->_group->metadata->revised, $this->_group->guid);
-        $_MIDCOM->set_pagetitle($this->_group->title);
+        midcom::set_26_request_metadata($this->_group->metadata->revised, $this->_group->guid);
+        midcom::set_pagetitle($this->_group->title);
 
         return true;
     }

@@ -21,7 +21,7 @@ class org_openpsa_mypage_handler_weekreview extends midcom_baseclasses_component
 
     function _on_initialize()
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
     }
 
     /**
@@ -32,7 +32,7 @@ class org_openpsa_mypage_handler_weekreview extends midcom_baseclasses_component
     function _handler_redirect($handler_id, $args, &$data)
     {
         $date = date('Y-m-d', time());
-        $_MIDCOM->relocate("weekreview/{$date}/");
+        midcom::relocate("weekreview/{$date}/");
     }
 
     function _populate_toolbar()
@@ -166,7 +166,7 @@ class org_openpsa_mypage_handler_weekreview extends midcom_baseclasses_component
             return false;
         }
         
-        $_MIDCOM->load_library('org.openpsa.positioning');
+        midcom::load_library('org.openpsa.positioning');
         
         // List user's position reports
         $qb = org_routamc_positioning_log_dba::new_query_builder();
@@ -220,7 +220,7 @@ class org_openpsa_mypage_handler_weekreview extends midcom_baseclasses_component
         // Then start looking for stuff to display
         $this->_list_events_between($data['review_data'], midcom_connection::get_user(), $data['week_start'], $data['week_end']);
         $this->_list_hour_reports_between($data['review_data'], midcom_connection::get_user(), $data['week_start'], $data['week_end']);
-        $this->_list_task_statuses_between($data['review_data'], $_MIDCOM->auth->user, $data['week_start'], $data['week_end']);
+        $this->_list_task_statuses_between($data['review_data'], midcom::auth->user, $data['week_start'], $data['week_end']);
         $this->_list_positions_between($data['review_data'], midcom_connection::get_user(), $data['week_start'], $data['week_end']);
 
         // Arrange by date/time
@@ -237,11 +237,11 @@ class org_openpsa_mypage_handler_weekreview extends midcom_baseclasses_component
         }
 
         $data['title'] = sprintf($this->_l10n->get($title_string), strftime('%W %Y', $data['requested_time']));
-        $_MIDCOM->set_pagetitle($data['title']);
+        midcom::set_pagetitle($data['title']);
 
         $this->_populate_toolbar();
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -262,7 +262,7 @@ class org_openpsa_mypage_handler_weekreview extends midcom_baseclasses_component
             MIDCOM_NAV_URL => '',
             MIDCOM_NAV_NAME => $data['title'],
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         return true;
     }

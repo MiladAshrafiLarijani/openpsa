@@ -77,7 +77,7 @@ class org_openpsa_relatedto_collector extends midcom_core_collector
         $this->_set_direction($direction);
         
         //workaround for #1648
-        $_MIDCOM->load_library('org.openpsa.relatedto');
+        midcom::load_library('org.openpsa.relatedto');
 
         if (is_string($guids))
         {
@@ -107,7 +107,7 @@ class org_openpsa_relatedto_collector extends midcom_core_collector
         }
         else
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'None of the arguments was passed as a string, cannot continue');
             // This will exit.
         }

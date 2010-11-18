@@ -4,7 +4,7 @@
 <thead>
 <tr>
 <?php
-    echo "<th>" . $_MIDCOM->i18n->get_string('description' , 'midcom') . "</th>";
+    echo "<th>" . midcom::i18n()->get_string('description' , 'midcom') . "</th>";
     echo "<th>" . $data['l10n']->get('price') . "</th>";
     echo "<th>" . $data['l10n']->get('quantity') . "</th>";
     echo "<th class='numeric'>" . $data['l10n']->get('sum') . "</th>";
@@ -42,7 +42,7 @@ echo $data['l10n']->get('invoice sum');
 </tbody>
 </table>
 <div style='padding-top:15px;'>
-<input type="submit" name="save" value="<?php echo $_MIDCOM->i18n->get_string('save', 'midcom') ?>"/>
-<input type="submit" name="cancel" value="<?php echo $_MIDCOM->i18n->get_string('cancel', 'midcom') ?>"/>
+<input type="submit" name="save" value="<?php echo midcom::i18n()->get_string('save', 'midcom') ?>"/>
+<input type="submit" name="cancel" value="<?php echo midcom::i18n()->get_string('cancel', 'midcom') ?>"/>
 </div>
 </form>

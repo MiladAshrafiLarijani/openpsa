@@ -153,18 +153,18 @@ class net_nemein_wiki_viewer extends midcom_baseclasses_components_request
         $this->_request_data['schemadb'] = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb'));
 
         // Add machine-readable RSS link
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
                 'rel'   => 'alternate',
                 'type'  => 'application/rss+xml',
                 'title' => 'Latest changes RSS',
-                'href'  => $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX).'rss.xml',
+                'href'  => midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX).'rss.xml',
             )
         );
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -174,9 +174,9 @@ class net_nemein_wiki_viewer extends midcom_baseclasses_components_request
             )
         );
 
-        if ($_MIDCOM->auth->user)
+        if (midcom::auth->user)
         {
-            $user = $_MIDCOM->auth->user->get_storage();
+            $user = midcom::auth->user->get_storage();
             if ($this->_topic->parameter('net.nemein.wiki:watch', $user->guid))
             {
                 $this->_node_toolbar->add_item
@@ -248,7 +248,7 @@ class net_nemein_wiki_viewer extends midcom_baseclasses_components_request
             $tmp = new midcom_db_topic($topic);
             if (! $tmp)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Failed to load the topic referenced by {$topic} for indexing, this is fatal.");
                 // This will exit.
             }

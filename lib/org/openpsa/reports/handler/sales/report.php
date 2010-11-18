@@ -37,7 +37,7 @@ class org_openpsa_reports_handler_sales_report extends org_openpsa_reports_handl
      */
     function _handler_generator($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         if (!$this->_generator_load_redirect($args))
         {
@@ -95,7 +95,7 @@ class org_openpsa_reports_handler_sales_report extends org_openpsa_reports_handl
         // Get invoices our deliverables are related to
         $data['invoices'] = $mc->get_related_objects_grouped_by('toGuid');
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -118,7 +118,7 @@ class org_openpsa_reports_handler_sales_report extends org_openpsa_reports_handl
         midcom_show_style('sales_report-deliverable-start');
 
         // Quick workaround to Bergies lazy determination of whether this is user's or everyone's report...
-        if ($this->_request_data['query_data']['resource'] == 'user:' . $_MIDCOM->auth->user->guid)
+        if ($this->_request_data['query_data']['resource'] == 'user:' . midcom::auth->user->guid)
         {
             // My report
             $data['handler_id'] = 'deliverable_report';

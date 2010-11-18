@@ -37,12 +37,12 @@ class midcom_helper_datamanager2_storage_midgard extends midcom_helper_datamanag
     function __construct($schema, $object)
     {
         parent::__construct($schema);
-        if (! $_MIDCOM->dbclassloader->is_mgdschema_object($object))
+        if (! midcom::dbclassloader()->is_mgdschema_object($object))
         {
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('Object passed:', $object);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'The midgard storage backend requires a MidCOM DBA object.');
             // This will exit.
         }

@@ -77,7 +77,7 @@ class midcom_core_group_virtual extends midcom_core_group
 
             if (count($name_parts) != 2)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Failed to load the virtual group {$id}: The name is invalid");
                 // This will exit.
             }
@@ -127,18 +127,18 @@ class midcom_core_group_virtual extends midcom_core_group
 
         if (! array_key_exists($this->id, $members))
         {
-            if (!$_MIDCOM->componentloader->load_graceful($this->_component))
+            if (!midcom::componentloader()->load_graceful($this->_component))
             {
                 return false;
             }
 
-            $interface = $_MIDCOM->componentloader->get_interface_class($this->_component);
+            $interface = midcom::componentloader()->get_interface_class($this->_component);
 
             // Set internal sudo mode during the retrieval of vgroup members,
             // otherwise any DBA access control check can lead to an infinite loop.
-            $_MIDCOM->auth->acl->_internal_sudo = true;
+            midcom::auth()->acl->_internal_sudo = true;
             $members[$this->id] = $interface->retrieve_vgroup_members($this->_localname);
-            $_MIDCOM->auth->acl->_internal_sudo = false;
+            midcom::auth()->acl->_internal_sudo = false;
 
             if (is_null($members[$this->id]))
             {
@@ -167,9 +167,9 @@ class midcom_core_group_virtual extends midcom_core_group
 
         $result = Array();
 
-        foreach ($_MIDCOM->auth->get_all_vgroups() as $id => $name)
+        foreach (midcom::auth()->get_all_vgroups() as $id => $name)
         {
-            $vgroup = $_MIDCOM->auth->get_group($id);
+            $vgroup = midcom::auth()->get_group($id);
             $members = $vgroup->list_members();
             if (! $members)
             {

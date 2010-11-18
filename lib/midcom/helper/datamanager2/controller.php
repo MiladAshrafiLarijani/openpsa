@@ -133,7 +133,7 @@ class midcom_helper_datamanager2_controller extends midcom_baseclasses_component
                 debug_push_class(__CLASS__, __FUNCTION__);
                 debug_print_r('The database passed was:', $schemadb);
                 debug_pop();
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     'An invalid schema database has been passed to the midcom_helper_datamanager2_controller::set_schemadb method.');
                 // This will exit.
             }
@@ -158,7 +158,7 @@ class midcom_helper_datamanager2_controller extends midcom_baseclasses_component
     {
         if (count($this->schemadb) == 0)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'You cannot set a storage object for a DM2 controller object without loading a schema database previously.');
             // This will exit.
         }
@@ -168,7 +168,7 @@ class midcom_helper_datamanager2_controller extends midcom_baseclasses_component
             $this->datamanager = $storage;
         }
         else if (   $storage instanceof midcom_helper_datamanager2_storage
-                 || $_MIDCOM->dbclassloader->is_midcom_db_object($storage))
+                 || midcom::dbclassloader()->is_midcom_db_object($storage))
         {
             $this->datamanager = new midcom_helper_datamanager2_datamanager($this->schemadb);
             if ($schema === null)
@@ -178,7 +178,7 @@ class midcom_helper_datamanager2_controller extends midcom_baseclasses_component
                     debug_push_class(__CLASS__, __FUNCTION__);
                     debug_print_r('We got this storage object:', $storage);
                     debug_pop();
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                    midcom::generate_error(MIDCOM_ERRCRIT,
                         'Failed to automatically create a datamanager instance for a storage object or a MidCOM type. See the debug level log for more information.');
                     // This will exit().
                 }
@@ -191,7 +191,7 @@ class midcom_helper_datamanager2_controller extends midcom_baseclasses_component
                     debug_add("Tried to set the schema {$schema}");
                     debug_print_r('We got this storage object:', $storage);
                     debug_pop();
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                    midcom::generate_error(MIDCOM_ERRCRIT,
                         'Failed to set the autocreated datamanager\'s schema. See the debug level log for more information.');
                     // This will exit().
                 }
@@ -201,7 +201,7 @@ class midcom_helper_datamanager2_controller extends midcom_baseclasses_component
                     debug_add("Tried to set the schema {$schema}");
                     debug_print_r('We got this storage object:', $storage);
                     debug_pop();
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                    midcom::generate_error(MIDCOM_ERRCRIT,
                         'Failed to set the autocreated datamanager\'s storage object. See the debug level log for more information.');
                     // This will exit().
                 }
@@ -212,7 +212,7 @@ class midcom_helper_datamanager2_controller extends midcom_baseclasses_component
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('Storage object passed was:', $storage);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'You must pass either a datamanager subclass, an initialized storage encapsulation or a MidCOM DBA object to datamanager2_controller::set_storage()');
             // This will exit.
         }
@@ -269,7 +269,7 @@ class midcom_helper_datamanager2_controller extends midcom_baseclasses_component
             if ($metadata->is_locked())
             {
                 // Drop us to uncached state when locked
-                $_MIDCOM->cache->content->uncached();
+                midcom::cache()->content->uncached();
                 $this->show_unlock();
                 return;
             }

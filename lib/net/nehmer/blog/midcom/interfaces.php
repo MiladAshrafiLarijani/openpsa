@@ -49,9 +49,9 @@ class net_nehmer_blog_interface extends midcom_baseclasses_components_interface
         if (   is_null($config->get('symlink_topic'))
             && !$config->get('disable_indexing'))
         {
-            $qb = $_MIDCOM->dbfactory->new_query_builder('midcom_db_article');
+            $qb = midcom::dbfactory()->new_query_builder('midcom_db_article');
             $qb->add_constraint('topic', '=', $topic->id);
-            $result = $_MIDCOM->dbfactory->exec_query_builder($qb);
+            $result = midcom::dbfactory()->exec_query_builder($qb);
 
             if ($result)
             {
@@ -136,7 +136,7 @@ class net_nehmer_blog_interface extends midcom_baseclasses_components_interface
 
     public function get_opengraph_default($object)
     {
-        if ($_MIDCOM->dbfactory->is_a($object, 'midgard_topic'))
+        if (midcom::dbfactory()->is_a($object, 'midgard_topic'))
         {
             return 'blog';
         }

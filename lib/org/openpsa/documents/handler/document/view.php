@@ -41,8 +41,8 @@ class org_openpsa_documents_handler_document_view extends midcom_baseclasses_com
 
     function _on_initialize()
     {
-        $_MIDCOM->auth->require_valid_user();
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::auth->require_valid_user();
+        midcom::load_library('midcom.helper.datamanager2');
         $this->_schemadb = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb_document'));
         $this->_datamanager = new midcom_helper_datamanager2_datamanager($this->_schemadb);
     }
@@ -56,7 +56,7 @@ class org_openpsa_documents_handler_document_view extends midcom_baseclasses_com
         if (   !is_object($document)
             || $document->topic != $this->_topic->id)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The document '{$guid}' could not be found in this folder.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The document '{$guid}' could not be found in this folder.");
         }
         
         // Load the document to datamanager
@@ -123,14 +123,14 @@ class org_openpsa_documents_handler_document_view extends midcom_baseclasses_com
         $this->_document = $this->_load_document($args[0]);
 
         //If the user hasn't looked at the document since its last update, save the current time as last visit
-        $person = $_MIDCOM->auth->user->get_storage();
+        $person = midcom::auth->user->get_storage();
         if ((int) $person->get_parameter('org.openpsa.documents_visited', $this->_document->guid) < (int) $this->_document->metadata->revised)
         {
             $person->set_parameter('org.openpsa.documents_visited', $this->_document->guid, time());
         }
 
         // Add toolbar items
-        if ( $_MIDCOM->auth->can_do('midgard:update', $this->_document))
+        if ( midcom::auth->can_do('midgard:update', $this->_document))
         {
             $this->_view_toolbar->add_item
             (
@@ -145,7 +145,7 @@ class org_openpsa_documents_handler_document_view extends midcom_baseclasses_com
                 )
             );
         }
-        if ( $_MIDCOM->auth->can_do('midgard:delete', $this->_document))
+        if ( midcom::auth->can_do('midgard:delete', $this->_document))
         {
             $this->_view_toolbar->add_item
             (
@@ -170,7 +170,7 @@ class org_openpsa_documents_handler_document_view extends midcom_baseclasses_com
 
         $GLOBALS['midcom_component_data']['org.openpsa.documents']['active_leaf'] = $this->_document->id;
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -182,14 +182,14 @@ class org_openpsa_documents_handler_document_view extends midcom_baseclasses_com
 
         org_openpsa_core_ui::enable_ui_tab();
 
-        $_MIDCOM->componentloader->load('org.openpsa.contactwidget');
+        midcom::componentloader->load('org.openpsa.contactwidget');
 
         $this->_request_data['document_dm'] =& $this->_datamanager;
         $this->_request_data['document'] =& $this->_document;
 
-        $_MIDCOM->set_pagetitle($this->_document->title);
+        midcom::set_pagetitle($this->_document->title);
 
-        $_MIDCOM->bind_view_to_object($this->_document, $this->_datamanager->schema->name);
+        midcom::bind_view_to_object($this->_document, $this->_datamanager->schema->name);
 
         $this->_update_breadcrumb_line();
 
@@ -231,7 +231,7 @@ class org_openpsa_documents_handler_document_view extends midcom_baseclasses_com
             );
         }
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
 }

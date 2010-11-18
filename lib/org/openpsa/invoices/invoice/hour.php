@@ -26,12 +26,12 @@ class org_openpsa_invoices_invoice_hour_dba extends midcom_core_dbaobject
 
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
 
     function _on_created()
@@ -57,7 +57,7 @@ class org_openpsa_invoices_invoice_hour_dba extends midcom_core_dbaobject
     {
         parent::_on_deleted();
 
-        if (! $_MIDCOM->auth->request_sudo('org.openpsa.invoices'))
+        if (! midcom::auth->request_sudo('org.openpsa.invoices'))
         {
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_add('Failed to get SUDO privileges, skipping invoice hour deletion silently.', MIDCOM_LOG_ERROR);
@@ -79,7 +79,7 @@ class org_openpsa_invoices_invoice_hour_dba extends midcom_core_dbaobject
             debug_pop();
         }
         
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         return;
     }
 }

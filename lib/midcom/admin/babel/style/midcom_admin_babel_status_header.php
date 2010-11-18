@@ -1,5 +1,5 @@
 <?php
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 $languages = $data['l10n']->_language_db;
 ?>
 <h1><?php echo sprintf($data['l10n']->get('translation status for language %s'), $data['l10n']->get($languages[$data['language']]['enname'])); ?></h1>

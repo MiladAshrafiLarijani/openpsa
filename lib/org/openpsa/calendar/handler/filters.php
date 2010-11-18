@@ -64,7 +64,7 @@ class org_openpsa_calendar_handler_filters extends midcom_baseclasses_components
      */
     function _handler_edit($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         
         // Get the current user
         $this->_person = new midcom_db_person(midcom_connection::get_user());
@@ -79,7 +79,7 @@ class org_openpsa_calendar_handler_filters extends midcom_baseclasses_components
         $this->_controller->set_storage($this->_person);
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for article {$this->_article->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for article {$this->_article->id}.");
             // This will exit.
         }
         
@@ -96,7 +96,7 @@ class org_openpsa_calendar_handler_filters extends midcom_baseclasses_components
                 {
                     $url = '';
                 }
-                $_MIDCOM->relocate($url);
+                midcom::relocate($url);
                 // This will exit
         }
         
@@ -117,7 +117,7 @@ class org_openpsa_calendar_handler_filters extends midcom_baseclasses_components
             MIDCOM_NAV_URL => 'filters/',
             MIDCOM_NAV_NAME => $this->_l10n->get('choose calendars'),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         return true;
     }

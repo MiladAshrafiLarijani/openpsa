@@ -464,7 +464,7 @@ class org_openpsa_products_viewer extends midcom_baseclasses_components_request
             $tmp = new midcom_db_topic($topic);
             if (! $tmp)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Failed to load the topic referenced by {$topic} for indexing, this is fatal.");
                 // This will exit.
             }
@@ -475,7 +475,7 @@ class org_openpsa_products_viewer extends midcom_baseclasses_components_request
         // of the index() method. Needs fixes there.
 
         $document = $indexer->new_document($dm);
-        if ($_MIDCOM->dbfactory->is_a($object, 'org_openpsa_products_product_dba'))
+        if (midcom::dbfactory()->is_a($object, 'org_openpsa_products_product_dba'))
         {
             if ($config->get('enable_scheduling'))
             {
@@ -592,7 +592,7 @@ class org_openpsa_products_viewer extends midcom_baseclasses_components_request
      */
     function _on_handle($handler, $args)
     {
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
         $this->_request_data['schemadb_group'] = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb_group'));
         $this->_request_data['schemadb_product'] = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb_product'));
 
@@ -611,7 +611,7 @@ class org_openpsa_products_viewer extends midcom_baseclasses_components_request
             {
                 foreach ($feeds as $title => $url)
                 {
-                    $_MIDCOM->add_link_head
+                    midcom::add_link_head
                     (
                         array
                         (
@@ -626,14 +626,14 @@ class org_openpsa_products_viewer extends midcom_baseclasses_components_request
         }
         else
         {
-            $_MIDCOM->add_link_head
+            midcom::add_link_head
             (
                 array
                 (
                     'rel'   => 'alternate',
                     'type'  => 'application/rss+xml',
                     'title' => $this->_l10n->get('updated products'),
-                    'href'  => $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . 'rss.xml',
+                    'href'  => midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . 'rss.xml',
                 )
             );
         }

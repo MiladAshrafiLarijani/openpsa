@@ -23,7 +23,7 @@ class org_openpsa_mypage_handler_today extends midcom_baseclasses_components_han
 
     function _on_initialize()
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
     }
 
     function _calculate_day()
@@ -142,7 +142,7 @@ class org_openpsa_mypage_handler_today extends midcom_baseclasses_components_han
      */
     function _handler_today($handler_id, $args, &$data)
     {
-        $this->user = $_MIDCOM->auth->user->get_storage();
+        $this->user = midcom::auth->user->get_storage();
 
         if ($handler_id != 'today')
         {
@@ -168,15 +168,15 @@ class org_openpsa_mypage_handler_today extends midcom_baseclasses_components_han
         $this->_populate_toolbar();
 
         $data['title'] = strftime('%a %x', $data['requested_time']);
-        $_MIDCOM->set_pagetitle($data['title']);
+        midcom::set_pagetitle($data['title']);
 
         // Add the JS file for "now working on" calculator
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . "/jQuery/jquery.epiclock.min.js");
+        midcom::add_jsfile(MIDCOM_STATIC_URL . "/jQuery/jquery.epiclock.min.js");
 
         // Add the JS file for dynamic switching tasks without reloading the whole window
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . "/org.openpsa.mypage/mypage.js");
+        midcom::add_jsfile(MIDCOM_STATIC_URL . "/org.openpsa.mypage/mypage.js");
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -186,7 +186,7 @@ class org_openpsa_mypage_handler_today extends midcom_baseclasses_components_han
             )
         );
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -196,7 +196,7 @@ class org_openpsa_mypage_handler_today extends midcom_baseclasses_components_han
             )
         );
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -216,7 +216,7 @@ class org_openpsa_mypage_handler_today extends midcom_baseclasses_components_han
         $this->_request_data['journal_constraints'][] = array(
                         'property' => 'metadata.creator',
                         'operator' => '=',
-                        'value' => $_MIDCOM->auth->user->guid,
+                        'value' => midcom::auth->user->guid,
                         );
         $this->_request_data['journal_constraints'][] = array(
                         'property' => 'followUp',
@@ -246,7 +246,7 @@ class org_openpsa_mypage_handler_today extends midcom_baseclasses_components_han
         $data['expenses_url'] = $siteconfig->get_node_full_url('org.openpsa.expenses');
         $data['wiki_url'] = $siteconfig->get_node_relative_url('net.nemein.wiki');
 
-        $data_url = $_MIDCOM->get_host_name() . $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $data_url = midcom::get_host_name() . midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
         $data['journal_url'] = $data_url . '/__mfa/org.openpsa.relatedto/journalentry/list/xml/';
 
         midcom_show_style('show-today');
@@ -267,7 +267,7 @@ class org_openpsa_mypage_handler_today extends midcom_baseclasses_components_han
         // List work hours this week
         $this->_list_work_hours();
 
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
 
         return true;
     }

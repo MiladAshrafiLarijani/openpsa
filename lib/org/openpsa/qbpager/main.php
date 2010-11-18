@@ -56,9 +56,9 @@ class org_openpsa_qbpager extends midcom_baseclasses_components_purecode
 
         $this->_limit =& $this->results_per_page;
         $this->_pager_id = $pager_id;
-        $this->_midcom_qb = $_MIDCOM->dbfactory->new_query_builder($classname);
+        $this->_midcom_qb = midcom::dbfactory()->new_query_builder($classname);
         // Make another QB for counting, we need to do this to avoid trouble with core internal references system
-        $this->_midcom_qb_count = $_MIDCOM->dbfactory->new_query_builder($classname);
+        $this->_midcom_qb_count = midcom::dbfactory()->new_query_builder($classname);
         if (!$this->_sanity_check())
         {
             return false;
@@ -230,7 +230,7 @@ class org_openpsa_qbpager extends midcom_baseclasses_components_purecode
      */
     function show_previousnext($acl_checks = false)
     {
-        $_MIDCOM->load_library('midcom.helper.xsspreventer');
+        midcom::load_library('midcom.helper.xsspreventer');
         $this->_request_data['prefix'] = $this->_prefix;
         $this->_request_data['current_page'] = $this->_current_page;
         $this->_request_data['page_count'] = $this->count_pages($acl_checks);
@@ -275,7 +275,7 @@ class org_openpsa_qbpager extends midcom_baseclasses_components_purecode
      */
     function show_pages($acl_checks = false)
     {
-        $_MIDCOM->load_library('midcom.helper.xsspreventer');
+        midcom::load_library('midcom.helper.xsspreventer');
         $this->_request_data['prefix'] = $this->_prefix;
         $this->_request_data['current_page'] = $this->_current_page;
         $this->_request_data['page_count'] = $this->count_pages($acl_checks);
@@ -355,7 +355,7 @@ class org_openpsa_qbpager extends midcom_baseclasses_components_purecode
      */
     function show_pages_as_xml($acl_checks = false, $echo = true)
     {
-        $_MIDCOM->load_library('midcom.helper.xsspreventer');
+        midcom::load_library('midcom.helper.xsspreventer');
         $pages_xml_str = "<pages ";
 
         $this->_request_data['prefix'] = $this->_prefix;

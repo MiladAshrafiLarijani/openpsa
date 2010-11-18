@@ -1,7 +1,7 @@
 <?php
-$_MIDCOM->auth->require_valid_user();
+midcom::auth->require_valid_user();
 
-$user = $_MIDCOM->auth->user->get_storage();
+$user = midcom::auth->user->get_storage();
 $api_key = $user->parameter('org.routamc.positioning:instamapper', 'api_key');
 if (!$api_key)
 {

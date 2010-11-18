@@ -60,10 +60,10 @@ class org_openpsa_calendar_handler_ical extends midcom_baseclasses_components_ha
      */
     function _content_type()
     {
-        $_MIDCOM->skip_page_style = true;
-        $_MIDCOM->cache->content->content_type('text/calendar');
+        midcom::skip_page_style = true;
+        midcom::cache()->content->content_type('text/calendar');
         // Debugging
-        //$_MIDCOM->cache->content->content_type('text/plain');
+        //midcom::cache()->content->content_type('text/plain');
     }
 
     /**
@@ -78,7 +78,7 @@ class org_openpsa_calendar_handler_ical extends midcom_baseclasses_components_ha
      */
     function _handler_user_events($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user('basic');
+        midcom::auth->require_valid_user('basic');
         debug_push_class(__CLASS__, __FUNCTION__);
 
         $username = $this->_strip_extension($args[0]);
@@ -131,11 +131,11 @@ class org_openpsa_calendar_handler_ical extends midcom_baseclasses_components_ha
         {
             return false;
         }
-        $_MIDCOM->auth->request_sudo();
+        midcom::auth->request_sudo();
         $qb = org_openpsa_contacts_person_dba::new_query_builder();
         $qb->add_constraint('username', '=', $username);
         $persons = $qb->execute();
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         if (   !is_array($persons)
             || count($persons) == 0)
         {

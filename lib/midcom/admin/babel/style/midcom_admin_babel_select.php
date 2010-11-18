@@ -1,7 +1,7 @@
 <?php
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 $languages = $data['l10n']->_language_db;
-$curlang = $_MIDCOM->i18n->get_current_language();
+$curlang = midcom::i18n()->get_current_language();
 ?>
 <h1><?php echo $data['l10n']->get('select language to translate')?></h1>
 

@@ -1,8 +1,8 @@
 <?php
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 ?>
 <div class="midgard_admin_asgard_objecthelper_help">
-    <h3><a href="#"><?php echo $_MIDCOM->i18n->get_string('creating new style element', 'midgard.admin.asgard'); ?></a></h3>
+    <h3><a href="#"><?php echo midcom::i18n()->get_string('creating new style element', 'midgard.admin.asgard'); ?></a></h3>
     <div>
         <?php
         echo "<ul>\n";
@@ -15,7 +15,7 @@ $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
             }
             else
             {
-                echo "<a href=\"{$prefix}__mfa/asgard/components/{$component}/\">" . $_MIDCOM->i18n->get_string($component, $component) ." </a>\n";
+                echo "<a href=\"{$prefix}__mfa/asgard/components/{$component}/\">" . midcom::i18n()->get_string($component, $component) ." </a>\n";
             }
             
             echo "<ul>\n";

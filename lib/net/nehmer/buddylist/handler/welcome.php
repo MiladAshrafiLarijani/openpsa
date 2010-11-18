@@ -49,7 +49,7 @@ class net_nehmer_buddylist_handler_welcome extends midcom_baseclasses_components
      */
     function _prepare_request_data()
     {
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 
         $this->_request_data['buddies'] =& $this->_buddies;
         $this->_request_data['buddies_meta'] =& $this->_buddies_meta;
@@ -68,7 +68,7 @@ class net_nehmer_buddylist_handler_welcome extends midcom_baseclasses_components
      */
     function _handler_welcome($handler_id, $args, &$data)
     {
-        $_MIDCOM->load_library('org.openpsa.qbpager');
+        midcom::load_library('org.openpsa.qbpager');
         $qb = new org_openpsa_qbpager('net_nehmer_buddylist_entry', 'net_nehmer_buddylist');
         $data['qb'] =& $qb;
         $qb->results_per_page = $this->_config->get('buddies_per_page');
@@ -86,8 +86,8 @@ class net_nehmer_buddylist_handler_welcome extends midcom_baseclasses_components
         $this->_prepare_buddies_meta();
 
         $this->_prepare_request_data();
-        $_MIDCOM->set_26_request_metadata(time(), null);
-        $_MIDCOM->set_pagetitle($this->_topic->extra);
+        midcom::set_26_request_metadata(time(), null);
+        midcom::set_pagetitle($this->_topic->extra);
 
         return true;
     }
@@ -99,7 +99,7 @@ class net_nehmer_buddylist_handler_welcome extends midcom_baseclasses_components
     {
         if ($this->_config->get('net_nehmer_mail_integration'))
         {
-            $mail_prefix = $_MIDCOM->get_page_prefix() . $this->_config->get('net_nehmer_mail_integration') . 'mail/new/';
+            $mail_prefix = midcom::get_page_prefix() . $this->_config->get('net_nehmer_mail_integration') . 'mail/new/';
         }
         else
         {
@@ -107,7 +107,7 @@ class net_nehmer_buddylist_handler_welcome extends midcom_baseclasses_components
         }
         if ($this->_config->get('net_nehmer_account_integration'))
         {
-            $account_prefix = $_MIDCOM->get_page_prefix() . $this->_config->get('net_nehmer_account_integration') . 'view/';
+            $account_prefix = midcom::get_page_prefix() . $this->_config->get('net_nehmer_account_integration') . 'view/';
         }
         else
         {
@@ -116,7 +116,7 @@ class net_nehmer_buddylist_handler_welcome extends midcom_baseclasses_components
 
         $this->_buddies_meta = Array();
 
-        if ($_MIDCOM->auth->user)
+        if (midcom::auth->user)
         {
             $online_buddies = net_nehmer_buddylist_entry::list_online_buddies();
         }

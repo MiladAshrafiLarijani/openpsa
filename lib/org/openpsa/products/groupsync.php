@@ -57,7 +57,7 @@ class org_openpsa_products_groupsync extends midcom_baseclasses_components_purec
         $root_topic_guid = $this->_config->get('groupsync_root_topic');
         if (empty($root_topic_guid))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'GroupSync root topic not defined');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'GroupSync root topic not defined');
             // This will exit
         }
         $this->root_topic = new midcom_db_topic($root_topic_guid);
@@ -65,7 +65,7 @@ class org_openpsa_products_groupsync extends midcom_baseclasses_components_purec
             || !isset($this->root_topic->guid)
             || empty($this->root_topic->guid))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "GroupSync could not load topic '{$root_topic_guid}'");
+            midcom::generate_error(MIDCOM_ERRCRIT, "GroupSync could not load topic '{$root_topic_guid}'");
             // This will exit
         }
 
@@ -77,7 +77,7 @@ class org_openpsa_products_groupsync extends midcom_baseclasses_components_purec
         }
         if (empty($root_group_guid))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'GroupSync root group not defined');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'GroupSync root group not defined');
             // This will exit
         }
         $this->root_group = org_openpsa_products_product_group_dba::get_cached($root_group_guid);
@@ -85,26 +85,26 @@ class org_openpsa_products_groupsync extends midcom_baseclasses_components_purec
             || !isset($this->root_group->guid)
             || empty($this->root_group->guid))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "GroupSync could not load group '{$root_group_guid}'");
+            midcom::generate_error(MIDCOM_ERRCRIT, "GroupSync could not load group '{$root_group_guid}'");
             // This will exit
         }
 
         // Sanity check groupsync_topic_name_from
         $this->name_from = $this->_config->get('groupsync_topic_name_from');
-        if (!$_MIDCOM->dbfactory->property_exists($this->root_group, $this->name_from))
+        if (!midcom::dbfactory()->property_exists($this->root_group, $this->name_from))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "GroupSync: product_group has no property '{$this->name_from}'");
+            midcom::generate_error(MIDCOM_ERRCRIT, "GroupSync: product_group has no property '{$this->name_from}'");
             // This will exit
         }
         // Sanity check groupsync_topic_title_from
         $this->title_from = $this->_config->get('groupsync_topic_title_from');
-        if (!$_MIDCOM->dbfactory->property_exists($this->root_group, $this->title_from))
+        if (!midcom::dbfactory()->property_exists($this->root_group, $this->title_from))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "GroupSync: product_group has no property '{$this->title_from}'");
+            midcom::generate_error(MIDCOM_ERRCRIT, "GroupSync: product_group has no property '{$this->title_from}'");
             // This will exit
         }
 
-        $_MIDCOM->componentloader->load('midcom.helper.reflector');
+        midcom::componentloader->load('midcom.helper.reflector');
     }
 
     /**
@@ -413,7 +413,7 @@ class org_openpsa_products_groupsync extends midcom_baseclasses_components_purec
             foreach ($class_children as $k => $child)
             {
                 $child =& $class_children[$k];
-                if (   !$_MIDCOM->dbfactory->is_a($child, 'midgard_topic')
+                if (   !midcom::dbfactory()->is_a($child, 'midgard_topic')
                     || $child->component !== 'org.openpsa.products')
                 {
                     unset($class_children[$k], $child);

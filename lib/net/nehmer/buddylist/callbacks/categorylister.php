@@ -35,7 +35,7 @@ class net_nehmer_buddylist_callbacks_categorylister extends midcom_baseclasses_c
 
         parent::__construct();
 
-        $data =& $_MIDCOM->get_custom_context_data('request_data');
+        $data =& midcom::get_custom_context_data('request_data');
         $this->_data = $data['config']->get('categories');
         foreach ($this->_data as $key => $copy)
         {

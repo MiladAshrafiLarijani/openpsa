@@ -1,5 +1,5 @@
 <?php
-$_MIDCOM->auth->require_admin_user();
+midcom::auth->require_admin_user();
 
 $qb = midcom_db_topic::new_query_builder();
 $qb->add_constraint('component', '=', 'net.nemein.rss');

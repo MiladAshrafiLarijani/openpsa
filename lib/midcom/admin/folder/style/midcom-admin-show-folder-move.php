@@ -1,12 +1,12 @@
 <?php
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 ?>
 <h1><?php echo $data['title']; ?></h1>
 <form method="post">
     <div class="midcom_admin_content_folderlist">
         <ul>
         <?php
-        $root_folder = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ROOTTOPIC);
+        $root_folder = midcom::get_context_data(MIDCOM_CONTEXT_ROOTTOPIC);
         
         $class = '';
         $selected = '';
@@ -29,7 +29,7 @@ $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
         
         function midcom_admin_folder_list_folders($up = 0, $tree_disabled = false)
         {
-            $data =& $_MIDCOM->get_custom_context_data('request_data');
+            $data =& midcom::get_custom_context_data('request_data');
             if (   is_a($data['object'], 'midcom_db_topic')
                 && $up == $data['object']->id)
             {
@@ -88,6 +88,6 @@ $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
         </ul>
     </div>
     <div class="form_toolbar">
-        <input type="submit" class="save" accesskey="s" value="<?php echo $_MIDCOM->i18n->get_string('move', 'midcom.admin.folder'); ?>" />
+        <input type="submit" class="save" accesskey="s" value="<?php echo midcom::i18n()->get_string('move', 'midcom.admin.folder'); ?>" />
     </div>
 </form>

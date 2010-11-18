@@ -34,7 +34,7 @@ class net_nemein_tag_handler extends midcom_baseclasses_components_purecode
     {
         if (is_null($component))
         {
-            $component = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_COMPONENT);
+            $component = midcom::get_context_data(MIDCOM_CONTEXT_COMPONENT);
         }
         $existing_tags = net_nemein_tag_handler::get_object_tags($object);
         if (!is_array($existing_tags))

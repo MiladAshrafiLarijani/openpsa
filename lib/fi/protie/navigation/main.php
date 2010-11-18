@@ -13,7 +13,7 @@
  *
  * <code>
  * // Loads the component for the first time
- * $_MIDCOM->componentloader->load('fi.protie.navigation');
+ * midcom::componentloader()->load('fi.protie.navigation');
  *
  * // Initializes the class
  * $navigation = new fi_protie_navigation();
@@ -423,7 +423,7 @@ class fi_protie_navigation
     function css_dropdown_headers()
     {
         // Print the link for external CSS file
-        $_MIDCOM->add_link_head(
+        midcom::add_link_head(
             array
             (
                 'rel'   => 'stylesheet',
@@ -623,7 +623,7 @@ class fi_protie_navigation
         // Add information about the object's status
         if (   $this->object_status_to_class
             && isset($item[MIDCOM_NAV_OBJECT])
-            && $css_status_class = $_MIDCOM->metadata->get_object_classes($item[MIDCOM_NAV_OBJECT]))
+            && $css_status_class = midcom::metadata()->get_object_classes($item[MIDCOM_NAV_OBJECT]))
         {
             $classes[] = $css_status_class;
         }

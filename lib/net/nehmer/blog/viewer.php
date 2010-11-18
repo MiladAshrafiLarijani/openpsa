@@ -440,7 +440,7 @@ class net_nehmer_blog_viewer extends midcom_baseclasses_components_request
 
         if ($this->_config->get('rss_subscription_enable'))
         {
-            $_MIDCOM->load_library('net.nemein.rss');
+            midcom::load_library('net.nemein.rss');
             $rss_switches = net_nemein_rss_manage::get_plugin_handlers();
             $this->_request_switch = array_merge($this->_request_switch, $rss_switches);
         }
@@ -456,37 +456,37 @@ class net_nehmer_blog_viewer extends midcom_baseclasses_components_request
     {
         if ($this->_config->get('rss_enable'))
         {
-            $_MIDCOM->add_link_head
+            midcom::add_link_head
             (
                 array
                 (
                     'rel'   => 'alternate',
                     'type'  => 'application/rss+xml',
                     'title' => $this->_l10n->get('rss 2.0 feed'),
-                    'href'  => $_MIDCOM->get_host_name() . $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . 'rss.xml',
+                    'href'  => midcom::get_host_name() . midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . 'rss.xml',
                 )
             );
-            $_MIDCOM->add_link_head
+            midcom::add_link_head
             (
                 array
                 (
                     'rel'   => 'alternate',
                     'type'  => 'application/atom+xml',
                     'title' => $this->_l10n->get('atom feed'),
-                    'href'  => $_MIDCOM->get_host_name() . $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . 'atom.xml',
+                    'href'  => midcom::get_host_name() . midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . 'atom.xml',
                 )
             );
         }
 
         // RSD (Really Simple Discoverability) autodetection
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
                 'rel' => 'EditURI',
                 'type' => 'application/rsd+xml',
                 'title' => 'RSD',
-                'href' => $_MIDCOM->get_host_name() . $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . 'rsd.xml',
+                'href' => midcom::get_host_name() . midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . 'rsd.xml',
             )
         );
     }
@@ -526,7 +526,7 @@ class net_nehmer_blog_viewer extends midcom_baseclasses_components_request
                 array
                 (
                     MIDCOM_TOOLBAR_URL => 'feeds/subscribe/',
-                    MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('subscribe feeds', 'net.nemein.rss'),
+                    MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('subscribe feeds', 'net.nemein.rss'),
                     MIDCOM_TOOLBAR_ICON => 'net.nemein.rss/rss-16.png',
                     MIDCOM_TOOLBAR_ENABLED => $this->_topic->can_do('midgard:create'),
                 )
@@ -536,7 +536,7 @@ class net_nehmer_blog_viewer extends midcom_baseclasses_components_request
                 array
                 (
                     MIDCOM_TOOLBAR_URL => 'feeds/list/',
-                    MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('manage feeds', 'net.nemein.rss'),
+                    MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('manage feeds', 'net.nemein.rss'),
                     MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/properties.png',
                     MIDCOM_TOOLBAR_ENABLED => $this->_topic->can_do('midgard:create'),
                 )
@@ -546,7 +546,7 @@ class net_nehmer_blog_viewer extends midcom_baseclasses_components_request
                 array
                 (
                     MIDCOM_TOOLBAR_URL => "feeds/fetch/all",
-                    MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('refresh all feeds', 'net.nemein.rss'),
+                    MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('refresh all feeds', 'net.nemein.rss'),
                     MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/stock_refresh.png',
                     MIDCOM_TOOLBAR_ENABLED => $this->_topic->can_do('midgard:create'),
                 )
@@ -590,7 +590,7 @@ class net_nehmer_blog_viewer extends midcom_baseclasses_components_request
     static function disable_language_select()
     {
         // We cannot use $this->_topic in a static method
-        $topic = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_CONTENTTOPIC);
+        $topic = midcom::get_context_data(MIDCOM_CONTEXT_CONTENTTOPIC);
         $qb = midcom_db_article::new_query_builder();
         $qb->add_constraint('topic', '=', $topic->id);
         $qb->set_limit(1);
@@ -683,14 +683,14 @@ class net_nehmer_blog_viewer extends midcom_baseclasses_components_request
         {
             debug_add('Failed to open symlink content topic, (might also be an invalid object) last Midgard Error: '
                 . midcom_connection::get_error_string(), MIDCOM_LOG_ERROR);
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to open symlink content topic.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to open symlink content topic.');
             // This will exit.
         }
 
         if ($this->_content_topic->component != 'net.nehmer.blog')
         {
             debug_print_r('Retrieved topic was:', $this->_content_topic);
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Symlink content topic is invalid, see the debug level log for details.');
             // This will exit.
         }
@@ -722,7 +722,7 @@ class net_nehmer_blog_viewer extends midcom_baseclasses_components_request
             $tmp = new midcom_db_topic($topic);
             if (! $tmp)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Failed to load the topic referenced by {$topic} for indexing, this is fatal.");
                 // This will exit.
             }
@@ -931,17 +931,17 @@ class net_nehmer_blog_viewer extends midcom_baseclasses_components_request
         // Hide the articles that have the publish time in the future and if
         // the user is not administrator
         if (   $config->get('enable_scheduled_publishing')
-            && !$_MIDCOM->auth->admin)
+            && !midcom::auth->admin)
         {
             // Show the article only if the publishing time has passed or the viewer
             // is the author
             $qb->begin_group('OR');
                 $qb->add_constraint('metadata.published', '<', gmdate('Y-m-d H:i:s'));
 
-                if (   $_MIDCOM->auth->user
-                    && isset($_MIDCOM->auth->user->guid))
+                if (   midcom::auth->user
+                    && isset(midcom::auth->user->guid))
                 {
-                    $qb->add_constraint('metadata.authors', 'LIKE', '|' . $_MIDCOM->auth->user->guid . '|');
+                    $qb->add_constraint('metadata.authors', 'LIKE', '|' . midcom::auth->user->guid . '|');
                 }
             $qb->end_group();
         }

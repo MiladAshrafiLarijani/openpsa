@@ -43,7 +43,7 @@ class org_openpsa_calendar_event_participant_dba extends org_openpsa_calendar_ev
     {
         debug_push_class(__CLASS__, __FUNCTION__);
         debug_add("called with options: '{$type}', '{$event->guid}', '{$nl}'");
-        $l10n = $_MIDCOM->i18n->get_l10n('org.openpsa.calendar');
+        $l10n = midcom::i18n()->get_l10n('org.openpsa.calendar');
         $recipient =& $this->get_person_obj();
         if (!$recipient)
         {

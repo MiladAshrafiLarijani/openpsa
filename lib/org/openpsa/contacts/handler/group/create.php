@@ -68,9 +68,9 @@ class org_openpsa_contacts_handler_group_create extends midcom_baseclasses_compo
 
     function _on_initialize()
     {
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
         $this->_schemadb = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb_group'));
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -96,7 +96,7 @@ class org_openpsa_contacts_handler_group_create extends midcom_baseclasses_compo
 
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
             // This will exit.
         }
     }
@@ -126,7 +126,7 @@ class org_openpsa_contacts_handler_group_create extends midcom_baseclasses_compo
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $group);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to create a new invoice, cannot continue. Error: " . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -144,7 +144,7 @@ class org_openpsa_contacts_handler_group_create extends midcom_baseclasses_compo
      */
     function _handler_create($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         $this->_parent_group = false;
         if (count($args) > 0)
@@ -158,7 +158,7 @@ class org_openpsa_contacts_handler_group_create extends midcom_baseclasses_compo
                 return false;
             }
 
-            $_MIDCOM->auth->require_do('midgard:create', $this->_parent_group);
+            midcom::auth->require_do('midgard:create', $this->_parent_group);
 
             // Set the default type to "department"
             $this->_defaults['object_type'] = ORG_OPENPSA_OBTYPE_DEPARTMENT;
@@ -166,7 +166,7 @@ class org_openpsa_contacts_handler_group_create extends midcom_baseclasses_compo
         else
         {
             // This is a root level organization, require creation permissions under the component root group
-            $_MIDCOM->auth->require_user_do('midgard:create', null, 'org_openpsa_contacts_group_dba');
+            midcom::auth->require_user_do('midgard:create', null, 'org_openpsa_contacts_group_dba');
         }
 
         $this->_load_controller();
@@ -174,16 +174,16 @@ class org_openpsa_contacts_handler_group_create extends midcom_baseclasses_compo
         {
             case 'save':
                 // Index the organization
-                $indexer = $_MIDCOM->get_service('indexer');
+                $indexer = midcom::get_service('indexer');
                 org_openpsa_contacts_viewer::index_group($this->_controller->datamanager, $indexer, $this->_content_topic);
 
                 // Relocate to group view
-                $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-                $_MIDCOM->relocate($prefix . "group/" . $this->_group->guid . "/");
+                $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+                midcom::relocate($prefix . "group/" . $this->_group->guid . "/");
                 // This will exit
 
             case 'cancel':
-                $_MIDCOM->relocate('');
+                midcom::relocate('');
                 // This will exit
         }
         $this->_request_data['controller'] =& $this->_controller;
@@ -191,7 +191,7 @@ class org_openpsa_contacts_handler_group_create extends midcom_baseclasses_compo
         // Add toolbar items
         org_openpsa_helpers::dm2_savecancel($this);
 
-        $_MIDCOM->set_pagetitle($this->_l10n->get("create organization"));
+        midcom::set_pagetitle($this->_l10n->get("create organization"));
 
         $this->_update_breadcrumb_line();
 
@@ -226,7 +226,7 @@ class org_openpsa_contacts_handler_group_create extends midcom_baseclasses_compo
             MIDCOM_NAV_NAME => sprintf($this->_l10n_midcom->get('create %s'), $this->_l10n->get('organization')),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
 }

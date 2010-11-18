@@ -115,8 +115,8 @@ class org_openpsa_contacts_handler_person_admin extends midcom_baseclasses_compo
      */
     function _on_initialize()
     {
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
-        $_MIDCOM->add_link_head
+        midcom::load_library('midcom.helper.datamanager2');
+        midcom::add_link_head
         (
             array
             (
@@ -164,7 +164,7 @@ class org_openpsa_contacts_handler_person_admin extends midcom_baseclasses_compo
         if (   ! $this->_datamanager
             || ! $this->_datamanager->autoset_storage($this->_contact))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for contact {$this->_contact->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for contact {$this->_contact->id}.");
             // This will exit.
         }
     }
@@ -182,7 +182,7 @@ class org_openpsa_contacts_handler_person_admin extends midcom_baseclasses_compo
         $this->_controller->set_storage($this->_contact, $this->_schema);
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for contact {$this->_contact->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for contact {$this->_contact->id}.");
             // This will exit.
         }
     }
@@ -221,7 +221,7 @@ class org_openpsa_contacts_handler_person_admin extends midcom_baseclasses_compo
                 break;
         }
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
 
@@ -243,7 +243,7 @@ class org_openpsa_contacts_handler_person_admin extends midcom_baseclasses_compo
         $this->_contact = new org_openpsa_contacts_person_dba($args[0]);
         if (! $this->_contact)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The contact {$args[0]} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The contact {$args[0]} was not found.");
             // This will exit.
         }
         $this->_contact->require_do('midgard:update');
@@ -254,21 +254,21 @@ class org_openpsa_contacts_handler_person_admin extends midcom_baseclasses_compo
         {
             case 'save':
                 // Reindex the contact
-                $indexer = $_MIDCOM->get_service('indexer');
+                $indexer = midcom::get_service('indexer');
                 org_openpsa_contacts_viewer::index_person($this->_controller->datamanager, $indexer, $this->_content_topic);
 
                 // *** FALL-THROUGH ***
 
             case 'cancel':
-                $_MIDCOM->relocate("person/{$this->_contact->guid}/");
+                midcom::relocate("person/{$this->_contact->guid}/");
                 // This will exit.
         }
 
         org_openpsa_helpers::dm2_savecancel($this);
 
         $this->_prepare_request_data($handler_id);
-        $_MIDCOM->set_pagetitle($this->_contact->name);
-        $_MIDCOM->bind_view_to_object($this->_contact, $this->_controller->datamanager->schema->name);
+        midcom::set_pagetitle($this->_contact->name);
+        midcom::bind_view_to_object($this->_contact, $this->_controller->datamanager->schema->name);
         $this->_update_breadcrumb_line($handler_id);
 
         return true;
@@ -305,7 +305,7 @@ class org_openpsa_contacts_handler_person_admin extends midcom_baseclasses_compo
 
         if (! $this->_contact)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The contact {$args[0]} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The contact {$args[0]} was not found.");
             // This will exit.
         }
         $this->_contact->require_do('midgard:delete');
@@ -317,29 +317,29 @@ class org_openpsa_contacts_handler_person_admin extends midcom_baseclasses_compo
             // Deletion confirmed.
             if (! $this->_contact->delete())
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to delete contact {$args[0]}, last Midgard error was: " . midcom_connection::get_error_string());
+                midcom::generate_error(MIDCOM_ERRCRIT, "Failed to delete contact {$args[0]}, last Midgard error was: " . midcom_connection::get_error_string());
                 // This will exit.
             }
 
             // Update the index
-            $indexer = $_MIDCOM->get_service('indexer');
-            $indexer->delete($this->_contact->guid . '_' . $_MIDCOM->i18n->get_content_language());
+            $indexer = midcom::get_service('indexer');
+            $indexer->delete($this->_contact->guid . '_' . midcom::i18n()->get_content_language());
 
             // Delete ok, relocating to welcome.
-            $_MIDCOM->relocate('');
+            midcom::relocate('');
             // This will exit.
         }
 
         if (array_key_exists('org_openpsa_contacts_deletecancel', $_REQUEST))
         {
             // Redirect to view page.
-            $_MIDCOM->relocate("person/{$this->_contact->guid}/");
+            midcom::relocate("person/{$this->_contact->guid}/");
             // This will exit()
         }
 
         $this->_prepare_request_data($handler_id);
-        $_MIDCOM->set_pagetitle($this->_contact->name);
-        $_MIDCOM->bind_view_to_object($this->_contact, $this->_datamanager->schema->name);
+        midcom::set_pagetitle($this->_contact->name);
+        midcom::bind_view_to_object($this->_contact, $this->_datamanager->schema->name);
         $this->_update_breadcrumb_line($handler_id);
 
         return true;

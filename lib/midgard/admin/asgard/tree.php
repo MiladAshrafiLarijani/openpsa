@@ -79,7 +79,7 @@ class midgard_admin_asgard_copytree extends midgard_admin_asgard_navigation
     function __construct($object, &$request_data)
     {
         parent::__construct($object, $request_data);
-        $this->page_prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $this->page_prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
     }
 
     /**
@@ -187,16 +187,16 @@ class midgard_admin_asgard_copytree extends midgard_admin_asgard_navigation
                     // Show the link to the object
                     if ($this->view_link)
                     {
-                        echo "{$prefix}            <a href=\"{$this->page_prefix}__mfa/asgard/object/view/{$child->guid}/\" class=\"thickbox\" target=\"_blank\" title=\"" . sprintf($_MIDCOM->i18n->get_string('%s (%s)', 'midgard.admin.asgard'), $label, $ref->get_class_label()) . "\">\n";
-                        echo "{$prefix}                <img src=\"" . MIDCOM_STATIC_URL . "/stock-icons/16x16/view.png\" alt=\"" . $_MIDCOM->i18n->get_string('view object', 'midgard.admin.asgard') . "\" />\n";
+                        echo "{$prefix}            <a href=\"{$this->page_prefix}__mfa/asgard/object/view/{$child->guid}/\" class=\"thickbox\" target=\"_blank\" title=\"" . sprintf(midcom::i18n()->get_string('%s (%s)', 'midgard.admin.asgard'), $label, $ref->get_class_label()) . "\">\n";
+                        echo "{$prefix}                <img src=\"" . MIDCOM_STATIC_URL . "/stock-icons/16x16/view.png\" alt=\"" . midcom::i18n()->get_string('view object', 'midgard.admin.asgard') . "\" />\n";
                         echo "{$prefix}            </a>\n";
                     }
 
                     // Show the link to the object
                     if ($this->edit_link)
                     {
-                        echo "{$prefix}            <a href=\"{$this->page_prefix}__mfa/asgard/object/edit/{$child->guid}/\" target=\"_blank\" title=\"" . sprintf($_MIDCOM->i18n->get_string('%s (%s)', 'midgard.admin.asgard'), $label, $ref->get_class_label()) . "\">\n";
-                        echo "{$prefix}                <img src=\"" . MIDCOM_STATIC_URL . "/stock-icons/16x16/edit.png\" alt=\"" . $_MIDCOM->i18n->get_string('edit object', 'midgard.admin.asgard') . "\" />\n";
+                        echo "{$prefix}            <a href=\"{$this->page_prefix}__mfa/asgard/object/edit/{$child->guid}/\" target=\"_blank\" title=\"" . sprintf(midcom::i18n()->get_string('%s (%s)', 'midgard.admin.asgard'), $label, $ref->get_class_label()) . "\">\n";
+                        echo "{$prefix}                <img src=\"" . MIDCOM_STATIC_URL . "/stock-icons/16x16/edit.png\" alt=\"" . midcom::i18n()->get_string('edit object', 'midgard.admin.asgard') . "\" />\n";
                         echo "{$prefix}            </a>\n";
                     }
 

@@ -12,7 +12,7 @@
  * manipulate accounts, instead, this is an abstraction used in the ACL system.
  *
  * You must not create these objects directly. Instead, use the factory method
- * $_MIDCOM->auth->get_user($id), where $id is any valid constructor argument
+ * midcom::auth()->get_user($id), where $id is any valid constructor argument
  * for a midcom_db_person.
  *
  * @package midcom
@@ -190,7 +190,7 @@ class midcom_core_user extends midcom_baseclasses_core_object
 
         if (is_null($id))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'The class midcom_user is not default constructible.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'The class midcom_user is not default constructible.');
             // This will exit.
         }
 
@@ -399,7 +399,7 @@ class midcom_core_user extends midcom_baseclasses_core_object
         $result = Array();
         foreach ($this->_per_class_privileges as $class => $privileges)
         {
-            if ($_MIDCOM->dbfactory->is_a($object, $class))
+            if (midcom::dbfactory()->is_a($object, $class))
             {
                 $result = array_merge($result, $privileges);
             }
@@ -451,7 +451,7 @@ class midcom_core_user extends midcom_baseclasses_core_object
         $result = $mc->list_keys();
         if (!empty($result))
         {
-            $group = $_MIDCOM->auth->get_group(key($result));
+            $group = midcom::auth()->get_group(key($result));
             return $group->_storage->guid;
         }
 
@@ -633,7 +633,7 @@ class midcom_core_user extends midcom_baseclasses_core_object
         }
 
         // Process
-        if ($_MIDCOM->dbfactory->is_a($group, 'midcom_core_group'))
+        if (midcom::dbfactory()->is_a($group, 'midcom_core_group'))
         {
             return array_key_exists($group->id, $this->_all_groups);
         }
@@ -646,7 +646,7 @@ class midcom_core_user extends midcom_baseclasses_core_object
             // We scan through our groups looking for a midgard group with the right name
             foreach ($this->_all_groups as $id => $group_object)
             {
-                if (   $_MIDCOM->dbfactory->is_a($group_object, 'midcom_core_group_midgard')
+                if (   midcom::dbfactory()->is_a($group_object, 'midcom_core_group_midgard')
                     && $group_object->_storage->name == $group)
                 {
                     return true;
@@ -685,7 +685,7 @@ class midcom_core_user extends midcom_baseclasses_core_object
     {
         $person = $this->get_storage();
         if (   ! $person
-            || ! $_MIDCOM->auth->can_do('midgard:update', $person))
+            || ! midcom::auth()->can_do('midgard:update', $person))
         {
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_add('Cannot update password, insufficient privileges.', MIDCOM_LOG_INFO);
@@ -712,7 +712,7 @@ class midcom_core_user extends midcom_baseclasses_core_object
             return false;
         }
 
-        $_MIDCOM->auth->sessionmgr->_update_user_password($this, $new);
+        midcom::auth()->sessionmgr->_update_user_password($this, $new);
 
         return true;
     }
@@ -732,8 +732,8 @@ class midcom_core_user extends midcom_baseclasses_core_object
     {
         $person = $this->get_storage();
         if (   ! $person
-            || ! $_MIDCOM->auth->can_do('midgard:update', $person)
-            || ! $_MIDCOM->auth->can_do('midgard:parameters', $person))
+            || ! midcom::auth()->can_do('midgard:update', $person)
+            || ! midcom::auth()->can_do('midgard:parameters', $person))
         {
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_add('Cannot update username, insufficient privileges.', MIDCOM_LOG_INFO);
@@ -753,7 +753,7 @@ class midcom_core_user extends midcom_baseclasses_core_object
             return false;
         }
 
-        $_MIDCOM->auth->sessionmgr->_update_user_username($this, $new);
+        midcom::auth()->sessionmgr->_update_user_username($this, $new);
 
         // Update the history, ignore failed unserialization, this means that no
         // history is present yet. Thus we should be fine as we handle that case
@@ -785,7 +785,7 @@ class midcom_core_user extends midcom_baseclasses_core_object
      */
     function is_online()
     {
-        return $_MIDCOM->auth->sessionmgr->is_user_online($this);
+        return midcom::auth()->sessionmgr->is_user_online($this);
     }
 
     /**
@@ -802,7 +802,7 @@ class midcom_core_user extends midcom_baseclasses_core_object
      */
     function get_last_login()
     {
-        if (! $_MIDCOM->auth->can_do('midcom:isonline', $this->_storage))
+        if (! midcom::auth()->can_do('midcom:isonline', $this->_storage))
         {
             return null;
         }
@@ -849,7 +849,7 @@ class midcom_core_user extends midcom_baseclasses_core_object
             return false;
         }
 
-        $_MIDCOM->auth->require_do('midgard:delete', $person);
+        midcom::auth()->require_do('midgard:delete', $person);
 
         if (! $person->delete())
         {

@@ -56,9 +56,9 @@ class org_openpsa_core_siteconfig extends midcom_baseclasses_components_purecode
     {
         $this->_component = 'org.openpsa.core';
 
-        if (!$_MIDCOM->componentloader->is_loaded($this->_component))
+        if (!midcom::componentloader->is_loaded($this->_component))
         {
-            $_MIDCOM->componentloader->load($this->_component);
+            midcom::componentloader->load($this->_component);
         }
 
         parent::__construct();
@@ -120,12 +120,12 @@ class org_openpsa_core_siteconfig extends midcom_baseclasses_components_purecode
             $this->set_config_value('owner_organization', "'" . $owner_guid . "'");
         }
 
-        $_MIDCOM->auth->request_sudo('org.openpsa.core');
+        midcom::auth->request_sudo('org.openpsa.core');
         $this->snippet->update();
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         //create the page needed for jquery ui-tab
         $this->create_ui_page();
-        $_MIDCOM->uimessages->add($this->_i18n->get_string('org.openpsa.core'), $this->_i18n->get_string('site structure cache created'), 'info');
+        midcom::uimessages()->add($this->_i18n->get_string('org.openpsa.core'), $this->_i18n->get_string('site structure cache created'), 'info');
     }
 
     /**
@@ -154,7 +154,7 @@ class org_openpsa_core_siteconfig extends midcom_baseclasses_components_purecode
      */
     private function get_snippet()
     {
-        $_MIDCOM->auth->request_sudo('org.openpsa.core');
+        midcom::auth->request_sudo('org.openpsa.core');
         $sg_snippetdir = new midcom_db_snippetdir();
         $sg_snippetdir->get_by_path($GLOBALS['midcom_config']['midcom_sgconfig_basedir']);
         if (!$sg_snippetdir->guid)
@@ -167,7 +167,7 @@ class org_openpsa_core_siteconfig extends midcom_baseclasses_components_purecode
             $sd->name = preg_replace("/^\//", "", $sd->name);
             if (!$sd->create())
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create snippetdir {$GLOBALS['midcom_config']['midcom_sgconfig_basedir']}: " . midcom_connection::get_error_string());
+                midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create snippetdir {$GLOBALS['midcom_config']['midcom_sgconfig_basedir']}: " . midcom_connection::get_error_string());
             }
             $sg_snippetdir = new midcom_db_snippetdir($sd->guid);
         }
@@ -181,7 +181,7 @@ class org_openpsa_core_siteconfig extends midcom_baseclasses_components_purecode
             $sd->name = 'org.openpsa.core';
             if (!$sd->create())
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,"Failed to create snippetdir {$GLOBALS['midcom_config']['midcom_sgconfig_basedir']}/org.openpsa.core: " . midcom_connection::get_error_string());
+                midcom::generate_error(MIDCOM_ERRCRIT,"Failed to create snippetdir {$GLOBALS['midcom_config']['midcom_sgconfig_basedir']}/org.openpsa.core: " . midcom_connection::get_error_string());
             }
             $lib_snippetdir = new midcom_db_snippetdir($sd->guid);
         }
@@ -197,7 +197,7 @@ class org_openpsa_core_siteconfig extends midcom_baseclasses_components_purecode
             $sn->create();
             $snippet = new midcom_db_snippet($sn->guid);
         }
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         return $snippet;
     }
 
@@ -269,12 +269,12 @@ class org_openpsa_core_siteconfig extends midcom_baseclasses_components_purecode
         }
         else
         {
-            if ($_MIDCOM->auth->admin)
+            if (midcom::auth->admin)
             {
-                $_MIDCOM->uimessages->add
+                midcom::uimessages()->add
                 (
-                    $_MIDCOM->i18n->get_string('org.openpsa.core', 'org.openpsa.core'),
-                    $_MIDCOM->i18n->get_string('owner organization couldnt be found', 'org.openpsa.core'),
+                    midcom::i18n()->get_string('org.openpsa.core', 'org.openpsa.core'),
+                    midcom::i18n()->get_string('owner organization couldnt be found', 'org.openpsa.core'),
                     'error'
                 );
             }
@@ -323,7 +323,7 @@ class org_openpsa_core_siteconfig extends midcom_baseclasses_components_purecode
             //activate active-url-parsing
             $ui_page->info = 'active';
 
-            $_MIDCOM->auth->request_sudo();
+            midcom::auth->request_sudo();
             if(!$ui_page->create())
             {
                 debug_push_class(__CLASS__, __FUNCTION__);
@@ -331,7 +331,7 @@ class org_openpsa_core_siteconfig extends midcom_baseclasses_components_purecode
                 debug_pop();
                 return false;
             }
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
         }
         else
         {

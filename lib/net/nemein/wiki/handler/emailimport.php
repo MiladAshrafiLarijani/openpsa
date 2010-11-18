@@ -29,16 +29,16 @@ class net_nemein_wiki_handler_emailimport extends midcom_baseclasses_components_
     function _handler_emailimport($handler_id, $args, &$data)
     {
         //Content-Type
-        $_MIDCOM->skip_page_style = true;
-        $_MIDCOM->cache->content->content_type('text/plain');
+        midcom::skip_page_style = true;
+        midcom::cache()->content->content_type('text/plain');
 
         //Load o.o.mail
-        $_MIDCOM->load_library('org.openpsa.mail');
+        midcom::load_library('org.openpsa.mail');
 
         //Make sure we have the components we use and the Mail_mimeDecode package
         if (!class_exists('org_openpsa_mail'))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'library org.openpsa.mail could not be loaded.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'library org.openpsa.mail could not be loaded.');
             // This will exit.
         }
 
@@ -46,7 +46,7 @@ class net_nemein_wiki_handler_emailimport extends midcom_baseclasses_components_
 
         if (!class_exists('Mail_mimeDecode'))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Cannot decode attachments, aborting.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Cannot decode attachments, aborting.');
             // This will exit.
         }
 
@@ -54,7 +54,7 @@ class net_nemein_wiki_handler_emailimport extends midcom_baseclasses_components_
         if (   !array_key_exists('message_source', $_POST)
             || empty($_POST['message_source']))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, '_POST[\'message_source\'] not present or empty.');
+            midcom::generate_error(MIDCOM_ERRCRIT, '_POST[\'message_source\'] not present or empty.');
             // This will exit.
         }
         debug_push_class(__CLASS__, __FUNCTION__);
@@ -94,7 +94,7 @@ class net_nemein_wiki_handler_emailimport extends midcom_baseclasses_components_
             }
         }
 
-        $_MIDCOM->auth->request_sudo();
+        midcom::auth->request_sudo();
         //TODO: Create wikinote
         $wikipage = new net_nemein_wiki_wikipage();
         $wikipage->topic = $this->_topic->id;
@@ -116,7 +116,7 @@ class net_nemein_wiki_handler_emailimport extends midcom_baseclasses_components_
                     //Content exact duplicate, abort import
                     debug_add("duplicate content with page '{$wikipage->title}' content: \n===\n{$wikipage->content}\n===\n");
                     debug_pop();
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Duplicate content with an existing page with similar title, aborting import.');
+                    midcom::generate_error(MIDCOM_ERRCRIT, 'Duplicate content with an existing page with similar title, aborting import.');
                     // This will exit.
                 }
             }
@@ -137,7 +137,7 @@ class net_nemein_wiki_handler_emailimport extends midcom_baseclasses_components_
             {
                 //No users found
                 debug_pop();
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Cannot set any author for the wikipage');
+                midcom::generate_error(MIDCOM_ERRCRIT, 'Cannot set any author for the wikipage');
                 // This will exit.
             }
             $wikipage->author = $results[0]->id;
@@ -147,7 +147,7 @@ class net_nemein_wiki_handler_emailimport extends midcom_baseclasses_components_
         if (!$stat)
         {
             //Could not create article
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'wikipage->create returned failure, errstr: ' . midcom_connection::get_error_string());
+            midcom::generate_error(MIDCOM_ERRCRIT, 'wikipage->create returned failure, errstr: ' . midcom_connection::get_error_string());
             // This will exit.
         }
         //Mark as email
@@ -234,7 +234,7 @@ class net_nemein_wiki_handler_emailimport extends midcom_baseclasses_components_
             }
         }
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         debug_pop();
         return true;
     }

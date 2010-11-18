@@ -596,7 +596,7 @@ class midcom_helper_datamanager2_type_blobs extends midcom_helper_datamanager2_t
         $attachment->name = $filename;
         $attachment->parentguid = $this->storage->object->guid;
 
-        $_MIDCOM->componentloader->load('midcom.helper.reflector');
+        midcom::componentloader()->load('midcom.helper.reflector');
         $resolver = midcom_helper_reflector_tree::get($attachment);
         if (!$resolver->name_is_unique_nonstatic($attachment))
         {
@@ -1130,7 +1130,7 @@ class midcom_helper_datamanager2_type_blobs extends midcom_helper_datamanager2_t
             debug_add("filesize('{$filepath}') returned {$size} which evaluated to zero", MIDCOM_LOG_ERROR);
             debug_pop();
 
-            $_MIDCOM->uimessages->add($this->_l10n->get('midcom.helper.datamanager2'), $this->_l10n->get('uploaded file has zero size'), 'error');
+            midcom::uimessages()->add($this->_l10n->get('midcom.helper.datamanager2'), $this->_l10n->get('uploaded file has zero size'), 'error');
 
             return false;
         }
@@ -1161,7 +1161,7 @@ class midcom_helper_datamanager2_type_blobs extends midcom_helper_datamanager2_t
             debug_add("{$scan_command} returned {$exit_code}, likely file is infected", MIDCOM_LOG_ERROR);
             debug_print_r('scanner_output', $scan_output, MIDCOM_LOG_ERROR);
             debug_pop();
-            $_MIDCOM->uimessages->add($this->_l10n_midcom->get('midcom.helper.datamanager2'), $this->_l10n->get('virus found in uploaded file'), 'error');
+            midcom::uimessages()->add($this->_l10n_midcom->get('midcom.helper.datamanager2'), $this->_l10n->get('virus found in uploaded file'), 'error');
             return false;
         }
         return true;
@@ -1190,7 +1190,7 @@ class midcom_helper_datamanager2_type_blobs extends midcom_helper_datamanager2_t
             if($index_attachment)
             {
                 $document = new midcom_services_indexer_document_attachment($attachment, $this->storage->object);
-                $indexer = $_MIDCOM->get_service('indexer');
+                $indexer = midcom::get_service('indexer');
                 $indexer->index($document);
             }
         }

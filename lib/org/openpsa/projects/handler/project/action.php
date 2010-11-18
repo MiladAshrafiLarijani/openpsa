@@ -46,7 +46,7 @@ class org_openpsa_projects_handler_project_action extends midcom_baseclasses_com
      */
     function _handler_action($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         $this->_request_data['project'] = $this->_load_project($args[0]);
         if (!$this->_request_data['project'])
@@ -64,17 +64,17 @@ class org_openpsa_projects_handler_project_action extends midcom_baseclasses_com
                 if (   array_key_exists(midcom_connection::get_user(), $this->_request_data['project']->resources)
                     || array_key_exists(midcom_connection::get_user(), $this->_request_data['project']->contacts))
                 {
-                    $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+                    midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                         . "project/{$this->_request_data['project']->guid}/");
                     // This will exit
                 }
 
-                if (!$_MIDCOM->auth->can_do('midgard:create', $this->_request_data['project']))
+                if (!midcom::auth->can_do('midgard:create', $this->_request_data['project']))
                 {
                     // We usually want to skip ACL here and allow anybody to subscribe
-                    $_MIDCOM->auth->request_sudo();
+                    midcom::auth->request_sudo();
                 }
-                $_MIDCOM->auth->require_do('midgard:create', $this->_request_data['project']);
+                midcom::auth->require_do('midgard:create', $this->_request_data['project']);
 
                 // FIXME: Move this to a method in the project class
                 $subscriber = new org_openpsa_projects_task_resource_dba();
@@ -84,13 +84,13 @@ class org_openpsa_projects_handler_project_action extends midcom_baseclasses_com
 
                 if ($subscriber->create())
                 {
-                    $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+                    midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                         . "project/{$this->_request_data['project']->guid}/");
                     // This will exit
                 }
                 else
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to subscribe, reason " . midcom_connection::get_error_string());
+                    midcom::generate_error(MIDCOM_ERRCRIT, "Failed to subscribe, reason " . midcom_connection::get_error_string());
                     // This will exit
                 }
 
@@ -98,7 +98,7 @@ class org_openpsa_projects_handler_project_action extends midcom_baseclasses_com
                 // If person is not a subscriber just redirect
                 if (!array_key_exists(midcom_connection::get_user(), $this->_request_data['project']->contacts))
                 {
-                    $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+                    midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                         . "project/{$this->_request_data['project']->guid}/");
                     // This will exit
                 }
@@ -116,17 +116,17 @@ class org_openpsa_projects_handler_project_action extends midcom_baseclasses_com
                         $subscriber->delete();
                     }
                 }
-                $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+                midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                     . "project/{$this->_request_data['project']->guid}/");
                 // This will exit
 
             case 'create_news':
-                $_MIDCOM->auth->require_do('midgard:update', $this->_request_data['project']);
-                $_MIDCOM->auth->require_do('midgard:create', $this->_request_data['project_topic']);
+                midcom::auth->require_do('midgard:update', $this->_request_data['project']);
+                midcom::auth->require_do('midgard:create', $this->_request_data['project_topic']);
 
                 if ($this->_request_data['project']->newsTopic)
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "The news topic already exists");
+                    midcom::generate_error(MIDCOM_ERRCRIT, "The news topic already exists");
                     // This will exit
                 }
 
@@ -157,19 +157,19 @@ class org_openpsa_projects_handler_project_action extends midcom_baseclasses_com
                     $this->_request_data['project']->newsTopic = $news_topic->id;
                     $this->_request_data['project']->update();
 
-                    $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+                    midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                         . "project/" . $this->_request_data["project"]->guid);
                     // This will exit
                 }
                 else
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create project news topic, reason " . $news_topic->errstr);
+                    midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create project news topic, reason " . $news_topic->errstr);
                     // This will exit
                 }
 
             case 'create_forum':
-                $_MIDCOM->auth->require_do('midgard:update', $this->_request_data['project']);
-                $_MIDCOM->auth->require_do('midgard:create', $this->_request_data['project_topic']);
+                midcom::auth->require_do('midgard:update', $this->_request_data['project']);
+                midcom::auth->require_do('midgard:create', $this->_request_data['project_topic']);
 
                 if (!$this->_request_data['config']->get('enable_project_forum'))
                 {
@@ -178,7 +178,7 @@ class org_openpsa_projects_handler_project_action extends midcom_baseclasses_com
 
                 if ($this->_request_data['project']->forumTopic)
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "The forum topic already exists");
+                    midcom::generate_error(MIDCOM_ERRCRIT, "The forum topic already exists");
                     // This will exit
                 }
 
@@ -204,13 +204,13 @@ class org_openpsa_projects_handler_project_action extends midcom_baseclasses_com
                     $this->_request_data['project']->forumTopic = $forum_topic->id;
                     $this->_request_data['project']->update();
 
-                    $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+                    midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                         . "project/" . $this->_request_data["project"]->guid);
                     // This will exit
                 }
                 else
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create project forum topic, reason " . $forum_topic->errstr);
+                    midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create project forum topic, reason " . $forum_topic->errstr);
                     // This will exit
                 }
 

@@ -194,7 +194,7 @@ class midcom_helper_reflector_copy extends midcom_baseclasses_components_purecod
         }
 
         // Get property list and start checking (or abort on error)
-        if ($_MIDCOM->dbclassloader->is_midcom_db_object($object))
+        if (midcom::dbclassloader()->is_midcom_db_object($object))
         {
             $properties = $object->get_object_vars();
         }
@@ -277,7 +277,7 @@ class midcom_helper_reflector_copy extends midcom_baseclasses_components_purecod
                 break;
 
             case (mgd_is_guid($object)):
-                $object = $_MIDCOM->dbfactory->get_object_by_guid($object);
+                $object = midcom::dbfactory()->get_object_by_guid($object);
                 break;
 
             case ($class):

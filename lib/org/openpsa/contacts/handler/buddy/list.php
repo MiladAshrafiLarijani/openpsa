@@ -27,7 +27,7 @@ class org_openpsa_contacts_handler_buddy_list extends midcom_baseclasses_compone
      */
     function _handler_add($handler_id, $args, &$data)
     {
-        $user =& $_MIDCOM->auth->user->get_storage();
+        $user =& midcom::auth->user->get_storage();
         $user->require_do('midgard:create');
 
         $target = new org_openpsa_contacts_person_dba($args[0]);
@@ -53,12 +53,12 @@ class org_openpsa_contacts_handler_buddy_list extends midcom_baseclasses_compone
         $buddy->isapproved = true;
         if (!$buddy->create())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to add buddy, reason " . midcom_connection::get_error_string());
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to add buddy, reason " . midcom_connection::get_error_string());
             // This will exit
         }
 
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-        $_MIDCOM->relocate("{$prefix}person/{$target->guid}/");
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        midcom::relocate("{$prefix}person/{$target->guid}/");
     }
 
     /**
@@ -69,7 +69,7 @@ class org_openpsa_contacts_handler_buddy_list extends midcom_baseclasses_compone
      */
     function _handler_remove($handler_id, $args, &$data)
     {
-        $user =& $_MIDCOM->auth->user->get_storage();
+        $user =& midcom::auth->user->get_storage();
         $user->require_do('midgard:create');
 
         $target = new org_openpsa_contacts_person_dba($args[0]);
@@ -92,13 +92,13 @@ class org_openpsa_contacts_handler_buddy_list extends midcom_baseclasses_compone
         {
             if (!$buddy->delete())
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to add buddy, reason " . midcom_connection::get_error_string());
+                midcom::generate_error(MIDCOM_ERRCRIT, "Failed to add buddy, reason " . midcom_connection::get_error_string());
                 // This will exit
             }
         }
 
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-        $_MIDCOM->relocate("{$prefix}person/{$target->guid}/");
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        midcom::relocate("{$prefix}person/{$target->guid}/");
     }
 
     /**
@@ -109,20 +109,20 @@ class org_openpsa_contacts_handler_buddy_list extends midcom_baseclasses_compone
      */
     function _handler_list($handler_id, $args, &$data)
     {
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
 
         if ($handler_id == 'buddylist_xml')
         {
-            $_MIDCOM->auth->require_valid_user('basic');
-            $_MIDCOM->cache->content->content_type("text/xml; charset=UTF-8");
-            $_MIDCOM->header("Content-type: text/xml; charset=UTF-8");
+            midcom::auth->require_valid_user('basic');
+            midcom::cache()->content->content_type("text/xml; charset=UTF-8");
+            midcom::header("Content-type: text/xml; charset=UTF-8");
         }
         else
         {
-            $_MIDCOM->auth->require_valid_user();
+            midcom::auth->require_valid_user();
         }
 
-        $user = $_MIDCOM->auth->user->get_storage();
+        $user = midcom::auth->user->get_storage();
 
         $this->_request_data['buddylist'] = array();
 
@@ -156,7 +156,7 @@ class org_openpsa_contacts_handler_buddy_list extends midcom_baseclasses_compone
         {
             if ($handler_id == 'buddylist_xml')
             {
-                $_MIDCOM->load_library('midcom.helper.datamanager2');
+                midcom::load_library('midcom.helper.datamanager2');
                 $schemadb_person = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb_person'));
 
 
@@ -192,7 +192,7 @@ class org_openpsa_contacts_handler_buddy_list extends midcom_baseclasses_compone
             }
             else
             {
-                $_MIDCOM->load_library('org.openpsa.contactwidget');
+                midcom::load_library('org.openpsa.contactwidget');
                 midcom_show_style("show-buddylist-header");
                 foreach ($data['buddylist'] as $person)
                 {

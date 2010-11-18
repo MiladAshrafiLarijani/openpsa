@@ -75,9 +75,9 @@ class org_openpsa_contactwidget extends midcom_baseclasses_components_purecode
         $this->_component = 'org.openpsa.contactwidget';
 
         //make sue the component is loaded, so that config data is available
-        if (!$_MIDCOM->componentloader->is_loaded($this->_component))
+        if (!midcom::componentloader->is_loaded($this->_component))
         {
-            $_MIDCOM->componentloader->load($this->_component);
+            midcom::componentloader->load($this->_component);
         }
         parent::__construct();
 
@@ -143,8 +143,8 @@ class org_openpsa_contactwidget extends midcom_baseclasses_components_purecode
     function read_object($person)
     {
         if (   !is_object($person)
-            && !$_MIDCOM->dbfactory->is_a($person, 'midcom_db_person')
-            && !$_MIDCOM->dbfactory->is_a($person, 'org_openpsa_contacts_person_dba')
+            && !midcom::dbfactory()->is_a($person, 'midcom_db_person')
+            && !midcom::dbfactory()->is_a($person, 'org_openpsa_contacts_person_dba')
             )
         {
             // Given $person is not one
@@ -220,7 +220,7 @@ class org_openpsa_contactwidget extends midcom_baseclasses_components_purecode
         else if ($this->link_contacts
                  && $this->contact_details['guid'] != "")
         {
-            if (!$_MIDCOM->componentloader->is_loaded('org.openpsa.core'))
+            if (!midcom::componentloader->is_loaded('org.openpsa.core'))
             {
                 $this->link_contacts = false;
                 return null;
@@ -561,7 +561,7 @@ class org_openpsa_contactwidget extends midcom_baseclasses_components_purecode
                 || ($cardname != 'visiting'
                     && !$inherited_cards_only))
             {
-                echo '<div style="text-align:center"><em>' . $_MIDCOM->i18n->get_string($cardname . ' address', 'org.openpsa.contacts') . "</em></div>\n";
+                echo '<div style="text-align:center"><em>' . midcom::i18n()->get_string($cardname . ' address', 'org.openpsa.contacts') . "</em></div>\n";
             }
             echo "<strong>\n";
             if ($parent_name)

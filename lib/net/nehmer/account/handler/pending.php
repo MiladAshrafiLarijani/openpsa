@@ -29,10 +29,10 @@ class net_nehmer_account_handler_pending extends midcom_baseclasses_components_h
         $this->_component_data['active_leaf'] = NET_NEHMER_ACCOUNT_LEAFID_PENDING;
 
         // Add table sorder
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.tablesorter.pack.js');
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/net.nehmer.account/jquery.tablesorter.widget.column_highlight.js');
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/net.nehmer.account/twisty.js');
-        $_MIDCOM->add_link_head
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.tablesorter.pack.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/net.nehmer.account/jquery.tablesorter.widget.column_highlight.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/net.nehmer.account/twisty.js');
+        midcom::add_link_head
         (
             array
             (
@@ -62,7 +62,7 @@ class net_nehmer_account_handler_pending extends midcom_baseclasses_components_h
     function _handler_list($handler_id, $args, &$data)
     {
         // Require administrator privileges
-        $_MIDCOM->auth->require_admin_user();
+        midcom::auth->require_admin_user();
 
         $qb = midcom_db_person::new_query_builder();
 
@@ -133,7 +133,7 @@ class net_nehmer_account_handler_pending extends midcom_baseclasses_components_h
     function _handler_approve($handler_id, $args, &$data)
     {
         // Require administrator privileges
-        $_MIDCOM->auth->require_admin_user();
+        midcom::auth->require_admin_user();
 
         // Handle both several and single approval query at once
         if ($args[0] === 'multiple')
@@ -142,10 +142,10 @@ class net_nehmer_account_handler_pending extends midcom_baseclasses_components_h
                 || count($_POST['persons']) === 0)
             {
                 // Give user a message of an invalid request
-                $_MIDCOM->uimessages->add($this->_l10n->get('net.nehmer.account'), $this->_l10n->get('invalid query'));
+                midcom::uimessages()->add($this->_l10n->get('net.nehmer.account'), $this->_l10n->get('invalid query'));
 
                 // ...and relocate back to the list of unapproved accounts
-                $_MIDCOM->relocate('pending/');
+                midcom::relocate('pending/');
                 // This will exit
             }
 
@@ -167,14 +167,14 @@ class net_nehmer_account_handler_pending extends midcom_baseclasses_components_h
             if (   !$person
                 || !$person->guid)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The account '{$args[0]}' could not be loaded, reason: " . midcom_connection::get_error_string());
+                midcom::generate_error(MIDCOM_ERRNOTFOUND, "The account '{$args[0]}' could not be loaded, reason: " . midcom_connection::get_error_string());
             }
 
             $this->persons[$person->guid] =& $person;
 
-            $_MIDCOM->bind_view_to_object($person);
-            $_MIDCOM->set_26_request_metadata(time(), $this->_topic->guid);
-            $_MIDCOM->set_pagetitle($this->_l10n->get('pending approval') . ': ' . $person->rname);
+            midcom::bind_view_to_object($person);
+            midcom::set_26_request_metadata(time(), $this->_topic->guid);
+            midcom::set_pagetitle($this->_l10n->get('pending approval') . ': ' . $person->rname);
         }
 
         // Process the query form
@@ -187,7 +187,7 @@ class net_nehmer_account_handler_pending extends midcom_baseclasses_components_h
             MIDCOM_NAV_URL => "pending/{$args[0]}/",
             MIDCOM_NAV_NAME => (!isset($person)) ? $this->_l10n->get('multiple') : $person->rname,
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         // Load the Datamanager2 instance of the person object
         $this->_load_datamanager();
@@ -235,10 +235,10 @@ class net_nehmer_account_handler_pending extends midcom_baseclasses_components_h
         if (isset($_POST['f_cancel']))
         {
             // Show UI message
-            $_MIDCOM->uimessages->show($this->_l10n->get('net.nehmer.account'), $this->_l10n->get('cancelled'));
+            midcom::uimessages()->show($this->_l10n->get('net.nehmer.account'), $this->_l10n->get('cancelled'));
 
             // Relocate
-            $_MIDCOM->relocate('pending/');
+            midcom::relocate('pending/');
             // This will exit
         }
 
@@ -258,16 +258,16 @@ class net_nehmer_account_handler_pending extends midcom_baseclasses_components_h
                     $person->set_parameter('net.nehmer.account', 'require_approval', sprintf('approved by user id %s', midcom_connection::get_user()));
 
 
-                    $_MIDCOM->uimessages->add($this->_l10n->get('net.nehmer.account'), sprintf($this->_l10n->get('%s, message sent to %s'), $this->_l10n_midcom->get('approved'), $person->email));
+                    midcom::uimessages()->add($this->_l10n->get('net.nehmer.account'), sprintf($this->_l10n->get('%s, message sent to %s'), $this->_l10n_midcom->get('approved'), $person->email));
                 }
                 else
                 {
-                    $_MIDCOM->uimessages->add($this->_l10n->get('net.nehmer.account'), sprintf($this->_l10n->get('failed to send the activation message to %s'), $person->email, 'error'));
+                    midcom::uimessages()->add($this->_l10n->get('net.nehmer.account'), sprintf($this->_l10n->get('failed to send the activation message to %s'), $person->email, 'error'));
                 }
             }
 
             // Relocate to the frontpage of accounts pending for approvate
-            $_MIDCOM->relocate('pending/');
+            midcom::relocate('pending/');
             // This will exit
         }
 
@@ -300,16 +300,16 @@ class net_nehmer_account_handler_pending extends midcom_baseclasses_components_h
             {
                 if ($this->_send_rejection_mail($person, $subject, $body))
                 {
-                    $_MIDCOM->uimessages->add($this->_l10n->get('net.nehmer.account'), sprintf($this->_l10n->get('%s, message sent to %s'), $this->_l10n->get('rejected'), $person->email));
+                    midcom::uimessages()->add($this->_l10n->get('net.nehmer.account'), sprintf($this->_l10n->get('%s, message sent to %s'), $this->_l10n->get('rejected'), $person->email));
                 }
                 else
                 {
-                    $_MIDCOM->uimessages->add($this->_l10n->get('net.nehmer.account'), sprintf($this->_l10n->get('failed to send the rejection message to %s'), $person->email, 'error'));
+                    midcom::uimessages()->add($this->_l10n->get('net.nehmer.account'), sprintf($this->_l10n->get('failed to send the rejection message to %s'), $person->email, 'error'));
                 }
             }
 
             // Finally relocate back to view the list
-            $_MIDCOM->relocate('pending/');
+            midcom::relocate('pending/');
             // This will exit
         }
     }
@@ -325,7 +325,7 @@ class net_nehmer_account_handler_pending extends midcom_baseclasses_components_h
      */
     function _send_rejection_mail(&$person, $subject, $body)
     {
-        $_MIDCOM->load_library('org.openpsa.mail');
+        midcom::load_library('org.openpsa.mail');
         $mail = new org_openpsa_mail();
         $mail->from = $this->_config->get('activation_mail_sender');
         
@@ -345,7 +345,7 @@ class net_nehmer_account_handler_pending extends midcom_baseclasses_components_h
         $mail->subject = net_nehmer_account_viewer::parse_parameters($parameters, $mail->subject);
         $mail->body = net_nehmer_account_viewer::parse_parameters($parameters, $mail->body);
         
-        $_MIDCOM->uimessages->add($this->_l10n->get('net.nehmer.account'), sprintf($this->_l10n->get('person %s has been rejected and deleted'), $person->name));
+        midcom::uimessages()->add($this->_l10n->get('net.nehmer.account'), sprintf($this->_l10n->get('person %s has been rejected and deleted'), $person->name));
         
         // Delete the person in the end
         $person->delete();

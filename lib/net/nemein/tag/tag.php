@@ -24,12 +24,12 @@ class net_nemein_tag_tag_dba extends midcom_core_dbaobject
     
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
         
     function get_label()
@@ -82,23 +82,23 @@ class net_nemein_tag_tag_dba extends midcom_core_dbaobject
     {
         if (empty($tag))
         {
-            $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('net.nemein.tag', 'net.nemein.tag'), sprintf($_MIDCOM->i18n->get_string('tag "%s" is not valid. tags may not be empty', 'net.nemein.tag'), $tag), 'info');
+            midcom::uimessages()->add(midcom::i18n()->get_string('net.nemein.tag', 'net.nemein.tag'), sprintf(midcom::i18n()->get_string('tag "%s" is not valid. tags may not be empty', 'net.nemein.tag'), $tag), 'info');
             return false;
         }
         if (!is_string($tag))
         {
-            $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('net.nemein.tag', 'net.nemein.tag'), sprintf($_MIDCOM->i18n->get_string('tag "%s" is not valid. tags must be valid strings', 'net.nemein.tag'), $tag), 'info');
+            midcom::uimessages()->add(midcom::i18n()->get_string('net.nemein.tag', 'net.nemein.tag'), sprintf(midcom::i18n()->get_string('tag "%s" is not valid. tags must be valid strings', 'net.nemein.tag'), $tag), 'info');
             return false;
         }
         if (is_numeric($tag))
         {
-            $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('net.nemein.tag', 'net.nemein.tag'), sprintf($_MIDCOM->i18n->get_string('tag "%s" is not valid. tags may not be numeric', 'net.nemein.tag'), $tag), 'info');
+            midcom::uimessages()->add(midcom::i18n()->get_string('net.nemein.tag', 'net.nemein.tag'), sprintf(midcom::i18n()->get_string('tag "%s" is not valid. tags may not be numeric', 'net.nemein.tag'), $tag), 'info');
             return false;
         }
         if (   strstr($tag, '"')
             || strstr($tag, "'"))
         {
-            $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('net.nemein.tag', 'net.nemein.tag'), sprintf($_MIDCOM->i18n->get_string('tag "%s" is not valid. tags may not contain quotes', 'net.nemein.tag'), $tag), 'info');
+            midcom::uimessages()->add(midcom::i18n()->get_string('net.nemein.tag', 'net.nemein.tag'), sprintf(midcom::i18n()->get_string('tag "%s" is not valid. tags may not contain quotes', 'net.nemein.tag'), $tag), 'info');
             return false;
         }
 

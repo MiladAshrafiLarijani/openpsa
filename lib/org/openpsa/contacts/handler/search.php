@@ -83,11 +83,11 @@ class org_openpsa_contacts_handler_search extends midcom_baseclasses_components_
      */
     function _handler_search_type($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         switch ($args[0])
         {
             case 'foaf':
-                $_MIDCOM->skip_page_style = true;
+                midcom::skip_page_style = true;
                 $this->_view = 'foaf';
                 $this->_search_qb_persons();
                 return true;
@@ -125,7 +125,7 @@ class org_openpsa_contacts_handler_search extends midcom_baseclasses_components_
      */
     function _handler_search($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         $this->_get_search_string();
         if ($this->_search)
@@ -137,20 +137,20 @@ class org_openpsa_contacts_handler_search extends midcom_baseclasses_components_
         if (   count($this->_groups) == 1
             && count($this->_persons) == 0)
         {
-            $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-            $_MIDCOM->relocate($prefix . 'group/' . $this->_groups[0]->guid . '/');
+            $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+            midcom::relocate($prefix . 'group/' . $this->_groups[0]->guid . '/');
             //This will exit
         }
         else if (   count($this->_groups) == 0
                  && count($this->_persons) == 1)
         {
-            $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-            $_MIDCOM->relocate($prefix . 'person/' . $this->_persons[0]->guid . '/');
+            $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+            midcom::relocate($prefix . 'person/' . $this->_persons[0]->guid . '/');
             //This will exit
         }
 
         //We always want to display *something*
-        if ($_MIDCOM->auth->can_user_do('midgard:create', null, 'org_openpsa_contacts_person_dba'))
+        if (midcom::auth->can_user_do('midgard:create', null, 'org_openpsa_contacts_person_dba'))
         {
             $this->_view_toolbar->add_item
             (
@@ -165,7 +165,7 @@ class org_openpsa_contacts_handler_search extends midcom_baseclasses_components_
             );
         }
         $root_group = org_openpsa_contacts_interface::find_root_group();
-        if ($_MIDCOM->auth->can_do('midgard:create', $root_group))
+        if (midcom::auth->can_do('midgard:create', $root_group))
         {
             $this->_view_toolbar->add_item
             (
@@ -217,7 +217,7 @@ class org_openpsa_contacts_handler_search extends midcom_baseclasses_components_
 
             if (count($this->_persons) > 0)
             {
-                $_MIDCOM->load_library('org.openpsa.contactwidget');
+                midcom::load_library('org.openpsa.contactwidget');
                 midcom_show_style('search-persons-header');
                 foreach($this->_persons as $person)
                 {
@@ -252,7 +252,7 @@ class org_openpsa_contacts_handler_search extends midcom_baseclasses_components_
         if (   !is_array($org_fields)
             || count($org_fields) == 0)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Invalid organization search configuration');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Invalid organization search configuration');
         }
 
         foreach ($org_fields as $field)
@@ -290,7 +290,7 @@ class org_openpsa_contacts_handler_search extends midcom_baseclasses_components_
         if (   !is_array($person_fields)
             || count($person_fields) == 0)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Invalid person search configuration');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Invalid person search configuration');
         }
 
         foreach ($person_fields as $field)

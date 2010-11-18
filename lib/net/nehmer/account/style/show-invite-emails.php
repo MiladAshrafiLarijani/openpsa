@@ -1,6 +1,6 @@
 <?php
 $email_fields = $data['config']->get('email_fields');
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 
 $contacts = array();
 $total_contacts = 0;
@@ -9,9 +9,9 @@ $total_contacts = 0;
 <h2><?php echo $data['l10n']->get("import contacts"); ?></h2>
 
 <?php
-if ($_MIDCOM->componentloader->is_installed('com.magnettechnologies.contactgrabber'))
+if (midcom::componentloader->is_installed('com.magnettechnologies.contactgrabber'))
 {
-    $_MIDCOM->load_library('com.magnettechnologies.contactgrabber');
+    midcom::load_library('com.magnettechnologies.contactgrabber');
     $crabber = new com_magnettechnologies_contactgrabber();
     $crabber_contacts = $crabber->grab_contacts();
 

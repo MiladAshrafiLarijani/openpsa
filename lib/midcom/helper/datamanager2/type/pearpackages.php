@@ -50,7 +50,7 @@ class midcom_helper_datamanager2_type_pearpackages extends midcom_helper_dataman
             debug_add("{$filename} is not a PEAR package", MIDCOM_LOG_WARN);
             debug_pop();
 
-            $_MIDCOM->uimessages->add($this->_l10n->get('midcom.helper.datamanager2'), $this->_l10n->get('uploaded file is not a pear package'), 'error');
+            midcom::uimessages()->add($this->_l10n->get('midcom.helper.datamanager2'), $this->_l10n->get('uploaded file is not a pear package'), 'error');
 
             return false;
         }
@@ -68,7 +68,7 @@ class midcom_helper_datamanager2_type_pearpackages extends midcom_helper_dataman
             debug_add("{$tmpfile} is not a PEAR package: " . $this->package->getMessage(), MIDCOM_LOG_WARN);
             debug_pop();
 
-            $_MIDCOM->uimessages->add($this->_l10n->get('midcom.helper.datamanager2'), $this->_l10n->get('uploaded file is not a pear package'), 'error');
+            midcom::uimessages()->add($this->_l10n->get('midcom.helper.datamanager2'), $this->_l10n->get('uploaded file is not a pear package'), 'error');
 
             return false;
         }
@@ -87,7 +87,7 @@ class midcom_helper_datamanager2_type_pearpackages extends midcom_helper_dataman
                 debug_add("{$filename} has faulty name.", MIDCOM_LOG_WARN);
                 debug_pop();
                 
-                $_MIDCOM->uimessages->add($this->_l10n->get('midcom.helper.datamanager2'), $this->_l10n->get('uploaded file has faulty name'), 'error');
+                midcom::uimessages()->add($this->_l10n->get('midcom.helper.datamanager2'), $this->_l10n->get('uploaded file has faulty name'), 'error');
                 
                 return false;
             }
@@ -98,7 +98,7 @@ class midcom_helper_datamanager2_type_pearpackages extends midcom_helper_dataman
                 debug_add("{$filename} doesn't match product name {$this->storage->object->code}.", MIDCOM_LOG_WARN);
                 debug_pop();
                 
-                $_MIDCOM->uimessages->add($this->_l10n->get('midcom.helper.datamanager2'), $this->_l10n->get("uploaded file doesn't match product name"), 'error');
+                midcom::uimessages()->add($this->_l10n->get('midcom.helper.datamanager2'), $this->_l10n->get("uploaded file doesn't match product name"), 'error');
                 
                 return false;
             }

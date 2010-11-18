@@ -84,7 +84,7 @@ class org_openpsa_directmarketing_campaign_ruleresolver
     function __construct($rules = false)
     {
         // Make sure all supported classes are loaded
-        $_MIDCOM->componentloader->load_graceful('org.maemo.devcodes');
+        midcom::componentloader->load_graceful('org.maemo.devcodes');
 
         // if querybuilder is used response-time will increase -> set_key_property hast to be removed
         $this->_result_mc = org_openpsa_contacts_person_dba::new_collector('metadata.deleted' , false);
@@ -377,31 +377,31 @@ class org_openpsa_directmarketing_campaign_ruleresolver
         foreach($parameter_keys as $parameter_key => $value)
         {
             $guid = $mc_parameter->get_subkey($parameter_key , 'parentguid');
-            $parent = $_MIDCOM->dbfactory->get_object_by_guid($guid);
+            $parent = midcom::dbfactory()->get_object_by_guid($guid);
 
             switch (true)
             {
-                case (   $_MIDCOM->dbfactory->is_a($parent, 'midgard_person')
-                      || $_MIDCOM->dbfactory->is_a($parent, 'org_openpsa_contacts_person')
-                      || $_MIDCOM->dbfactory->is_a($parent, 'org_openpsa_contacts_person_dba')):
+                case (   midcom::dbfactory()->is_a($parent, 'midgard_person')
+                      || midcom::dbfactory()->is_a($parent, 'org_openpsa_contacts_person')
+                      || midcom::dbfactory()->is_a($parent, 'org_openpsa_contacts_person_dba')):
                     $person_rule = array('property' => 'id' , 'match' => '=' , 'value' => $parent->id);
                     $this->add_person_rule($person_rule);
                     break;
-                case ($_MIDCOM->dbfactory->is_a($parent, 'midgard_group')):
+                case (midcom::dbfactory()->is_a($parent, 'midgard_group')):
                     $group_rule = array('property' => 'id' , 'match' => '=' , 'value' => $parent->id);
                     $this->add_group_rule($group_rule);
                     break;
-                case $_MIDCOM->dbfactory->is_a($parent, 'org_openpsa_campaign_member'):
-                case $_MIDCOM->dbfactory->is_a($parent, 'org_openpsa_campaign_message_receipt'):
-                case $_MIDCOM->dbfactory->is_a($parent, 'org_openpsa_link_log'):
+                case midcom::dbfactory()->is_a($parent, 'org_openpsa_campaign_member'):
+                case midcom::dbfactory()->is_a($parent, 'org_openpsa_campaign_message_receipt'):
+                case midcom::dbfactory()->is_a($parent, 'org_openpsa_link_log'):
                     $person_rule = array('property' => 'id' , 'match' => '=' , 'value' => $parent->person);
                     $this->add_person_rule($person_rule);
                     break;
-                case $_MIDCOM->dbfactory->is_a($parent, 'org_maemo_devcodes_application'):
+                case midcom::dbfactory()->is_a($parent, 'org_maemo_devcodes_application'):
                     $person_rule = array('property' => 'id' , 'match' => '=' , 'value' => $parent->applicant);
                     $this->add_person_rule($person_rule);
                     break;
-                case $_MIDCOM->dbfactory->is_a($parent, 'org_maemo_devcodes_code'):
+                case midcom::dbfactory()->is_a($parent, 'org_maemo_devcodes_code'):
                     $person_rule = array('property' => 'id' , 'match' => '=' , 'value' => $parent->recipient);
                     $this->add_person_rule($person_rule);
                     break;

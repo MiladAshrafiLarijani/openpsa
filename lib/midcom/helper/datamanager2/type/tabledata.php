@@ -408,7 +408,7 @@ class midcom_helper_datamanager2_type_tabledata extends midcom_helper_datamanage
                 }
                 break;
             default:
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Error in type configuration: storage mode cannot be '{$this->storage_mode}'");
+                midcom::generate_error(MIDCOM_ERRCRIT, "Error in type configuration: storage mode cannot be '{$this->storage_mode}'");
                 // This will exit
         }
         

@@ -43,8 +43,8 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
     function __construct()
     {
         parent::__construct();
-        $_MIDCOM->style->prepend_component_styledir('org.openpsa.relatedto');
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::style->prepend_component_styledir('org.openpsa.relatedto');
+        midcom::load_library('midcom.helper.datamanager2');
     }
 
     /**
@@ -55,7 +55,7 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
      */
     function _handler_entry($handler_id, $args, &$data)
     {
-        $this->_current_object = $_MIDCOM->dbfactory->get_object_by_guid($args[0]);
+        $this->_current_object = midcom::dbfactory()->get_object_by_guid($args[0]);
         //passed guid does not exist
         if (empty($this->_current_object->guid))
         {
@@ -70,8 +70,8 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
             $this->_output_mode = $args[1];
         }
 
-        $this->_relocate_url = $_MIDCOM->permalinks->create_permalink($this->_current_object->guid);
-        $this->_request_data['url_prefix'] = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "__mfa/org.openpsa.relatedto/journalentry/";
+        $this->_relocate_url = midcom::permalinks->create_permalink($this->_current_object->guid);
+        $this->_request_data['url_prefix'] = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "__mfa/org.openpsa.relatedto/journalentry/";
 
          //add needed constraints etc. to the query-builder
         $this->qb_journal_entries = org_openpsa_relatedto_journal_entry_dba::new_query_builder();
@@ -92,12 +92,12 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
             $this->_prepare_output();
             org_openpsa_core_ui::enable_jqgrid();
             //pass url where to get the data for js-plugin
-            $this->_request_data['data_url'] = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "__mfa/org.openpsa.relatedto/journalentry/" . $this->_current_object->guid ."/xml/";
+            $this->_request_data['data_url'] = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "__mfa/org.openpsa.relatedto/journalentry/" . $this->_current_object->guid ."/xml/";
 
             //prepare breadcrumb
             $ref = midcom_helper_reflector::get($this->_current_object);
             $object_label = $ref->get_object_label($this->_current_object);
-            $object_url = $_MIDCOM->permalinks->create_permalink($this->_current_object->guid);
+            $object_url = midcom::permalinks->create_permalink($this->_current_object->guid);
             if ($object_url)
             {
                 $tmp[] = array
@@ -108,15 +108,15 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
             }
             $tmp[] = array
             (
-                MIDCOM_NAV_URL => $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "__mfa/org.openpsa.relatedto/render/" . $this->_current_object->guid . "/both/",
-                MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('view related information', 'org.openpsa.relatedto')
+                MIDCOM_NAV_URL => midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "__mfa/org.openpsa.relatedto/render/" . $this->_current_object->guid . "/both/",
+                MIDCOM_NAV_NAME => midcom::i18n()->get_string('view related information', 'org.openpsa.relatedto')
             );
             $tmp[] = array
             (
                 MIDCOM_NAV_URL => "",
-                MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('journal entries', 'org.openpsa.relatedto')
+                MIDCOM_NAV_NAME => midcom::i18n()->get_string('journal entries', 'org.openpsa.relatedto')
             );
-            $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+            midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
         }
         $this->_prepare_header();
 
@@ -143,13 +143,13 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
             array
             (
                 MIDCOM_TOOLBAR_URL => $this->_request_data['url_prefix'] . "create/" . $this->_current_object->guid . "/",
-                MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('add journal entry', 'org.openpsa.relatedto'),
+                MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('add journal entry', 'org.openpsa.relatedto'),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/new-text.png',
             )
         );
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -178,7 +178,7 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
 
     function _handler_create($handler_id, $args, &$data)
     {
-        $this->_current_object = $_MIDCOM->dbfactory->get_object_by_guid($args[0]);
+        $this->_current_object = midcom::dbfactory()->get_object_by_guid($args[0]);
 
         $this->_prepare_datamanager();
         $this->_load_controller();
@@ -187,13 +187,13 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
         {
             case 'save':
             case 'cancel':
-                $object = $_MIDCOM->dbfactory->get_object_by_guid($args[0]);
+                $object = midcom::dbfactory()->get_object_by_guid($args[0]);
                 //relocate to relatedto-renders
-                $add_url = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "__mfa/org.openpsa.relatedto/journalentry/";
+                $add_url = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "__mfa/org.openpsa.relatedto/journalentry/";
                 $add_url = $add_url . $this->_current_object->guid . "/html/";
                 $siteconfig = org_openpsa_core_siteconfig::get_instance();
-                $relocate = $_MIDCOM->permalinks->create_permalink($object->guid);
-                $_MIDCOM->relocate($add_url);
+                $relocate = midcom::permalinks->create_permalink($object->guid);
+                midcom::relocate($add_url);
                 // This will exit.
                 break;
         }
@@ -215,7 +215,7 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
      */
     private function _prepare_datamanager()
     {
-        $_MIDCOM->componentloader->load('org.openpsa.relatedto');
+        midcom::componentloader->load('org.openpsa.relatedto');
 
         $this->_schemadb = midcom_helper_datamanager2_schema::load_database($GLOBALS['midcom_component_data']['org.openpsa.relatedto']['config']->get('schemadb_journalentry'));
         $this->_schema = 'default';
@@ -224,7 +224,7 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
 
         if (!$this->_datamanager)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Datamanager could not be instantiated.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Datamanager could not be instantiated.");
             // This will exit.
         }
     }
@@ -252,7 +252,7 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
         }
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
             // This will exit.
         }
     }
@@ -269,7 +269,7 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $reminder);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to create a new reminder, cannot continue. Error: " . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -279,15 +279,15 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
     
     function _handler_remove($handler_id, $args, &$data)
     {
-        $this->_current_object = $_MIDCOM->dbfactory->get_object_by_guid($args[0]);
+        $this->_current_object = midcom::dbfactory()->get_object_by_guid($args[0]);
         $reminder = new org_openpsa_relatedto_journal_entry_dba($args[1]);
 
         $reminder->delete();
 
-        $add_url = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "__mfa/org.openpsa.relatedto/reminder/";
+        $add_url = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "__mfa/org.openpsa.relatedto/reminder/";
         $add_url = $add_url . $this->_current_object->guid . "/";
 
-        $_MIDCOM->relocate($add_url);
+        midcom::relocate($add_url);
 
         return true;
     }
@@ -305,21 +305,21 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
             return false;
         }
         
-        $this->_current_object = $_MIDCOM->dbfactory->get_object_by_guid($this->_journal_entry->linkGuid);
+        $this->_current_object = midcom::dbfactory()->get_object_by_guid($this->_journal_entry->linkGuid);
 
         $this->_prepare_datamanager();
         $this->_load_controller();
-        $url_prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "__mfa/org.openpsa.relatedto/journalentry/";
+        $url_prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "__mfa/org.openpsa.relatedto/journalentry/";
 
         switch ($this->_controller->process_form())
         {
             case 'save':
             case 'cancel':
-                $object = $_MIDCOM->dbfactory->get_object_by_guid($args[0]);
+                $object = midcom::dbfactory()->get_object_by_guid($args[0]);
                 $url_prefix = $url_prefix . $this->_current_object->guid . "/html/";
                 $siteconfig = org_openpsa_core_siteconfig::get_instance();
-                $relocate = $_MIDCOM->permalinks->create_permalink($object->guid);
-                $_MIDCOM->relocate($url_prefix);
+                $relocate = midcom::permalinks->create_permalink($object->guid);
+                midcom::relocate($url_prefix);
                 // This will exit.
                 break;
         }
@@ -340,7 +340,7 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
             )
         );
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -351,7 +351,7 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
         );
 
         $this->_prepare_breadcrumb();
-        $_MIDCOM->bind_view_to_object($this->_journal_entry, $this->_controller->datamanager->schema->name);
+        midcom::bind_view_to_object($this->_journal_entry, $this->_controller->datamanager->schema->name);
 
         return true;
     }
@@ -364,7 +364,7 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
     function _handler_delete($handler_id, $args, &$data)
     {
         $this->_journal_entry = new org_openpsa_relatedto_journal_entry_dba($args[0]);
-        $this->_current_object = $_MIDCOM->dbfactory->get_object_by_guid($this->_journal_entry->linkGuid);
+        $this->_current_object = midcom::dbfactory()->get_object_by_guid($this->_journal_entry->linkGuid);
 
         if(!$this->_journal_entry->delete())
         {
@@ -374,10 +374,10 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
             return false;
         }
         //build url for relocate
-        $url_prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "__mfa/org.openpsa.relatedto/render/";
+        $url_prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "__mfa/org.openpsa.relatedto/render/";
         $url_prefix = $url_prefix . $this->_current_object->guid . "/both/";
 
-        $_MIDCOM->relocate($url_prefix);
+        midcom::relocate($url_prefix);
 
         return true;
     }
@@ -416,7 +416,7 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
             {
                 $this->_request_data['linked_objects'] = array();
                 $this->_request_data['linked_raw_objects'] = array();
-                $_MIDCOM->componentloader->load('midcom.helper.reflector');
+                midcom::componentloader->load('midcom.helper.reflector');
 
                 foreach($this->_request_data['entries'] as $entry)
                 {
@@ -425,20 +425,20 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
                         continue;
                     }
                     //create reflector with linked object to get the right label
-                    $linked_object = $_MIDCOM->dbfactory->get_object_by_guid($entry->linkGuid);
+                    $linked_object = midcom::dbfactory()->get_object_by_guid($entry->linkGuid);
                     $reflector = new midcom_helper_reflector($linked_object);
-                    $link_html = "<a href='" . $_MIDCOM->permalinks->create_permalink($linked_object->guid) . "'>" . $reflector->get_object_label($linked_object) ."</a>";
+                    $link_html = "<a href='" . midcom::permalinks->create_permalink($linked_object->guid) . "'>" . $reflector->get_object_label($linked_object) ."</a>";
                     $this->_request_data['linked_objects'][$entry->linkGuid] = $link_html;
                     $this->_request_data['linked_raw_objects'][$entry->linkGuid] = $reflector->get_object_label($linked_object);
                 }
             }
             //url_prefix to build the links to the entries
-            $this->_request_data['url_prefix'] = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "__mfa/org.openpsa.relatedto/journalentry/";
+            $this->_request_data['url_prefix'] = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "__mfa/org.openpsa.relatedto/journalentry/";
         }
         else
         {
             //url where the xml-data can be loaded
-            $this->_request_data['data_url'] =$_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "__mfa/org.openpsa.relatedto/journalentry/list/xml/" ;
+            $this->_request_data['data_url'] =midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "__mfa/org.openpsa.relatedto/journalentry/list/xml/" ;
             //enable jqgrid for html-output
             org_openpsa_core_ui::enable_jqgrid();
         }
@@ -457,8 +457,8 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
         switch($this->_output_mode)
         {
             case 'xml':
-                $_MIDCOM->header("Content-type: text/xml; charset=UTF-8");
-                $_MIDCOM->skip_page_style = true;
+                midcom::header("Content-type: text/xml; charset=UTF-8");
+                midcom::skip_page_style = true;
                 break;
         }
     }
@@ -505,19 +505,19 @@ class org_openpsa_relatedto_handler_journalentry extends midcom_baseclasses_comp
 
         $tmp[] = array
         (
-            MIDCOM_NAV_URL => $_MIDCOM->permalinks->create_permalink($this->_current_object->guid),
+            MIDCOM_NAV_URL => midcom::permalinks->create_permalink($this->_current_object->guid),
             MIDCOM_NAV_NAME => $object_label,
         );
         $tmp[] = array
         (
-            MIDCOM_NAV_URL => $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . '__mfa/org.openpsa.relatedto/render/' . $this->_current_object->guid . '/both/',
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('view related information', 'org.openpsa.relatedto'),
+            MIDCOM_NAV_URL => midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . '__mfa/org.openpsa.relatedto/render/' . $this->_current_object->guid . '/both/',
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('view related information', 'org.openpsa.relatedto'),
         );
         $tmp[] = array
         (
             MIDCOM_NAV_URL => "",
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('journal entry', 'org.openpsa.relatedto') . " : " . $object_label,
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('journal entry', 'org.openpsa.relatedto') . " : " . $object_label,
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 }

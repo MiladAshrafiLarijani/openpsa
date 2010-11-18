@@ -115,9 +115,9 @@ class org_openpsa_sales_handler_deliverable_admin extends midcom_baseclasses_com
      */
     function _on_initialize()
     {
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
         
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -152,7 +152,7 @@ class org_openpsa_sales_handler_deliverable_admin extends midcom_baseclasses_com
         if (   ! $this->_datamanager
             || ! $this->_datamanager->autoset_storage($this->_deliverable))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for deliverable {$this->_deliverable->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for deliverable {$this->_deliverable->id}.");
             // This will exit.
         }
     }
@@ -171,7 +171,7 @@ class org_openpsa_sales_handler_deliverable_admin extends midcom_baseclasses_com
         $this->_controller->set_storage($this->_deliverable, $this->_schema);
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for deliverable {$this->_deliverable->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for deliverable {$this->_deliverable->id}.");
             // This will exit.
         }
     }
@@ -181,7 +181,7 @@ class org_openpsa_sales_handler_deliverable_admin extends midcom_baseclasses_com
      */
     private function _modify_schema()
     {
-        $_MIDCOM->load_library('midcom.services.at');
+        midcom::load_library('midcom.services.at');
 
         $mc = new org_openpsa_relatedto_collector($this->_deliverable->guid, 'midcom_services_at_entry');
         $mc->add_object_order('start', 'ASC');
@@ -230,7 +230,7 @@ class org_openpsa_sales_handler_deliverable_admin extends midcom_baseclasses_com
                 break;
         }
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
 
@@ -252,7 +252,7 @@ class org_openpsa_sales_handler_deliverable_admin extends midcom_baseclasses_com
         $this->_deliverable = new org_openpsa_sales_salesproject_deliverable_dba($args[0]);
         if (! $this->_deliverable)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The deliverable {$args[0]} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The deliverable {$args[0]} was not found.");
             // This will exit.
         }
         $this->_deliverable->require_do('midgard:update');
@@ -279,13 +279,13 @@ class org_openpsa_sales_handler_deliverable_admin extends midcom_baseclasses_com
                 $this->_process_notify_date($formdata);
 
                 // Reindex the deliverable
-                //$indexer = $_MIDCOM->get_service('indexer');
+                //$indexer = midcom::get_service('indexer');
                 //org_openpsa_sales_viewer::index($this->_controller->datamanager, $indexer, $this->_content_topic);
 
                 // *** FALL-THROUGH ***
 
             case 'cancel':
-                $_MIDCOM->relocate("deliverable/{$this->_deliverable->guid}/");
+                midcom::relocate("deliverable/{$this->_deliverable->guid}/");
                 // This will exit.
         }
 
@@ -293,11 +293,11 @@ class org_openpsa_sales_handler_deliverable_admin extends midcom_baseclasses_com
         org_openpsa_helpers::dm2_savecancel($this); 
         
         $this->_prepare_request_data($handler_id);
-        $_MIDCOM->set_pagetitle($this->_deliverable->title);
-        $_MIDCOM->bind_view_to_object($this->_deliverable, $this->_request_data['controller']->datamanager->schema->name);
+        midcom::set_pagetitle($this->_deliverable->title);
+        midcom::bind_view_to_object($this->_deliverable, $this->_request_data['controller']->datamanager->schema->name);
         $this->_update_breadcrumb_line($handler_id);
 
-        $_MIDCOM->set_pagetitle(sprintf($this->_l10n_midcom->get('edit %s'), $this->_deliverable->title));
+        midcom::set_pagetitle(sprintf($this->_l10n_midcom->get('edit %s'), $this->_deliverable->title));
 
         return true;
     }
@@ -332,7 +332,7 @@ class org_openpsa_sales_handler_deliverable_admin extends midcom_baseclasses_com
         $this->_deliverable = new org_openpsa_sales_salesproject_deliverable_dba($args[0]);
         if (! $this->_deliverable)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The deliverable {$args[0]} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The deliverable {$args[0]} was not found.");
             // This will exit.
         }
         $this->_deliverable->require_do('midgard:delete');
@@ -344,29 +344,29 @@ class org_openpsa_sales_handler_deliverable_admin extends midcom_baseclasses_com
             // Deletion confirmed.
             if (! $this->_deliverable->delete())
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to delete deliverable {$args[0]}, last Midgard error was: " . midcom_connection::get_error_string());
+                midcom::generate_error(MIDCOM_ERRCRIT, "Failed to delete deliverable {$args[0]}, last Midgard error was: " . midcom_connection::get_error_string());
                 // This will exit.
             }
 
             // Update the index
-            $indexer = $_MIDCOM->get_service('indexer');
+            $indexer = midcom::get_service('indexer');
             $indexer->delete($this->_deliverable->guid);
 
             // Delete ok, relocating to welcome.
-            $_MIDCOM->relocate('');
+            midcom::relocate('');
             // This will exit.
         }
 
         if (array_key_exists('org_openpsa_sales_deletecancel', $_REQUEST))
         {
             // Redirect to view page.
-            $_MIDCOM->relocate("deliverable/{$this->_deliverable->guid}/");
+            midcom::relocate("deliverable/{$this->_deliverable->guid}/");
             // This will exit()
         }
 
         $this->_prepare_request_data($handler_id);
-        $_MIDCOM->set_pagetitle($this->_deliverable->title);
-        $_MIDCOM->bind_view_to_object($this->_deliverable, $this->_request_data['controller']->datamanager->schema->title);
+        midcom::set_pagetitle($this->_deliverable->title);
+        midcom::bind_view_to_object($this->_deliverable, $this->_request_data['controller']->datamanager->schema->title);
         $this->_update_breadcrumb_line($handler_id);
 
         return true;

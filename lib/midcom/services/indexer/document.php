@@ -292,7 +292,7 @@ class midcom_services_indexer_document
      */
     function __construct()
     {
-        $this->_i18n = $_MIDCOM->get_service('i18n');
+        $this->_i18n = midcom::get_service('i18n');
     }
 
 
@@ -533,12 +533,12 @@ class midcom_services_indexer_document
         $this->creator = $this->get_field('__CREATOR');
         if ($this->creator != '')
         {
-            $this->creator = $_MIDCOM->dbfactory->get_object_by_guid($this->creator);
+            $this->creator = midcom::dbfactory()->get_object_by_guid($this->creator);
         }
         $this->editor = $this->get_field('__EDITOR');
         if ($this->editor != '')
         {
-            $this->editor = $_MIDCOM->dbfactory->get_object_by_guid($this->editor);
+            $this->editor = midcom::dbfactory()->get_object_by_guid($this->editor);
         }
         $this->author = $this->get_field('author');
         $this->abstract = $this->get_field('abstract');
@@ -860,7 +860,7 @@ class midcom_services_indexer_document
             }
         }
 
-        $author = $_MIDCOM->auth->get_user($id);
+        $author = midcom::auth->get_user($id);
         if (!$author)
         {
             return '';

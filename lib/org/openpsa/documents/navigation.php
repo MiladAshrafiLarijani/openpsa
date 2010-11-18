@@ -30,7 +30,7 @@ class org_openpsa_documents_navigation extends midcom_baseclasses_components_nav
         if (   is_array($ret)
             && count($ret) > 0)
         {
-            $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+            $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 
             foreach ($ret as $document)
             {

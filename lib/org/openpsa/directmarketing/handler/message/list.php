@@ -37,7 +37,7 @@ class org_openpsa_directmarketing_handler_message_list extends midcom_baseclasse
 
         if (!$this->_datamanager)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for messages.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for messages.");
             // This will exit.
         }
     }
@@ -47,13 +47,13 @@ class org_openpsa_directmarketing_handler_message_list extends midcom_baseclasse
      */
     function _handler_list ($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         $this->_list_type = $args[0];
         $this->_campaign = new org_openpsa_directmarketing_campaign_dba($args[1]);
         if (   !$this->_campaign
             || $this->_campaign->node != $this->_topic->id)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The campaign {$args[1]} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The campaign {$args[1]} was not found.");
             // This will exit.
         }
 
@@ -66,7 +66,7 @@ class org_openpsa_directmarketing_handler_message_list extends midcom_baseclasse
             return false;
         }
 
-        $_MIDCOM->load_library('org.openpsa.qbpager');
+        midcom::load_library('org.openpsa.qbpager');
 
         $data['campaign'] =& $this->_campaign;
         $this->_load_datamanager();

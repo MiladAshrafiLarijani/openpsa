@@ -52,7 +52,7 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
 
         if (!class_exists('XML_RPC_Server'))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'XML-RPC Server libraries not installer, aborting.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'XML-RPC Server libraries not installer, aborting.');
         }
 
         if ($GLOBALS['midcom_config']['positioning_enable'])
@@ -60,12 +60,12 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
             if (!class_exists('org_routamc_positioning_object'))
             {
                 // Load the positioning library
-                $_MIDCOM->load_library('org.routamc.positioning');
+                midcom::load_library('org.routamc.positioning');
             }
             $this->_positioning = true;
         }
 
-        $_MIDCOM->cache->content->enable_live_mode();
+        midcom::cache()->content->enable_live_mode();
     }
 
     /**
@@ -73,7 +73,7 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
      */
     function _create_article($title)
     {
-        $author = $_MIDCOM->auth->user->get_storage();
+        $author = midcom::auth->user->get_storage();
 
         $article = new midcom_db_article();
         $article->topic = $this->_content_topic->id;
@@ -125,7 +125,7 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
 
         if (!$this->_datamanager)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance.");
             // This will exit.
         }
     }
@@ -157,11 +157,11 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
             return new XML_RPC_Response(0, midcom_connection::get_error(), 'Blog ID does not match this folder.');
         }
 
-        if (!$_MIDCOM->auth->login($args[1], $args[2]))
+        if (!midcom::auth->login($args[1], $args[2]))
         {
             return new XML_RPC_Response(0, midcom_connection::get_error(), 'Authentication failed.');
         }
-        $_MIDCOM->auth->initialize();
+        midcom::auth->initialize();
 
         if (   !array_key_exists('title', $args[3])
             || $args[3]['title'] == '')
@@ -254,7 +254,7 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
         // TODO: Map the publish property to approval
 
         // Index the article
-        $indexer = $_MIDCOM->get_service('indexer');
+        $indexer = midcom::get_service('indexer');
         net_nehmer_blog_viewer::index($this->_datamanager, $indexer, $this->_content_topic);
 
         return new XML_RPC_Response(new XML_RPC_Value($article->guid, 'string'));
@@ -270,11 +270,11 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
             return new XML_RPC_Response(0, midcom_connection::get_error(), 'Invalid arguments.');
         }
 
-        if (!$_MIDCOM->auth->login($args[1], $args[2]))
+        if (!midcom::auth->login($args[1], $args[2]))
         {
             return new XML_RPC_Response(0, midcom_connection::get_error(), 'Authentication failed.');
         }
-        $_MIDCOM->auth->initialize();
+        midcom::auth->initialize();
 
         $article = new midcom_db_article($args[0]);
         if (!$article)
@@ -290,11 +290,11 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
         $arg = $article->name ? $article->name : $article->guid;
         if ($this->_config->get('view_in_url'))
         {
-            $link = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "view/{$arg}/";
+            $link = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "view/{$arg}/";
         }
         else
         {
-            $link = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "{$arg}/";
+            $link = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "{$arg}/";
         }
 
         if (array_key_exists('categories', $this->_datamanager->types))
@@ -310,7 +310,7 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
         (
             'postid'      => new XML_RPC_Value($article->guid, 'string'),
             'title'       => new XML_RPC_Value($article->title, 'string'),
-            'permaLink'   => new XML_RPC_Value($_MIDCOM->permalinks->create_permalink($article->guid), 'string'),
+            'permaLink'   => new XML_RPC_Value(midcom::permalinks->create_permalink($article->guid), 'string'),
             'link'        => new XML_RPC_Value($link, 'string'),
             'description' => new XML_RPC_Value($article->content, 'string'),
             'mt_excerpt'  => new XML_RPC_Value($article->abstract, 'string'),
@@ -343,11 +343,11 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
             return new XML_RPC_Response(0, midcom_connection::get_error(), 'Invalid arguments.');
         }
 
-        if (!$_MIDCOM->auth->login($args[1], $args[2]))
+        if (!midcom::auth->login($args[1], $args[2]))
         {
             return new XML_RPC_Response(0, midcom_connection::get_error(), 'Authentication failed.');
         }
-        $_MIDCOM->auth->initialize();
+        midcom::auth->initialize();
 
         $article = new midcom_db_article($args[0]);
         if (!$article)
@@ -427,7 +427,7 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
         // TODO: Map the publish property to approval
 
         // Index the article
-        $indexer = $_MIDCOM->get_service('indexer');
+        $indexer = midcom::get_service('indexer');
         net_nehmer_blog_viewer::index($this->_datamanager, $indexer, $this->_content_topic);
 
         return new XML_RPC_Response(new XML_RPC_Value($article->guid, 'string'));
@@ -448,11 +448,11 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
             return new XML_RPC_Response(0, midcom_connection::get_error(), 'Blog ID does not match this folder.');
         }
 
-        if (!$_MIDCOM->auth->login($args[1], $args[2]))
+        if (!midcom::auth->login($args[1], $args[2]))
         {
             return new XML_RPC_Response(0, midcom_connection::get_error(), 'Authentication failed.');
         }
-        $_MIDCOM->auth->initialize();
+        midcom::auth->initialize();
 
         $response = array();
 
@@ -473,11 +473,11 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
             $arg = $article->name ? $article->name : $article->guid;
             if ($this->_config->get('view_in_url'))
             {
-                $link = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "view/{$arg}/";
+                $link = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "view/{$arg}/";
             }
             else
             {
-                $link = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "{$arg}/";
+                $link = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "{$arg}/";
             }
 
             if (array_key_exists('categories', $this->_datamanager->types))
@@ -493,7 +493,7 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
             (
                 'postid'      => new XML_RPC_Value($article->guid, 'string'),
                 'title'       => new XML_RPC_Value($article->title, 'string'),
-                'permaLink'   => new XML_RPC_Value($_MIDCOM->permalinks->create_permalink($article->guid), 'string'),
+                'permaLink'   => new XML_RPC_Value(midcom::permalinks->create_permalink($article->guid), 'string'),
                 'link'        => new XML_RPC_Value($link, 'string'),
                 'description' => new XML_RPC_Value($article->content, 'string'),
                 'mt_excerpt'  => new XML_RPC_Value($article->abstract, 'string'),
@@ -529,15 +529,15 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
             return new XML_RPC_Response(0, midcom_connection::get_error(), 'Blog ID does not match this folder.');
         }
 
-        if (!$_MIDCOM->auth->login($args[1], $args[2]))
+        if (!midcom::auth->login($args[1], $args[2]))
         {
             return new XML_RPC_Response(0, midcom_connection::get_error(), 'Authentication failed.');
         }
-        $_MIDCOM->auth->initialize();
+        midcom::auth->initialize();
 
         $response = array();
 
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 
         foreach ($this->_request_data['categories'] as $category)
         {
@@ -569,11 +569,11 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
             return new XML_RPC_Response(0, midcom_connection::get_error(), 'Blog ID does not match this folder.');
         }
 
-        if (!$_MIDCOM->auth->login($args[1], $args[2]))
+        if (!midcom::auth->login($args[1], $args[2]))
         {
             return new XML_RPC_Response(0, midcom_connection::get_error(), 'Authentication failed.');
         }
-        $_MIDCOM->auth->initialize();
+        midcom::auth->initialize();
 
         if (count($args) < 3)
         {
@@ -623,11 +623,11 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
             return new XML_RPC_Response(0, midcom_connection::get_error(), 'Invalid arguments.');
         }
 
-        if (!$_MIDCOM->auth->login($args[2], $args[3]))
+        if (!midcom::auth->login($args[2], $args[3]))
         {
             return new XML_RPC_Response(0, midcom_connection::get_error(), 'Authentication failed.');
         }
-        $_MIDCOM->auth->initialize();
+        midcom::auth->initialize();
 
         $article = new midcom_db_article($args[1]);
         if (!$article)
@@ -641,7 +641,7 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
         }
 
         // Update the index
-        $indexer = $_MIDCOM->get_service('indexer');
+        $indexer = midcom::get_service('indexer');
         $indexer->delete($article->guid);
 
         return new XML_RPC_Response(new XML_RPC_Value(true, 'boolean'));
@@ -657,11 +657,11 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
             return new XML_RPC_Response(0, midcom_connection::get_error(), 'Invalid arguments.');
         }
 
-        if (!$_MIDCOM->auth->login($args[1], $args[2]))
+        if (!midcom::auth->login($args[1], $args[2]))
         {
             return new XML_RPC_Response(0, midcom_connection::get_error(), 'Authentication failed.');
         }
-        $_MIDCOM->auth->initialize();
+        midcom::auth->initialize();
 
         $response = array();
 
@@ -701,8 +701,8 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
     function _handler_rsd($handler_id, $args, &$data)
     {
         //Content-Type
-        $_MIDCOM->skip_page_style = true;
-        $_MIDCOM->cache->content->content_type('text/xml');
+        midcom::skip_page_style = true;
+        midcom::cache()->content->content_type('text/xml');
 
         return true;
     }
@@ -732,9 +732,9 @@ class net_nehmer_blog_handler_api_metaweblog extends midcom_baseclasses_componen
         }
 
         //Content-Type
-        $_MIDCOM->skip_page_style = true;
-        $_MIDCOM->cache->content->no_cache();
-        $_MIDCOM->cache->content->content_type('text/xml');
+        midcom::skip_page_style = true;
+        midcom::cache()->content->no_cache();
+        midcom::cache()->content->content_type('text/xml');
 
         $this->_load_datamanager();
 

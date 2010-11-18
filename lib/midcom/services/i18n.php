@@ -413,7 +413,7 @@ class midcom_services_i18n
     {
         if (is_null($component))
         {
-            $component = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_COMPONENT);
+            $component = midcom::get_context_data(MIDCOM_CONTEXT_COMPONENT);
         }
 
         $cacheid = "{$component}/{$database}";
@@ -471,7 +471,7 @@ class midcom_services_i18n
         {
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_add("Failed to load L10n database {$cacheid}, see above for possible reasons.", MIDCOM_LOG_ERR);
-            $_MIDCOM->generate_error(MIDCOM_LOG_ERROR,
+            midcom::generate_error(MIDCOM_LOG_ERROR,
                 "Failed to load L10n database {$cacheid}, see the log file for possible reasons.");
             // This will exit.
         }

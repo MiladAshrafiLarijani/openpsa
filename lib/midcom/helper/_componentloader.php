@@ -184,7 +184,7 @@ class midcom_helper__componentloader
     {
         if (! $this->_load($path))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to load the component {$path}, see the debug log for more information");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to load the component {$path}, see the debug log for more information");
         }
     }
 
@@ -307,7 +307,7 @@ class midcom_helper__componentloader
         // Make DBA Classes known, bail out if we encounter an invalid class
         foreach ($this->manifests[$path]->class_definitions as $filename => $data)
         {
-            if (! $_MIDCOM->dbclassloader->load_classes($this->manifests[$path]->name, $filename, $data))
+            if (! midcom::dbclassloader()->load_classes($this->manifests[$path]->name, $filename, $data))
             {
                 debug_push_class(__CLASS__, __FUNCTION__);
                 debug_add("Failed to load the component manifest for {$this->manifests[$path]->name}: The DBA classes failed to load.", MIDCOM_LOG_WARN);
@@ -384,7 +384,7 @@ class midcom_helper__componentloader
         {
             if (!$this->_load($path))
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to load component {$path}: {$GLOBALS['midcom_errstr']}");
+                midcom::generate_error(MIDCOM_ERRCRIT, "Failed to load component {$path}: {$GLOBALS['midcom_errstr']}");
             }
         }
 
@@ -496,7 +496,7 @@ class midcom_helper__componentloader
      */
     function load_all_manifests()
     {
-        $cache_identifier = $_MIDCOM->cache->phpscripts->create_identifier('midcom.componentloader', 'manifests');
+        $cache_identifier = midcom::cache()->phpscripts->create_identifier('midcom.componentloader', 'manifests');
 
         if (! $cache_identifier)
         {
@@ -504,7 +504,7 @@ class midcom_helper__componentloader
         }
         else
         {
-            $cache_hit = $_MIDCOM->cache->phpscripts->load($cache_identifier, filemtime(__FILE__));
+            $cache_hit = midcom::cache()->phpscripts->load($cache_identifier, filemtime(__FILE__));
         }
 
         if (! $cache_hit)
@@ -542,13 +542,13 @@ class midcom_helper__componentloader
 
                 $this->_add_class_definitions($manifest_data, $directory);
 
-                $code .= "\$_MIDCOM->componentloader->load_manifest(
+                $code .= "\midcom::componentloader()->load_manifest(
                     new midcom_core_manifest(
                     '{$filename}', array({$manifest_data})));\n";
             }
         }
 
-        if (! $_MIDCOM->cache->phpscripts->add($cache_identifier, $code))
+        if (! midcom::cache()->phpscripts->add($cache_identifier, $code))
         {
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_add("Failed to add the manifest loading queue to the cache using the identifier {$cache_identifier}.",
@@ -583,7 +583,7 @@ class midcom_helper__componentloader
             $path = $directory . '/' . $filename;
             if (! file_exists($path))
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                                          "Component Loader: Failed to access the file {$path}: File does not exist.");
                 // This will exit.
             }
@@ -616,7 +616,7 @@ class midcom_helper__componentloader
         $this->manifests[$manifest->name] = $manifest;
 
         // Register Privileges
-        $_MIDCOM->auth->acl->register_default_privileges($manifest->privileges);
+        midcom::auth()->acl->register_default_privileges($manifest->privileges);
 
         // Register watches
         if ($manifest->watches !== null)

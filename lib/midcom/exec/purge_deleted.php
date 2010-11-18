@@ -1,6 +1,6 @@
 <?php
-$_MIDCOM->auth->require_valid_user('basic');
-$_MIDCOM->auth->require_admin_user();
+midcom::auth()->require_valid_user('basic');
+midcom::auth()->require_admin_user();
 
 if (!isset($_GET['days']))
 {

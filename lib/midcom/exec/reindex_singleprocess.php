@@ -21,21 +21,21 @@ $ip_sudo = false;
 if (   $ips 
     && in_array($_SERVER['REMOTE_ADDR'], $ips))
 {
-    if (! $_MIDCOM->auth->request_sudo('midcom.services.indexer'))
+    if (! midcom::auth()->request_sudo('midcom.services.indexer'))
     {
-        $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to acquire SUDO rights. Aborting.');
+        midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to acquire SUDO rights. Aborting.');
     }
     $ip_sudo = true;
 }
 else
 {
-    $_MIDCOM->auth->require_valid_user('basic');
-    $_MIDCOM->auth->require_admin_user();
+    midcom::auth()->require_valid_user('basic');
+    midcom::auth()->require_admin_user();
 }
 
 if ($GLOBALS['midcom_config']['indexer_backend'] === false)
 {
-    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'No indexer backend has been defined. Aborting.');
+    midcom::generate_error(MIDCOM_ERRCRIT, 'No indexer backend has been defined. Aborting.');
 }
 
 ?>
@@ -55,8 +55,8 @@ ini_set('memory_limit', "{$GLOBALS['midcom_config']['indexer_reindex_memorylimit
 $nap = new midcom_helper_nav();
 $nodes = Array();
 $nodeid = $nap->get_root_node();
-$loader = $_MIDCOM->get_component_loader();
-$indexer = $_MIDCOM->get_service('indexer');
+$loader = midcom::get_component_loader();
+$indexer = midcom::get_service('indexer');
 
 echo "Dropping the index...\n";
 $indexer->delete_all();
@@ -97,7 +97,7 @@ while (! is_null($nodeid))
     if ($childs === false)
     {
         debug_pop();
-        $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to list the child nodes of {$nodeid}. Aborting.");
+        midcom::generate_error(MIDCOM_ERRCRIT, "Failed to list the child nodes of {$nodeid}. Aborting.");
     }
     $nodes = array_merge($nodes, $childs);
     $nodeid = array_shift($nodes);
@@ -109,7 +109,7 @@ ignore_user_abort(false);
 
 if ($ip_sudo)
 {
-    $_MIDCOM->auth->drop_sudo();
+    midcom::auth()->drop_sudo();
 }
 debug_pop();
 

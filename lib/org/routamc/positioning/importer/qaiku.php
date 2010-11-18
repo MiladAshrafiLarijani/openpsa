@@ -19,7 +19,7 @@ class org_routamc_positioning_importer_qaiku extends org_routamc_positioning_imp
     function __construct()
     {
         parent::__construct();
-        $_MIDCOM->load_library('org.openpsa.httplib');
+        midcom::load_library('org.openpsa.httplib');
     }
 
     /**

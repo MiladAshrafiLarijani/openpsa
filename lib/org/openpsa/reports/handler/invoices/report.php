@@ -24,7 +24,7 @@ class org_openpsa_reports_handler_invoices_report extends org_openpsa_reports_ha
 
     function _on_initialize()
     {
-        $_MIDCOM->load_library('org.openpsa.contactwidget');
+        midcom::load_library('org.openpsa.contactwidget');
         $this->module = 'invoices';
         $this->_initialize_datamanager();
         return true;
@@ -38,7 +38,7 @@ class org_openpsa_reports_handler_invoices_report extends org_openpsa_reports_ha
      */
     function _handler_generator($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         if (!$this->_generator_load_redirect($args))
         {
@@ -122,7 +122,7 @@ class org_openpsa_reports_handler_invoices_report extends org_openpsa_reports_ha
 
     private function _get_scheduled_invoices()
     {
-        $_MIDCOM->componentloader->load('org.openpsa.invoices');
+        midcom::componentloader->load('org.openpsa.invoices');
         $invoices = array();
         $at_qb = midcom_services_at_entry_dba::new_query_builder();
         $at_qb->add_constraint('method', '=', 'new_subscription_cycle');
@@ -242,7 +242,7 @@ class org_openpsa_reports_handler_invoices_report extends org_openpsa_reports_ha
         $data['contacts_url'] = $siteconfig->get_node_full_url('org.openpsa.contacts');
 
         $data['table_class'] = $type;
-        $data['table_title'] = $_MIDCOM->i18n->get_string($type . ' invoices', 'org.openpsa.invoices');
+        $data['table_title'] = midcom::i18n()->get_string($type . ' invoices', 'org.openpsa.invoices');
 
         $data['invoices'] = $invoices;
 

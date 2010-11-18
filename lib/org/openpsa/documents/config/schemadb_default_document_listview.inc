@@ -112,7 +112,7 @@
 
                 ),
              ),
-             'default'     => $_MIDCOM->auth->user->id,
+             'default'     => midcom::auth->user->id,
         ),
     )
 ),

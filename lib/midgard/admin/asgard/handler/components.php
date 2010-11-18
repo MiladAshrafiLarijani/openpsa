@@ -27,10 +27,10 @@ class midgard_admin_asgard_handler_components extends midcom_baseclasses_compone
     function _on_initialize()
     {
         // Ensure we get the correct styles
-        $_MIDCOM->style->prepend_component_styledir('midgard.admin.asgard');
-        $_MIDCOM->skip_page_style = true;
+        midcom::style->prepend_component_styledir('midgard.admin.asgard');
+        midcom::skip_page_style = true;
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -40,16 +40,16 @@ class midgard_admin_asgard_handler_components extends midcom_baseclasses_compone
             )
         );
 
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
     }
 
     function _load_component_data($name, $manifest)
     {
         $component_array = array();
         $component_array['name'] = $name;
-        $component_array['title'] = $_MIDCOM->i18n->get_string($name, $name);
+        $component_array['title'] = midcom::i18n()->get_string($name, $name);
         $component_array['purecode'] = $manifest->purecode;
-        $component_array['icon'] = $_MIDCOM->componentloader->get_component_icon($name);
+        $component_array['icon'] = midcom::componentloader->get_component_icon($name);
 
         if (isset($manifest->_raw_data['package.xml']['description']))
         {
@@ -74,32 +74,32 @@ class midgard_admin_asgard_handler_components extends midcom_baseclasses_compone
             array
             (
                 MIDCOM_TOOLBAR_URL => "__mfa/asgard/components/configuration/{$name}/",
-                MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('component configuration', 'midcom'),
+                MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('component configuration', 'midcom'),
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/stock_folder-properties.png',
             )
         );
         
-        if (isset($_MIDCOM->componentloader->manifests['midcom.admin.babel']))
+        if (isset(midcom::componentloader->manifests['midcom.admin.babel']))
         {
             $component_array['toolbar']->add_item
             (
                 array
                 (
-                    MIDCOM_TOOLBAR_URL => "__mfa/asgard_midcom.admin.babel/edit/{$name}/" . $_MIDCOM->i18n->get_current_language() . "/",
-                    MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('midcom.admin.babel', 'midcom.admin.babel'),
+                    MIDCOM_TOOLBAR_URL => "__mfa/asgard_midcom.admin.babel/edit/{$name}/" . midcom::i18n()->get_current_language() . "/",
+                    MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('midcom.admin.babel', 'midcom.admin.babel'),
                     MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/locale.png',
                 )
             );
         }
         
-        if (isset($_MIDCOM->componentloader->manifests['midcom.admin.help']))
+        if (isset(midcom::componentloader->manifests['midcom.admin.help']))
         {
             $component_array['toolbar']->add_item
             (
                 array
                 (
                     MIDCOM_TOOLBAR_URL => "__ais/help/{$name}/",
-                    MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('midcom.admin.help', 'midcom.admin.help'),
+                    MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('midcom.admin.help', 'midcom.admin.help'),
                     MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/stock_help-agent.png',
                 )
             );
@@ -114,7 +114,7 @@ class midgard_admin_asgard_handler_components extends midcom_baseclasses_compone
         $this->_request_data['components'] = array();
         $this->_request_data['libraries'] = array();
 
-        foreach($_MIDCOM->componentloader->manifests as $name => $manifest)
+        foreach(midcom::componentloader->manifests as $name => $manifest)
         {
             if (!array_key_exists('package.xml', $manifest->_raw_data))
             {
@@ -127,7 +127,7 @@ class midgard_admin_asgard_handler_components extends midcom_baseclasses_compone
             {
                 $type = 'libraries';
             }
-            elseif ($_MIDCOM->componentloader->is_core_component($name))
+            elseif (midcom::componentloader->is_core_component($name))
             {
                 $type = 'core_components';
             }
@@ -148,8 +148,8 @@ class midgard_admin_asgard_handler_components extends midcom_baseclasses_compone
      */
     function _handler_list($handler_id, $args, &$data)
     {
-        $data['view_title'] = $_MIDCOM->i18n->get_string('components', 'midgard.admin.asgard');
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        $data['view_title'] = midcom::i18n()->get_string('components', 'midgard.admin.asgard');
+        midcom::set_pagetitle($data['view_title']);
 
         $this->_list_components();
 
@@ -162,14 +162,14 @@ class midgard_admin_asgard_handler_components extends midcom_baseclasses_compone
         $tmp[] = array
         (
             MIDCOM_NAV_URL => '__mfa/asgard/',
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('midgard.admin.asgard', 'midgard.admin.asgard'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('midgard.admin.asgard', 'midgard.admin.asgard'),
         );
         $tmp[] = array
         (
             MIDCOM_NAV_URL => '__mfa/asgard/components/',
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('components', 'midgard.admin.asgard'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('components', 'midgard.admin.asgard'),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         return true;
     }
@@ -225,17 +225,17 @@ class midgard_admin_asgard_handler_components extends midcom_baseclasses_compone
     function _handler_component($handler_id, $args, &$data)
     {
         $data['component'] = $args[0];
-        if (!isset($_MIDCOM->componentloader->manifests[$data['component']]))
+        if (!isset(midcom::componentloader->manifests[$data['component']]))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Component '{$args[0]}' not installed.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Component '{$args[0]}' not installed.");
             // This will exit.
         }
 
-        $data['component_data'] = $this->_load_component_data($data['component'], $_MIDCOM->componentloader->manifests[$data['component']]);
-        $data['component_dependencies'] = $_MIDCOM->componentloader->get_component_dependencies($data['component']);
+        $data['component_data'] = $this->_load_component_data($data['component'], midcom::componentloader->manifests[$data['component']]);
+        $data['component_dependencies'] = midcom::componentloader->get_component_dependencies($data['component']);
 
         $data['view_title'] = $data['component_data']['title'];
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
 
         $data['asgard_toolbar'] = new midcom_helper_toolbar();
         midgard_admin_asgard_plugin::get_common_toolbar($data);
@@ -245,19 +245,19 @@ class midgard_admin_asgard_handler_components extends midcom_baseclasses_compone
             array
             (
                 MIDCOM_TOOLBAR_URL => "__mfa/asgard/components/configuration/{$data['component']}",
-                MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('component configuration', 'midcom'),
+                MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('component configuration', 'midcom'),
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/stock_folder-properties.png',
             )
         );
         
-        if (isset($_MIDCOM->componentloader->manifests['midcom.admin.babel']))
+        if (isset(midcom::componentloader->manifests['midcom.admin.babel']))
         {
             $data['asgard_toolbar']->add_item
             (
                 array
                 (
-                    MIDCOM_TOOLBAR_URL => "__mfa/asgard_midcom.admin.babel/edit/{$data['component']}/" . $_MIDCOM->i18n->get_current_language() . "/",
-                    MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('midcom.admin.babel', 'midcom.admin.babel'),
+                    MIDCOM_TOOLBAR_URL => "__mfa/asgard_midcom.admin.babel/edit/{$data['component']}/" . midcom::i18n()->get_current_language() . "/",
+                    MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('midcom.admin.babel', 'midcom.admin.babel'),
                     MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/locale.png',
                 )
             );
@@ -270,19 +270,19 @@ class midgard_admin_asgard_handler_components extends midcom_baseclasses_compone
         $tmp[] = array
         (
             MIDCOM_NAV_URL => '__mfa/asgard/',
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('midgard.admin.asgard', 'midgard.admin.asgard'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('midgard.admin.asgard', 'midgard.admin.asgard'),
         );
         $tmp[] = array
         (
             MIDCOM_NAV_URL => '__mfa/asgard/components/',
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('components', 'midgard.admin.asgard'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('components', 'midgard.admin.asgard'),
         );
         $tmp[] = array
         (
             MIDCOM_NAV_URL => "__mfa/asgard/components/{$data['component']}",
             MIDCOM_NAV_NAME => $data['component_data']['title'],
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         return true;
     }

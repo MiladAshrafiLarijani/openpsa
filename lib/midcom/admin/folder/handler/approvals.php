@@ -39,15 +39,15 @@ class midcom_admin_folder_handler_approvals extends midcom_baseclasses_component
         if (   ! array_key_exists('guid', $_REQUEST)
             || ! array_key_exists('return_to', $_REQUEST))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Cannot process approval request, request is incomplete.');
             // This will exit.
         }
 
-        $object = $_MIDCOM->dbfactory->get_object_by_guid($_REQUEST['guid']);
+        $object = midcom::dbfactory()->get_object_by_guid($_REQUEST['guid']);
         if (! $object)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The GUID '{$_REQUEST['guid']}' was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The GUID '{$_REQUEST['guid']}' was not found.");
             // This will exit.
         }
         $object->require_do('midcom:approve');
@@ -56,7 +56,7 @@ class midcom_admin_folder_handler_approvals extends midcom_baseclasses_component
 
         if (! $metadata)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to retrieve Metadata for " . get_class($object) . " {$object->guid}.");
             // This will exit.
         }
@@ -81,7 +81,7 @@ class midcom_admin_folder_handler_approvals extends midcom_baseclasses_component
             $metadata->unapprove();
         }
 
-        $_MIDCOM->relocate($_REQUEST['return_to']);
+        midcom::relocate($_REQUEST['return_to']);
         // This will exit.
     }
 

@@ -102,7 +102,7 @@ class org_openpsa_sales_handler_deliverable_view extends midcom_baseclasses_comp
             return false;
         }
 
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
 
         $this->_load_schema();
 
@@ -112,16 +112,16 @@ class org_openpsa_sales_handler_deliverable_view extends midcom_baseclasses_comp
         $this->_request_data['controller']->process_ajax();
 
         $tmp =  org_openpsa_sales_viewer::update_breadcrumb_line($this->_deliverable);
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         $this->_prepare_request_data();
 
-        $_MIDCOM->bind_view_to_object($this->_deliverable);
+        midcom::bind_view_to_object($this->_deliverable);
 
         org_openpsa_core_ui::enable_jqgrid();
 
-        $_MIDCOM->set_26_request_metadata($this->_deliverable->metadata->revised, $this->_deliverable->guid);
-        $_MIDCOM->set_pagetitle("{$this->_salesproject->title}: {$this->_deliverable->title}");
+        midcom::set_26_request_metadata($this->_deliverable->metadata->revised, $this->_deliverable->guid);
+        midcom::set_pagetitle("{$this->_salesproject->title}: {$this->_deliverable->title}");
 
         return true;
     }

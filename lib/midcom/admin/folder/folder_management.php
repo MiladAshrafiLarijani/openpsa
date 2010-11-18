@@ -75,11 +75,11 @@ class midcom_admin_folder_folder_management extends midcom_baseclasses_component
         $this->_anchor_prefix = $this->_request_data['plugin_anchorprefix'];
 
         // Ensure we get the correct styles
-        $_MIDCOM->style->prepend_component_styledir('midcom.admin.folder');
+        midcom::style()->prepend_component_styledir('midcom.admin.folder');
 
         $this->_request_data['folder'] = $this->_topic;
 
-        if (!array_key_exists($this->_topic->component, $_MIDCOM->componentloader->manifests))
+        if (!array_key_exists($this->_topic->component, midcom::componentloader()->manifests))
         {
             $this->_topic->component = 'midcom.core.nullcomponent';
         }
@@ -94,7 +94,7 @@ class midcom_admin_folder_folder_management extends midcom_baseclasses_component
      */
     function get_plugin_handlers()
     {
-        $_MIDCOM->load_library('midcom.admin.folder');
+        midcom::load_library('midcom.admin.folder');
         $return = array
         (
             /**
@@ -222,7 +222,7 @@ class midcom_admin_folder_folder_management extends midcom_baseclasses_component
         $components = array ();
 
         // Loop through the list of components of component loader
-        foreach ($_MIDCOM->componentloader->manifests as $manifest)
+        foreach (midcom::componentloader()->manifests as $manifest)
         {
             // Skip purecode components
             if ($manifest->purecode)
@@ -246,7 +246,7 @@ class midcom_admin_folder_folder_management extends midcom_baseclasses_component
 
             if (array_key_exists('description', $manifest->_raw_data['package.xml']))
             {
-                $description = $_MIDCOM->i18n->get_string($manifest->_raw_data['package.xml']['description'], $manifest->name);
+                $description = midcom::i18n()->get_string($manifest->_raw_data['package.xml']['description'], $manifest->name);
             }
             else
             {
@@ -290,7 +290,7 @@ class midcom_admin_folder_folder_management extends midcom_baseclasses_component
     {
         $list = array();
 
-        if ($urltopic = end($_MIDCOM->get_context_data(MIDCOM_CONTEXT_URLTOPICS)))
+        if ($urltopic = end(midcom::get_context_data(MIDCOM_CONTEXT_URLTOPICS)))
         {
             if (empty($urltopic->component))
             {
@@ -334,10 +334,10 @@ class midcom_admin_folder_folder_management extends midcom_baseclasses_component
     {
         static $style_array = array();
 
-        $style_array[''] = $_MIDCOM->i18n->get_string('default', 'midcom.admin.folder');
+        $style_array[''] = midcom::i18n()->get_string('default', 'midcom.admin.folder');
 
         // Give an option for creating a new layout template
-        $style_array['__create'] = $_MIDCOM->i18n->get_string('new layout template', 'midcom.admin.folder');
+        $style_array['__create'] = midcom::i18n()->get_string('new layout template', 'midcom.admin.folder');
 
         if (   $GLOBALS['midcom_config']['styleengine_relative_paths']
             && $up == 0)
@@ -378,7 +378,7 @@ class midcom_admin_folder_folder_management extends midcom_baseclasses_component
     {
         if (!empty($topic->symlink))
         {
-            $_MIDCOM->auth->request_sudo('midcom.admin.folder');
+            midcom::auth()->request_sudo('midcom.admin.folder');
             $target_topic = new midcom_db_topic($topic->symlink);
             if ($target_topic && $target_topic->guid)
             {
@@ -391,7 +391,7 @@ class midcom_admin_folder_folder_management extends midcom_baseclasses_component
                     midcom_connection::get_error_string(), MIDCOM_LOG_ERROR);
                 debug_pop();
             }
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth()->drop_sudo();
         }
 
         if (in_array($topic->id, $stop))
@@ -401,11 +401,11 @@ class midcom_admin_folder_folder_management extends midcom_baseclasses_component
 
         $stop[] = $topic->id;
 
-        $_MIDCOM->auth->request_sudo('midcom.admin.folder');
+        midcom::auth()->request_sudo('midcom.admin.folder');
         $qb = midcom_db_topic::new_query_builder();
         $qb->add_constraint('up', '=', $topic->id);
         $results = $qb->execute();
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth()->drop_sudo();
 
         foreach ($results as $topic)
         {

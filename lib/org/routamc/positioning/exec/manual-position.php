@@ -7,7 +7,7 @@ $GLOBALS["midcom_debugger"]->_loglevel = 5;
 function org_routamc_positioning_send_sms($to, $message, $from, $config)
 {
     $sms_lib = 'org.openpsa.smslib';
-    $_MIDCOM->load_library($sms_lib);
+    midcom::load_library($sms_lib);
     $sms_lib_api = $config->get('smslib_api');
     $sms_lib_location = $config->get('smslib_uri');
     $sms_lib_client_id = $config->get('smslib_client_id');
@@ -75,15 +75,15 @@ if (   array_key_exists('msisdn', $_GET)
         // Check where the request is from
         if ($_SERVER['REMOTE_ADDR'] != $config->get('sms_import_ip'))
         {
-            $_MIDCOM->finish();
+            midcom::finish();
             _midcom_stop_request();
         }
     }
 
-    if (!$_MIDCOM->auth->request_sudo('org.routamc.positioning'))
+    if (!midcom::auth->request_sudo('org.routamc.positioning'))
     {
         debug_add('Could not get sudo rights (check debug log for details), abort', MIDCOM_LOG_ERROR);
-        $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Could not get sudo rights (check debug log for details), abort');
+        midcom::generate_error(MIDCOM_ERRCRIT, 'Could not get sudo rights (check debug log for details), abort');
     }
 
     // Find matching person
@@ -93,7 +93,7 @@ if (   array_key_exists('msisdn', $_GET)
 
     if (count($persons) != 1)
     {
-        $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "User matching number +{$_GET['msisdn']} not found");
+        midcom::generate_error(MIDCOM_ERRCRIT, "User matching number +{$_GET['msisdn']} not found");
     }
 
     $person = $persons[0];
@@ -117,8 +117,8 @@ if (   array_key_exists('msisdn', $_GET)
         {
             org_routamc_positioning_send_sms($person->handphone, 'Failed to delete log, reason ' . midcom_connection::get_error_string(), $config->get('smslib_from'), $config);
         }
-        $_MIDCOM->auth->drop_sudo();
-        $_MIDCOM->finish();
+        midcom::auth->drop_sudo();
+        midcom::finish();
         _midcom_stop_request();
     }
 
@@ -162,13 +162,13 @@ if (   array_key_exists('msisdn', $_GET)
             org_routamc_positioning_send_sms($person->handphone, $message, $config->get('smslib_from'), $config);
         }
     }
-    $_MIDCOM->auth->drop_sudo();
-    $_MIDCOM->finish();
+    midcom::auth->drop_sudo();
+    midcom::finish();
     _midcom_stop_request();
 }
-$_MIDCOM->auth->require_valid_user();
+midcom::auth->require_valid_user();
 
-$user = $_MIDCOM->auth->user->get_storage();
+$user = midcom::auth->user->get_storage();
 
 if (array_key_exists('add_position', $_POST))
 {

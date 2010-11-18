@@ -27,7 +27,7 @@ class org_openpsa_mypage_handler_workingon extends midcom_baseclasses_components
      */
     function _handler_set($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user('basic');
+        midcom::auth->require_valid_user('basic');
 
         $relocate = '';
         if (array_key_exists('url', $_POST))
@@ -37,12 +37,12 @@ class org_openpsa_mypage_handler_workingon extends midcom_baseclasses_components
 
         if ($_SERVER['REQUEST_METHOD'] != 'POST')
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRFORBIDDEN, 'Only POST requests are allowed here.');
+            midcom::generate_error(MIDCOM_ERRFORBIDDEN, 'Only POST requests are allowed here.');
         }
 
         if (!array_key_exists('task', $_POST))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'No task specified, aborting.');
         }
 
@@ -57,10 +57,10 @@ class org_openpsa_mypage_handler_workingon extends midcom_baseclasses_components
         $stat = $workingon->set($_POST['task']);
         if (!$stat)
         {
-            $_MIDCOM->uimessages->add($this->_l10n->get('org.openpsa.mypage'),  'Failed to set "working on" parameter to "' . $_POST['task'] . '", reason ' . midcom_connection::get_error_string(), 'error');
+            midcom::uimessages()->add($this->_l10n->get('org.openpsa.mypage'),  'Failed to set "working on" parameter to "' . $_POST['task'] . '", reason ' . midcom_connection::get_error_string(), 'error');
         }
 
-        $_MIDCOM->relocate($relocate."workingon/check/");
+        midcom::relocate($relocate."workingon/check/");
         // This will exit
     }
 
@@ -72,15 +72,15 @@ class org_openpsa_mypage_handler_workingon extends midcom_baseclasses_components
      */
     function _handler_check($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user('basic');
+        midcom::auth->require_valid_user('basic');
 
         // Set the "now working on" status
         $data['workingon'] = new org_openpsa_mypage_workingon();
 
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
 
-        $_MIDCOM->cache->content->content_type("text/xml; charset=UTF-8");
-        $_MIDCOM->header("Content-type: text/xml; charset=UTF-8");
+        midcom::cache()->content->content_type("text/xml; charset=UTF-8");
+        midcom::header("Content-type: text/xml; charset=UTF-8");
 
         return true;
     }

@@ -141,7 +141,7 @@ class midcom_services_indexer
                         MIDCOM_LOG_ERROR);
                     debug_print_r("The document at type {$key} is invalid:", $documents[$key]);
                     debug_pop();
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Encountered an unsupported argument while processing the document {$key}");
+                    midcom::generate_error(MIDCOM_ERRCRIT, "Encountered an unsupported argument while processing the document {$key}");
                 }
             }
 
@@ -269,7 +269,7 @@ class midcom_services_indexer
         }
 
         // Do charset translations
-        $i18n = $_MIDCOM->get_service('i18n');
+        $i18n = midcom::get_service('i18n');
         $query = $i18n->convert_to_utf8($query);
 
         $nav = new midcom_helper_nav();
@@ -326,7 +326,7 @@ class midcom_services_indexer
             {
                 // Try to retrieve object:
                 // Strip language code from end of RI if it looks like "<GUID>_<LANG>" (because *many* places suppose it's plain GUID)
-                $object = $_MIDCOM->dbfactory->get_object_by_guid(preg_replace('/^([0-9a-f]{32,80})_[a-z]{2}$/', '\\1', $document->RI));
+                $object = midcom::dbfactory()->get_object_by_guid(preg_replace('/^([0-9a-f]{32,80})_[a-z]{2}$/', '\\1', $document->RI));
                 if (   !$object
                     || !$object->guid)
                 {

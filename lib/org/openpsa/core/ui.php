@@ -27,12 +27,12 @@ class org_openpsa_core_ui extends midcom_baseclasses_components_purecode
 
         if (!mgd_is_guid($guid))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The object with GUID {$guid} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The object with GUID {$guid} was not found.");
         }
 
         if ($last_error == MGD_ERR_ACCESS_DENIED)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRFORBIDDEN, $_MIDCOM->i18n->get_string('access denied', 'midcom'));
+            midcom::generate_error(MIDCOM_ERRFORBIDDEN, midcom::i18n()->get_string('access denied', 'midcom'));
         }
         else if ($last_error == MGD_ERR_OBJECT_DELETED)
         {
@@ -41,7 +41,7 @@ class org_openpsa_core_ui extends midcom_baseclasses_components_purecode
         }
 
         //If other options fail, go for the server error
-        $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+        midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to load object {$guid}, cannot continue. Last error: " . $last_error_string);
 
     }
@@ -54,26 +54,26 @@ class org_openpsa_core_ui extends midcom_baseclasses_components_purecode
         $jqgrid_path = '/org.openpsa.core/jquery.jqGrid-' . self::get_config_value('jqgrid_version') . '/';
 
         //first enable jquery - just in case it isn't loaded
-        $_MIDCOM->enable_jquery();
+        midcom::enable_jquery();
 
-        $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.core.min.js');
+        midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.core.min.js');
 
         //needed js/css-files for jqgrid
         $lang = "en";
-        $language = $_MIDCOM->i18n->get_current_language();
+        $language = midcom::i18n()->get_current_language();
         if (file_exists(MIDCOM_STATIC_ROOT . $jqgrid_path . 'js/i18n/grid.locale-' . $language . '.js'))
         {
             $lang = $language;
         }
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . $jqgrid_path . 'js/i18n/grid.locale-'. $lang . '.js');
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . $jqgrid_path . 'js/jquery.jqGrid.min.js');
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/org.openpsa.core/jqGrid.custom.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . $jqgrid_path . 'js/i18n/grid.locale-'. $lang . '.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . $jqgrid_path . 'js/jquery.jqGrid.min.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/org.openpsa.core/jqGrid.custom.js');
 
-        $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.widget.min.js');
-        $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.mouse.min.js');
-        $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.resizable.min.js');
+        midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.widget.min.js');
+        midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.mouse.min.js');
+        midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.resizable.min.js');
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -83,7 +83,7 @@ class org_openpsa_core_ui extends midcom_baseclasses_components_purecode
                 'href'  => MIDCOM_STATIC_URL . $jqgrid_path . 'css/ui.jqgrid.css',
             )
         );
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -114,7 +114,7 @@ class org_openpsa_core_ui extends midcom_baseclasses_components_purecode
         {
             $providers[] = array
             (
-                'helptext' => $_MIDCOM->i18n->get_string('search', 'midcom.helper.search'),
+                'helptext' => midcom::i18n()->get_string('search', 'midcom.helper.search'),
                 'url' => $search_url . 'result/',
                 'identifier' => 'midcom.helper.search'
             );
@@ -123,7 +123,7 @@ class org_openpsa_core_ui extends midcom_baseclasses_components_purecode
         {
             $providers[] = array
             (
-                'helptext' => $_MIDCOM->i18n->get_string('contact search', 'org.openpsa.contacts'),
+                'helptext' => midcom::i18n()->get_string('contact search', 'org.openpsa.contacts'),
                 'url' => $contacts_url . 'search/',
                 'identifier' => 'org.openpsa.contacts'
             );
@@ -132,7 +132,7 @@ class org_openpsa_core_ui extends midcom_baseclasses_components_purecode
         {
             $providers[] = array
             (
-                'helptext' => $_MIDCOM->i18n->get_string('document search', 'org.openpsa.documents'),
+                'helptext' => midcom::i18n()->get_string('document search', 'org.openpsa.documents'),
                 'url' => $documents_url . 'search/',
                 'identifier' => 'org.openpsa.documents'
             );
@@ -141,7 +141,7 @@ class org_openpsa_core_ui extends midcom_baseclasses_components_purecode
         {
             $providers[] = array
             (
-                'helptext' => $_MIDCOM->i18n->get_string('go to invoice number', 'org.openpsa.invoices'),
+                'helptext' => midcom::i18n()->get_string('go to invoice number', 'org.openpsa.invoices'),
                 'url' => $invoices_url . 'goto/',
                 'identifier' => 'org.openpsa.invoices'
             );
@@ -158,20 +158,20 @@ class org_openpsa_core_ui extends midcom_baseclasses_components_purecode
     public static function enable_ui_tab()
     {
         //first enable jquery - just in case it isn't loaded
-        $_MIDCOM->enable_jquery();
+        midcom::enable_jquery();
 
-        $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.core.min.js');
+        midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.core.min.js');
 
         //load ui-tab
-        $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.widget.min.js');
-        $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.tabs.min.js');
+        midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.widget.min.js');
+        midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.tabs.min.js');
 
         //functions needed for ui-tab to work here
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/org.openpsa.core/jquery.history.js');
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/org.openpsa.core/tab_functions.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/org.openpsa.core/jquery.history.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/org.openpsa.core/tab_functions.js');
 
         //add the needed css-files
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -194,7 +194,7 @@ class org_openpsa_core_ui extends midcom_baseclasses_components_purecode
     {
         $uipage = self::get_config_value('ui_page');
         //set the url where the data for the tabs are loaded
-        $data_url_prefix = $_MIDCOM->get_host_prefix() . $uipage;
+        $data_url_prefix = midcom::get_host_prefix() . $uipage;
 
         if (null !== $guid)
         {
@@ -202,12 +202,12 @@ class org_openpsa_core_ui extends midcom_baseclasses_components_purecode
             $tabdata[] = array
             (
                'url' => '/__mfa/org.openpsa.relatedto/journalentry/' . $guid . '/html/',
-               'title' => $_MIDCOM->i18n->get_string('journal entries', 'org.openpsa.relatedto'),
+               'title' => midcom::i18n()->get_string('journal entries', 'org.openpsa.relatedto'),
             );
             $tabdata[] = array
             (
                'url' => '__mfa/org.openpsa.relatedto/render/' . $guid . '/both/',
-               'title' => $_MIDCOM->i18n->get_string('related objects', 'org.openpsa.relatedto'),
+               'title' => midcom::i18n()->get_string('related objects', 'org.openpsa.relatedto'),
             );
         }
 
@@ -221,7 +221,7 @@ class org_openpsa_core_ui extends midcom_baseclasses_components_purecode
         echo "\n</ul>\n";
         echo "</div>\n";
 
-        $wait = $_MIDCOM->i18n->get_string('loading', 'org.openpsa.core');
+        $wait = midcom::i18n()->get_string('loading', 'org.openpsa.core');
 
         echo <<<JSINIT
 <script type="text/javascript">

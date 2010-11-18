@@ -1,5 +1,5 @@
 <?php
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 $reporters = $data['reporters'];
 $tasks = $data['tasks'];
 $reports = $data['reports'];
@@ -130,7 +130,7 @@ jQuery("#form_&(grid_id);").submit(function()
 <div class="action_select_div" id="action_select_&(grid_id);" style="display: none;">
 <select id='<?php echo $data['status'];?>_hours_list_action_select' class='action_select' name='action' size='1'>
 <?php
-    echo "<option>" . $_MIDCOM->i18n->get_string("choose action", "midcom.admin.user") . "</option>";
+    echo "<option>" . midcom::i18n()->get_string("choose action", "midcom.admin.user") . "</option>";
     foreach ($data['action_options'] as $action_id => $option)
     {
         echo "<option value ='" . $action_id . "' >" . $data['l10n']->get($action_id) . "</option>";

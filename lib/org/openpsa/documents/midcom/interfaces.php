@@ -34,7 +34,7 @@ class org_openpsa_documents_interface extends midcom_baseclasses_components_inte
     {
         debug_push_class(__CLASS__, __FUNCTION__);
 
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
 
         $qb = org_openpsa_documents_document_dba::new_query_builder();
         $qb->add_constraint('topic', '=', $topic->id);

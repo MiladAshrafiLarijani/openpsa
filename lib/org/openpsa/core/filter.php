@@ -64,7 +64,7 @@ class org_openpsa_core_filter extends midcom_baseclasses_components_purecode
      */
     private function _set_filter($filter_name)
     {
-        $current_user = $_MIDCOM->auth->user->get_storage();
+        $current_user = midcom::auth->user->get_storage();
         if (isset($_POST[$filter_name]))
         {
             if (!is_array($_POST[$filter_name]))
@@ -78,7 +78,7 @@ class org_openpsa_core_filter extends midcom_baseclasses_components_purecode
             $filter_string = implode('|', $this->_filter[$filter_name]);
             if (!$current_user->set_parameter("org_openpsa_core_filter", $filter_name, $filter_string))
             {
-                $_MIDCOM->uimessages->add($this->_l10n->get('filter error'), $this->_l10n->get('the handed filter for %s could not be set as parameter'), 'error');
+                midcom::uimessages()->add($this->_l10n->get('filter error'), $this->_l10n->get('the handed filter for %s could not be set as parameter'), 'error');
             }
         }
         else if ($filter_string = $current_user->get_parameter("org_openpsa_core_filter", $filter_name))
@@ -99,15 +99,15 @@ class org_openpsa_core_filter extends midcom_baseclasses_components_purecode
      */
     private function _unset_filter($filter)
     {
-        $current_user = $_MIDCOM->auth->user->get_storage();
+        $current_user = midcom::auth->user->get_storage();
         if (!$current_user->set_parameter("org_openpsa_core_filter", $filter, ""))
         {
             $message_content = sprintf
             (
-                $_MIDCOM->i18n->get_string('the handed filter for %s could not be set as parameter', 'org.openpsa.core'),
-                $_MIDCOM->i18n->get_string($filter, 'org.openpsa.core')
+                midcom::i18n()->get_string('the handed filter for %s could not be set as parameter', 'org.openpsa.core'),
+                midcom::i18n()->get_string($filter, 'org.openpsa.core')
             );
-            $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('filter error', 'org.openpsa.core'), $message_content, 'error');
+            midcom::uimessages()->add(midcom::i18n()->get_string('filter error', 'org.openpsa.core'), $message_content, 'error');
         }
     }
 
@@ -160,7 +160,7 @@ class org_openpsa_core_filter extends midcom_baseclasses_components_purecode
         $qb_persons->add_constraint('username', '<>', '');
         $qb_persons->add_constraint('password', '<>', '');
 
-        $current_user = $_MIDCOM->auth->user->get_storage();
+        $current_user = midcom::auth->user->get_storage();
         $person_array = array();
 
         if (array_key_exists('person', $this->_filter))
@@ -223,11 +223,11 @@ class org_openpsa_core_filter extends midcom_baseclasses_components_purecode
         }
         $message_content = sprintf
         (
-            $_MIDCOM->i18n->get_string('no filter available for %s', 'org.openpsa.core'),
-            $_MIDCOM->i18n->get_string($filter, 'org.openpsa.core')
+            midcom::i18n()->get_string('no filter available for %s', 'org.openpsa.core'),
+            midcom::i18n()->get_string($filter, 'org.openpsa.core')
         );
 
-        $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('no filter available', 'org.openpsa.core'), $message_content, 'error');
+        midcom::uimessages()->add(midcom::i18n()->get_string('no filter available', 'org.openpsa.core'), $message_content, 'error');
         return false;
     }
 

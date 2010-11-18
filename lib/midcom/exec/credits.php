@@ -1,6 +1,6 @@
 <?php
 echo '<?'.'xml version="1.0" encoding="UTF-8"?'.">\n";
-$_MIDCOM->add_link_head
+midcom::add_link_head
 (
     array
     (
@@ -11,11 +11,11 @@ $_MIDCOM->add_link_head
 );
 $title = 'MidCOM Developers';
 
-$_MIDCOM->auth->require_valid_user();
+midcom::auth()->require_valid_user();
 
 $developers = array();
 
-foreach($_MIDCOM->componentloader->manifests as $name => $manifest)
+foreach(midcom::componentloader()->manifests as $name => $manifest)
 {
     if (!array_key_exists('package.xml', $manifest->_raw_data))
     {
@@ -56,7 +56,7 @@ foreach($_MIDCOM->componentloader->manifests as $name => $manifest)
             if (   array_key_exists('active', $details)
                 && $details['active'] == 'no')
             {
-                $details['role'] = sprintf($_MIDCOM->i18n->get_string('not active %s', 'midcom'), $_MIDCOM->i18n->get_string($details['role'], 'midcom'));
+                $details['role'] = sprintf(midcom::i18n()->get_string('not active %s', 'midcom'), midcom::i18n()->get_string($details['role'], 'midcom'));
             }
 
             $developers[$identifier]['roles'][$details['role']][$package_type][$name] = $manifest->get_name_translated($name);
@@ -72,7 +72,7 @@ reset($developers);
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
     <head>
         <title>Midgard CMS - <?php echo $title; ?></title>
-        <?php echo $_MIDCOM->print_head_elements(); ?>
+        <?php echo midcom::print_head_elements(); ?>
         <style type="text/css">
             <!--
             table.dev
@@ -172,15 +172,15 @@ reset($developers);
                                         ?>
                                         <dt>
                                             <?php
-                                            echo sprintf($_MIDCOM->i18n->get_string('%s of packages of type %s', 'midcom'), $_MIDCOM->i18n->get_string($role, 'midcom'), $_MIDCOM->i18n->get_string($package_type, 'midcom'));
+                                            echo sprintf(midcom::i18n()->get_string('%s of packages of type %s', 'midcom'), midcom::i18n()->get_string($role, 'midcom'), midcom::i18n()->get_string($package_type, 'midcom'));
                                             ?>
                                         </dt>
                                         <dd>
                                         <?php
                                         foreach ($components as $component => $component_name)
                                         {
-                                            $icon = $_MIDCOM->componentloader->get_component_icon($component);
-                                            echo "<a href=\"" . $_MIDCOM->get_host_prefix() . "__mfa/asgard/components/{$component}/\">";
+                                            $icon = midcom::componentloader()->get_component_icon($component);
+                                            echo "<a href=\"" . midcom::get_host_prefix() . "__mfa/asgard/components/{$component}/\">";
                                             echo "<img src=\"" . MIDCOM_STATIC_URL . "/{$icon}\" alt=\"{$component_name} ({$component})\" title=\"{$component_name} ({$component})\" />";
                                             echo "</a>\n";
                                         }
@@ -199,7 +199,7 @@ reset($developers);
                 </tbody>
             </table>
 
-            <p><?php echo sprintf($_MIDCOM->i18n->get_string('get more components from <a href="http://pear.php.net/manual/en/guide.users.commandline.cli.php">PEAR</a> channel <a href="http://%s/">%s</a>', 'midcom'), $GLOBALS['midcom_config']['pear_channel'], $GLOBALS['midcom_config']['pear_channel']); ?>.</p>
+            <p><?php echo sprintf(midcom::i18n()->get_string('get more components from <a href="http://pear.php.net/manual/en/guide.users.commandline.cli.php">PEAR</a> channel <a href="http://%s/">%s</a>', 'midcom'), $GLOBALS['midcom_config']['pear_channel'], $GLOBALS['midcom_config']['pear_channel']); ?>.</p>
 
             </div>
             <div id="bottom">

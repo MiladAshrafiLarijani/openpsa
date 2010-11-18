@@ -60,7 +60,7 @@ class org_openpsa_contacts_handler_person_privileges extends midcom_baseclasses_
 
     function _on_initialize()
     {
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
     }
 
 
@@ -76,7 +76,7 @@ class org_openpsa_contacts_handler_person_privileges extends midcom_baseclasses_
             return false;
         }
 
-        $_MIDCOM->set_pagetitle("{$person->firstname} {$person->lastname}");
+        midcom::set_pagetitle("{$person->firstname} {$person->lastname}");
 
         return $person;
     }
@@ -98,7 +98,7 @@ class org_openpsa_contacts_handler_person_privileges extends midcom_baseclasses_
     private function _modify_schema()
     {
         $fields =& $this->_schemadb['default']->fields;
-        $user_object = $_MIDCOM->auth->get_user($this->_person->guid);
+        $user_object = midcom::auth->get_user($this->_person->guid);
 
 	$person_object = $user_object->get_storage();
 
@@ -129,7 +129,7 @@ class org_openpsa_contacts_handler_person_privileges extends midcom_baseclasses_
         $fields['products_editing']['privilege_object'] = $person_object;
 
         // Load wiki classes
-        if ($_MIDCOM->componentloader->load_graceful('net.nemein.wiki'))
+        if (midcom::componentloader->load_graceful('net.nemein.wiki'))
         {
             $fields['wiki_creation']['privilege_object'] = $person_object;
             $fields['wiki_editing']['privilege_object'] = $person_object;
@@ -140,7 +140,7 @@ class org_openpsa_contacts_handler_person_privileges extends midcom_baseclasses_
             unset($fields['wiki_editing']);
         }
         // Load campaign classes
-        if ($_MIDCOM->componentloader->load_graceful('org.openpsa.directmarketing'))
+        if (midcom::componentloader->load_graceful('org.openpsa.directmarketing'))
         {
             $fields['campaigns_creation']['privilege_object'] = $person_object;
             $fields['campaigns_editing']['privilege_object'] = $person_object;
@@ -167,7 +167,7 @@ class org_openpsa_contacts_handler_person_privileges extends midcom_baseclasses_
         if (   ! $this->_datamanager
             || ! $this->_datamanager->autoset_storage($this->_person))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for contact {$this->_person->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for contact {$this->_person->id}.");
             // This will exit.
         }
     }
@@ -185,7 +185,7 @@ class org_openpsa_contacts_handler_person_privileges extends midcom_baseclasses_
         $this->_controller->set_storage($this->_person, $this->_schema);
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for contact {$this->_contact->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for contact {$this->_contact->id}.");
             // This will exit.
         }
     }
@@ -198,7 +198,7 @@ class org_openpsa_contacts_handler_person_privileges extends midcom_baseclasses_
      */
     function _handler_privileges($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         // Check if we get the person
         $this->_person = $this->_load_person($args[0]);
@@ -210,7 +210,7 @@ class org_openpsa_contacts_handler_person_privileges extends midcom_baseclasses_
             return false;
         }
 
-        $_MIDCOM->auth->require_do('midgard:privileges', $this->_person);
+        midcom::auth->require_do('midgard:privileges', $this->_person);
 
         $this->_request_data['person'] =& $this->_person;
 
@@ -219,12 +219,12 @@ class org_openpsa_contacts_handler_person_privileges extends midcom_baseclasses_
         switch ($this->_controller->process_form())
         {
             case 'save':
-                $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+                midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                     . "person/" . $this->_person->guid . "/");
                 // This will exit()
 
             case 'cancel':
-                $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+                midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                     . "person/" . $this->_person->guid . "/");
                 // This will exit()
         }
@@ -256,7 +256,7 @@ class org_openpsa_contacts_handler_person_privileges extends midcom_baseclasses_
             MIDCOM_NAV_NAME => $this->_l10n->get('permissions'),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**

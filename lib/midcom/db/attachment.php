@@ -57,17 +57,17 @@ class midcom_db_attachment extends midcom_core_dbaobject
 
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
 
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
 
     function get_parent_guid_uncached()
@@ -231,7 +231,7 @@ class midcom_db_attachment extends midcom_core_dbaobject
             $object = $this->get_parent();
             if ($object !== null)
             {
-                $_MIDCOM->componentloader->trigger_watches(MIDCOM_OPERATION_DBA_UPDATE, $object);
+                midcom::componentloader()->trigger_watches(MIDCOM_OPERATION_DBA_UPDATE, $object);
             }
 
             $this->file_to_cache();
@@ -481,7 +481,7 @@ class midcom_db_attachment extends midcom_core_dbaobject
         $object = $this->get_parent();
         if ($object !== null)
         {
-            $_MIDCOM->componentloader->trigger_watches(MIDCOM_OPERATION_DBA_UPDATE, $object);
+            midcom::componentloader()->trigger_watches(MIDCOM_OPERATION_DBA_UPDATE, $object);
         }
     }
 
@@ -511,7 +511,7 @@ class midcom_db_attachment extends midcom_core_dbaobject
         $object = $this->get_parent();
         if ($object !== null)
         {
-            $_MIDCOM->componentloader->trigger_watches(MIDCOM_OPERATION_DBA_UPDATE, $object);
+            midcom::componentloader()->trigger_watches(MIDCOM_OPERATION_DBA_UPDATE, $object);
         }
     }
 
@@ -536,7 +536,7 @@ class midcom_db_attachment extends midcom_core_dbaobject
         $object = $this->get_parent();
         if ($object !== null)
         {
-            $_MIDCOM->componentloader->trigger_watches(MIDCOM_OPERATION_DBA_UPDATE, $object);
+            midcom::componentloader()->trigger_watches(MIDCOM_OPERATION_DBA_UPDATE, $object);
         }
     }
 

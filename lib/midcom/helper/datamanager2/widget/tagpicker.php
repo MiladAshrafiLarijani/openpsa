@@ -95,7 +95,7 @@ class midcom_helper_datamanager2_widget_tagpicker extends midcom_helper_datamana
             $this->maxtags = 0;
         }
 
-        $_MIDCOM->load_library('net.nemein.tag');
+        midcom::load_library('net.nemein.tag');
 
         return true;
     }

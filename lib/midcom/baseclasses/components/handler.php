@@ -155,7 +155,7 @@ class midcom_baseclasses_components_handler
     function initialize(&$master)
     {
         $this->_master =& $master;
-        $this->_i18n = $_MIDCOM->i18n;
+        $this->_i18n = midcom::i18n();
         $this->_l10n_midcom =& $master->_l10n_midcom;
 
         $this->_request_data =& $master->_request_data;

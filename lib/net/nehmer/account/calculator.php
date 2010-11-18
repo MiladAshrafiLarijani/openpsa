@@ -29,7 +29,7 @@ class net_nehmer_account_calculator extends midcom_baseclasses_components_pureco
     
     private function count_comments($guid)
     {
-        if (!$_MIDCOM->componentloader->load_graceful('net.nehmer.comments'))
+        if (!midcom::componentloader->load_graceful('net.nehmer.comments'))
         {
             return 0;
         }
@@ -42,7 +42,7 @@ class net_nehmer_account_calculator extends midcom_baseclasses_components_pureco
     
     private function count_favourites($guid)
     {
-        if (!$_MIDCOM->componentloader->load_graceful('net.nemein.favourites'))
+        if (!midcom::componentloader->load_graceful('net.nemein.favourites'))
         {
             return 0;
         }
@@ -55,7 +55,7 @@ class net_nehmer_account_calculator extends midcom_baseclasses_components_pureco
     
     private function count_buries($guid)
     {
-        if (!$_MIDCOM->componentloader->load_graceful('net.nemein.favourites'))
+        if (!midcom::componentloader->load_graceful('net.nemein.favourites'))
         {
             return 0;
         }
@@ -69,8 +69,8 @@ class net_nehmer_account_calculator extends midcom_baseclasses_components_pureco
 
     private function count_packagetesting($guid)
     {
-        if (   !$_MIDCOM->componentloader->load_graceful('net.nemein.favourites')
-            || !$_MIDCOM->componentloader->load_graceful('org.maemo.packages'))
+        if (   !midcom::componentloader->load_graceful('net.nemein.favourites')
+            || !midcom::componentloader->load_graceful('org.maemo.packages'))
         {
             return 0;
         }
@@ -92,7 +92,7 @@ class net_nehmer_account_calculator extends midcom_baseclasses_components_pureco
     private function count_wikiedits($guid)
     {
         $edits = 0;
-        $rcs = $_MIDCOM->get_service('rcs');    
+        $rcs = midcom::get_service('rcs');    
         $qb = midcom_db_article::new_query_builder();
         // TODO: Add this when wiki inserts all contributors to authors array
         // $qb->add_constraint('metadata.authors', 'LIKE', "%|{$guid}|%");
@@ -127,7 +127,7 @@ class net_nehmer_account_calculator extends midcom_baseclasses_components_pureco
             return $qb->count();
         }
         
-        if (!$_MIDCOM->componentloader->load_graceful('net.nemein.favourites'))
+        if (!midcom::componentloader->load_graceful('net.nemein.favourites'))
         {
             return $qb->count();
         }
@@ -156,7 +156,7 @@ class net_nehmer_account_calculator extends midcom_baseclasses_components_pureco
 
     private function count_products($guid)
     {
-        if (!$_MIDCOM->componentloader->load_graceful('org.openpsa.products'))
+        if (!midcom::componentloader->load_graceful('org.openpsa.products'))
         {
             return 0;
         }
@@ -184,7 +184,7 @@ class net_nehmer_account_calculator extends midcom_baseclasses_components_pureco
     
     private function count_discussion($id)
     {
-        if (!$_MIDCOM->componentloader->load_graceful('net.nemein.discussion'))
+        if (!midcom::componentloader->load_graceful('net.nemein.discussion'))
         {
             return 0;
         }
@@ -196,7 +196,7 @@ class net_nehmer_account_calculator extends midcom_baseclasses_components_pureco
 
     private function count_brainstorm($guid)
     {
-        if (!$_MIDCOM->componentloader->load_graceful('org.maemo.brainstorm'))
+        if (!midcom::componentloader->load_graceful('org.maemo.brainstorm'))
         {
             return 0;
         }

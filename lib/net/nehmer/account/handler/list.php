@@ -63,11 +63,11 @@ class net_nehmer_account_handler_list extends midcom_baseclasses_components_hand
      */
     function _handler_list($handler_id, $args, &$data)
     {
-        $_MIDCOM->load_library('org.openpsa.qbpager');
+        midcom::load_library('org.openpsa.qbpager');
 
         if (!$this->_config->get('allow_list'))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Listing users not enabled.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Listing users not enabled.");
         }
 
         $data['list_categories'] = $this->_config->get('list_categories');
@@ -81,7 +81,7 @@ class net_nehmer_account_handler_list extends midcom_baseclasses_components_hand
                 || strlen($args[0]) != 1)
             {
                 // FIXME: strlen() may not handle multibyte chars correctly
-                $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Invalid letter \"{$args[0]}\" for alphabetical search");
+                midcom::generate_error(MIDCOM_ERRNOTFOUND, "Invalid letter \"{$args[0]}\" for alphabetical search");
                 // This will exit
             }
         
@@ -100,7 +100,7 @@ class net_nehmer_account_handler_list extends midcom_baseclasses_components_hand
         $this->_view_toolbar->hide_item('list/');
 
         $data['view_title'] = $this->_l10n->get('user list');
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
 
         return true;
     }
@@ -145,7 +145,7 @@ class net_nehmer_account_handler_list extends midcom_baseclasses_components_hand
     {
         if (!$this->_config->get('allow_list'))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Listing users not enabled.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Listing users not enabled.");
         }
 
         $data['handler'] = $handler_id;
@@ -154,7 +154,7 @@ class net_nehmer_account_handler_list extends midcom_baseclasses_components_hand
 
         if (!in_array($data['category'], $data['list_categories']))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "List {$data['category']} not found");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "List {$data['category']} not found");
             // This will exit
         }
 
@@ -196,10 +196,10 @@ class net_nehmer_account_handler_list extends midcom_baseclasses_components_hand
             MIDCOM_NAV_URL => "list/category/{$args[0]}/",
             MIDCOM_NAV_NAME => $this->_l10n->get("by {$args[0]}"),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         $data['view_title'] = $this->_l10n->get('user list') . ': ' . $this->_l10n->get("by {$args[0]}");
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
 
         return true;
     }
@@ -239,13 +239,13 @@ class net_nehmer_account_handler_list extends midcom_baseclasses_components_hand
     {
         if (!$this->_config->get('allow_list'))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Listing users not enabled.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Listing users not enabled.");
         }
 
         $random = (int) $args[0];
         if ($random > 20)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Maximum list is 20 users.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Maximum list is 20 users.");
         }
 
         $data['handler'] = $handler_id;
@@ -298,7 +298,7 @@ class net_nehmer_account_handler_list extends midcom_baseclasses_components_hand
             }
         }
         $data['view_title'] = $this->_l10n->get('user list');
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
 
         return true;
     }
@@ -358,7 +358,7 @@ class net_nehmer_account_handler_list extends midcom_baseclasses_components_hand
      */
     function _is_field_visible($name, $user_guid)
     {
-        if ($_MIDCOM->auth->admin)
+        if (midcom::auth->admin)
         {
             return true;
         }
@@ -376,7 +376,7 @@ class net_nehmer_account_handler_list extends midcom_baseclasses_components_hand
                 $target = $this->_datamanager->schema->fields[$name]['customdata']['visible_link'];
                 if ($target == $name)
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                    midcom::generate_error(MIDCOM_ERRCRIT,
                         "Tried to link the visibility of {$name} to itself.");
                     // this will exit()
                 }
@@ -386,7 +386,7 @@ class net_nehmer_account_handler_list extends midcom_baseclasses_components_hand
                 return in_array($name, $this->_visible_fields_user_selection[$user_guid]);
 
         }
-        $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+        midcom::generate_error(MIDCOM_ERRCRIT,
             "Unknown Visibility declaration in {$name}: {$this->_datamanager->schema->fields[$name]['customdata']['visible_mode']}.");
         // This will exit()
     }

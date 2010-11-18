@@ -53,10 +53,10 @@ class org_routamc_positioning_user extends midcom_baseclasses_components_purecod
             throw new InvalidArgumentException('No coordinates provided');
         }
 
-        if ($_MIDCOM->auth->user)
+        if (midcom::auth->user)
         {
             // Set to user's location log
-            return org_routamc_positioning_user::set_location_for_person($location, $_MIDCOM->auth->user->get_storage());
+            return org_routamc_positioning_user::set_location_for_person($location, midcom::auth->user->get_storage());
         }
 
         // Set to session
@@ -91,10 +91,10 @@ class org_routamc_positioning_user extends midcom_baseclasses_components_purecod
 
     static public function get_location($when = null)
     {
-        if ($_MIDCOM->auth->user)
+        if (midcom::auth->user)
         {
             // Get from user's location log
-            return org_routamc_positioning_user::get_location_for_person($_MIDCOM->auth->user->get_storage(), $when);
+            return org_routamc_positioning_user::get_location_for_person(midcom::auth->user->get_storage(), $when);
         }
 
         // Get from session

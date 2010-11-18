@@ -21,7 +21,7 @@ class midcom_helper_datamanager2_type_position extends midcom_helper_datamanager
 
     function _on_initialize()
     {
-        return $_MIDCOM->load_library('org.routamc.positioning');
+        return midcom::load_library('org.routamc.positioning');
     }
 
     /**

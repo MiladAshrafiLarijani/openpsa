@@ -46,17 +46,17 @@ class midcom_db_group extends midcom_core_dbaobject
      */
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
     
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
 
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
 
     function get_label()
@@ -120,7 +120,7 @@ class midcom_db_group extends midcom_core_dbaobject
      */
     function add_member($person)
     {
-        $_MIDCOM->auth->require_do('midgard:create', $this);
+        midcom::auth()->require_do('midgard:create', $this);
 
         if ($this->is_member($person))
         {

@@ -21,7 +21,7 @@
  * you should explicitly delete temporary objects you do no longer need using
  * the default delete call.
  *
- * This service is available as $_MIDCOM->tmp.
+ * This service is available as midcom::tmp().
  *
  * <b>Temporary object privileges</b>
  *
@@ -85,7 +85,7 @@ class midcom_services_tmp extends midcom_baseclasses_core_object
     function create_object()
     {
         $this->_load_tmp_object_class();
-        $_MIDCOM->auth->require_user_do('midgard:create', null, 'midcom_core_temporary_object');
+        midcom::auth->require_user_do('midgard:create', null, 'midcom_core_temporary_object');
 
         $tmp = new midcom_core_temporary_object();
         if (! $tmp->create())
@@ -93,7 +93,7 @@ class midcom_services_tmp extends midcom_baseclasses_core_object
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('Tried to create this object:', $tmp);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Failed to create a new temporary object, last Midgard error was: ' . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -131,7 +131,7 @@ class midcom_services_tmp extends midcom_baseclasses_core_object
 
         $tmp = new midcom_core_temporary_object((int) $id);
         if (   ! $tmp
-            || ! $_MIDCOM->auth->can_do('midgard:owner', $tmp))
+            || ! midcom::auth->can_do('midgard:owner', $tmp))
         {
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_add("The current user does not have owner privileges on the temporary object {$id}, denying access.",

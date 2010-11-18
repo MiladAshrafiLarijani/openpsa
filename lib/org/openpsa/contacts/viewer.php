@@ -229,16 +229,16 @@ class org_openpsa_contacts_viewer extends midcom_baseclasses_components_request
     function _on_handle($handler, $args)
     {
         // Always run in uncached mode
-        $_MIDCOM->cache->content->no_cache();
+        midcom::cache()->content->no_cache();
         
         if ($handler != 'buddylist_xml')
         {
-            $_MIDCOM->auth->require_valid_user();
+            midcom::auth->require_valid_user();
         }
 
-        $_MIDCOM->load_library('org.openpsa.contactwidget');
+        midcom::load_library('org.openpsa.contactwidget');
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -298,7 +298,7 @@ class org_openpsa_contacts_viewer extends midcom_baseclasses_components_request
             $tmp = midcom_db_topic::get_cached($topic);
             if (! $tmp)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Failed to load the topic referenced by {$topic} for indexing, this is fatal.");
                 // This will exit.
             }
@@ -334,7 +334,7 @@ class org_openpsa_contacts_viewer extends midcom_baseclasses_components_request
             $tmp = midcom_db_topic::get_cached($topic);
             if (! $tmp)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Failed to load the topic referenced by {$topic} for indexing, this is fatal.");
                 // This will exit.
             }

@@ -114,7 +114,7 @@ class net_nehmer_static_handler_link extends midcom_baseclasses_components_handl
 
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
             // This will exit.
         }
     }
@@ -132,7 +132,7 @@ class net_nehmer_static_handler_link extends midcom_baseclasses_components_handl
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $this->_link);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Failed to create a new article, cannot continue. Last Midgard error was: '. midcom_connection::get_error_string());
             // This will exit.
         }
@@ -159,7 +159,7 @@ class net_nehmer_static_handler_link extends midcom_baseclasses_components_handl
         
         if (!$this->_config->get('enable_article_links'))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, 'Article linking disabled');
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, 'Article linking disabled');
         }
         
         $this->_load_controller();
@@ -168,17 +168,17 @@ class net_nehmer_static_handler_link extends midcom_baseclasses_components_handl
         {
             case 'save':
                 $this->_article = new midcom_db_article($this->_link->article);
-                $_MIDCOM->relocate("{$this->_article->name}/");
+                midcom::relocate("{$this->_article->name}/");
                 // This will exit
             
             case 'cancel':
-                $_MIDCOM->relocate('');
+                midcom::relocate('');
                 // This will exit
         }
         
         $this->_prepare_request_data();
         $title = sprintf($this->_l10n_midcom->get('create %s'), $this->_l10n->get('article link'));
-        $_MIDCOM->set_pagetitle("{$this->_topic->extra}: {$title}");
+        midcom::set_pagetitle("{$this->_topic->extra}: {$title}");
         $this->_update_breadcrumb_line($handler_id);
         return true;
     }
@@ -199,7 +199,7 @@ class net_nehmer_static_handler_link extends midcom_baseclasses_components_handl
             MIDCOM_NAV_NAME => sprintf($this->_l10n_midcom->get('create %s'), $this->_l10n->get('article link')),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**

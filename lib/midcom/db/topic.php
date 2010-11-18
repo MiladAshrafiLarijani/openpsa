@@ -46,17 +46,17 @@ class midcom_db_topic extends midcom_core_dbaobject
      */
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
 
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
 
     /**
@@ -231,7 +231,7 @@ class midcom_db_topic extends midcom_core_dbaobject
             }
             $root = $topic;
         }
-        else if ($_MIDCOM->dbfactory->is_a($topic, 'midcom_db_topic'))
+        else if (midcom::dbfactory()->is_a($topic, 'midcom_db_topic'))
         {
             if ($topic->id == $this->id)
             {

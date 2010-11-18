@@ -1,5 +1,5 @@
 <?php
-if (!$_MIDCOM->auth->user)
+if (!midcom::auth()->user)
 {
     _midcom_stop_request();
 }
@@ -15,7 +15,7 @@ if (   !isset($_REQUEST['position_x'])
     switch ($GLOBALS['midcom_config']['toolbars_position_storagemode'])
     {
         case 'parameter':
-            $person = new midcom_db_person($_MIDCOM->auth->user);
+            $person = new midcom_db_person(midcom::auth()->user);
             $x = $person->get_parameter('midcom.services.toolbars', 'position_x');
             $y = $person->get_parameter('midcom.services.toolbars', 'position_y');
             break;
@@ -45,7 +45,7 @@ if (   !isset($_REQUEST['position_x'])
 switch ($GLOBALS['midcom_config']['toolbars_position_storagemode'])
 {
     case 'parameter':
-        $person = new midcom_db_person($_MIDCOM->auth->user);
+        $person = new midcom_db_person(midcom::auth()->user);
         $person->set_parameter('midcom.services.toolbars', 'position_x', $_REQUEST['position_x']);
         $person->set_parameter('midcom.services.toolbars', 'position_y', $_REQUEST['position_y']);
         break;

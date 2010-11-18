@@ -64,7 +64,7 @@ function mgd_element($name)
         $element = $name;
     }
     // Sensible fallback if we don't have a style or ROOT element
-    $root_fallback = '<html><head><?php $_MIDCOM->print_head_elements(); ?><title><?php echo $_MIDCOM->get_context_data(MIDCOM_CONTEXT_PAGETITLE); ?></title></head><body class="<?php echo $_MIDCOM->metadata->get_page_class(); ?>"><(content)><?php $_MIDCOM->uimessages->show(); $_MIDCOM->toolbars->show(); $_MIDCOM->finish(); ?></body></html>';
+    $root_fallback = '<html><head><?php midcom::print_head_elements(); ?><title><?php echo midcom::get_context_data(MIDCOM_CONTEXT_PAGETITLE); ?></title></head><body class="<?php echo midcom::metadata()->get_page_class(); ?>"><(content)><?php midcom::uimessages()->show(); midcom::toolbars()->show(); midcom::finish(); ?></body></html>';
 
     switch ($element)
     {

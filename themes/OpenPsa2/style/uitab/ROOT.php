@@ -13,7 +13,7 @@ $js_pattern_content = "/<script type=\"text\/javascript\">[^<]+<\/script>/";
 ob_clean();
 //get the head_elements
 ob_start();
-$_MIDCOM->print_head_elements();
+midcom::print_head_elements();
 $head_elements = ob_get_contents();
 ob_end_clean();
 //check for css/js
@@ -50,7 +50,7 @@ parse_css(scripts["head_css"]);
      <(toolbar-bottom)>
   </div>
 <?php
-$_MIDCOM->content();
+midcom::content();
 ?>
 
 </div>

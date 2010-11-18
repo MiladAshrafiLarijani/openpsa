@@ -14,8 +14,8 @@
  * The following code will retrieve a valid instance of this class:
  *
  * <code>
- * $_MIDCOM->componentloader->load('net.nehmer.account');
- * $interface = $_MIDCOM->componentloader->get_interface_class('net.nehmer.account');
+ * midcom::componentloader->load('net.nehmer.account');
+ * $interface = midcom::componentloader->get_interface_class('net.nehmer.account');
  * $remote = $interface->create_remote_controller($this->_config->get('account_topic'));
  * </code>
  *
@@ -63,7 +63,7 @@ class net_nehmer_account_remote extends midcom_baseclasses_components_purecode
         $this->_topic = new midcom_db_topic($guid);
         if (! $this->_topic)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Tried to load the n.n.account remote interface with an invalid topic.');
             // This will exit.
         }
@@ -97,10 +97,10 @@ class net_nehmer_account_remote extends midcom_baseclasses_components_purecode
             $this->_type_groups = Array();
             foreach ($this->_schemadb as $name => $schema)
             {
-                $this->_type_groups[$name] =& $_MIDCOM->auth->get_midgard_group_by_name($name);
+                $this->_type_groups[$name] =& midcom::auth->get_midgard_group_by_name($name);
                 if (! $this->_type_groups[$name])
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                    midcom::generate_error(MIDCOM_ERRCRIT,
                         "DB inconsistency, we could not load the account group {$name}.");
                     // This will exit.
                 }
@@ -144,7 +144,7 @@ class net_nehmer_account_remote extends midcom_baseclasses_components_purecode
         }
         else if (! is_string($type))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Incorrect arguments for get_account_schema, need either null, string or mdicom_core_user.');
             // This will exit.
         }
@@ -164,7 +164,7 @@ class net_nehmer_account_remote extends midcom_baseclasses_components_purecode
                 debug_push_class(__CLASS__, __FUNCTION__);
                 debug_print_r('We were working on this schema database (keys only)', array_keys($this->_schemadb));
                 debug_pop();
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Key {$type} was not found in the schema database. Please correct the system configuration.");
                 // This will exit.
             }
@@ -187,12 +187,12 @@ class net_nehmer_account_remote extends midcom_baseclasses_components_purecode
 
         if ($user === null)
         {
-            $user =& $_MIDCOM->auth->user;
+            $user =& midcom::auth->user;
         }
         $storage = $user->get_storage();
         if (! $storage)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to load the storage object for the user {$user->name}, this most probably means insufficient permissions.");
             // This will exit.
         }
@@ -218,12 +218,12 @@ class net_nehmer_account_remote extends midcom_baseclasses_components_purecode
 
         if ($user === null)
         {
-            $user =& $_MIDCOM->auth->user;
+            $user =& midcom::auth->user;
         }
         $storage = $user->get_storage();
         if (! $storage)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to load the storage object for the user {$user->name}, this most probably means insufficient permissions.");
             // This will exit.
         }
@@ -250,7 +250,7 @@ class net_nehmer_account_remote extends midcom_baseclasses_components_purecode
 
         if ($user === null)
         {
-            $user =& $_MIDCOM->auth->user;
+            $user =& midcom::auth->user;
         }
 
         foreach ($this->_type_groups as $name => $grp)

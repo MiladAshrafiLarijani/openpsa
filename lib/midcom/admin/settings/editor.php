@@ -65,16 +65,16 @@ class midcom_admin_settings_editor extends midcom_baseclasses_components_handler
 
         require_once MIDCOM_ROOT . '/midcom/helper/hostconfig.php';
         require_once MIDCOM_ROOT . '/midcom/admin/folder/folder_management.php';
-        $_MIDCOM->load_library('midgard.admin.asgard');
-        $_MIDCOM->load_library('midcom.admin.folder');
+        midcom::load_library('midgard.admin.asgard');
+        midcom::load_library('midcom.admin.folder');
 
-        $this->_l10n = $_MIDCOM->i18n->get_l10n('midcom.admin.settings');
+        $this->_l10n = midcom::i18n()->get_l10n('midcom.admin.settings');
         $this->_debug_prefix = "midcom_admin_settings::";
 
         $this->_request_data['l10n'] = $this->_l10n;
-        $_MIDCOM->cache->content->no_cache();
+        midcom::cache()->content->no_cache();
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -93,7 +93,7 @@ class midcom_admin_settings_editor extends midcom_baseclasses_components_handler
 
     function get_plugin_handlers()
     {
-        $_MIDCOM->auth->require_user_do('midcom.admin.settings:access', null, 'midcom_admin_settings_editor');
+        midcom::auth()->require_user_do('midcom.admin.settings:access', null, 'midcom_admin_settings_editor');
 
         return array
         (
@@ -152,7 +152,7 @@ class midcom_admin_settings_editor extends midcom_baseclasses_components_handler
         $this->_controller->defaults = $this->hostconfig->config;
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance.");
             // This will exit.
         }
     }
@@ -167,7 +167,7 @@ class midcom_admin_settings_editor extends midcom_baseclasses_components_handler
      */
     function _handler_edit($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_admin_user();
+        midcom::auth()->require_admin_user();
         $data['hostname'] = $_SERVER['SERVER_NAME'] . midcom_connection::get_url('prefix');
 
         if (   isset($args[0])
@@ -217,10 +217,10 @@ class midcom_admin_settings_editor extends midcom_baseclasses_components_handler
                 if (   $this->_codeinit->value == ''
                     || !$this->_codeinit->value)
                 {
-                    $_MIDCOM->uimessages->add
+                    midcom::uimessages()->add
                     (
-                        $_MIDCOM->i18n->get_string('host configuration', 'midcom.admin.settings'),
-                        $_MIDCOM->i18n->get_string('failed to create settings', 'midcom.admin.settings'),
+                        midcom::i18n()->get_string('host configuration', 'midcom.admin.settings'),
+                        midcom::i18n()->get_string('failed to create settings', 'midcom.admin.settings'),
                         'error'
                     );
                     break;
@@ -238,27 +238,27 @@ class midcom_admin_settings_editor extends midcom_baseclasses_components_handler
                 if ($rst)
                 {
                     mgd_cache_invalidate();
-                    $_MIDCOM->uimessages->add
+                    midcom::uimessages()->add
                     (
-                        $_MIDCOM->i18n->get_string('host configuration', 'midcom.admin.settings'),
-                        $_MIDCOM->i18n->get_string('settings saved successfully', 'midcom.admin.settings'),
+                        midcom::i18n()->get_string('host configuration', 'midcom.admin.settings'),
+                        midcom::i18n()->get_string('settings saved successfully', 'midcom.admin.settings'),
                         'ok'
                     );
                 }
                 else
                 {
-                    $_MIDCOM->uimessages->add
+                    midcom::uimessages()->add
                     (
-                        $_MIDCOM->i18n->get_string('host configuration', 'midcom.admin.settings'),
-                        sprintf($_MIDCOM->i18n->get_string('failed to save settings, reason %s', 'midcom.admin.settings'), midcom_connection::get_error_string()),
+                        midcom::i18n()->get_string('host configuration', 'midcom.admin.settings'),
+                        sprintf(midcom::i18n()->get_string('failed to save settings, reason %s', 'midcom.admin.settings'), midcom_connection::get_error_string()),
                         'error'
                     );
                 }
 
-                $_MIDCOM->relocate('__mfa/asgard_midcom.admin.settings/'.$host->guid.'/');
+                midcom::relocate('__mfa/asgard_midcom.admin.settings/'.$host->guid.'/');
 
             case 'cancel':
-                $_MIDCOM->relocate('__mfa/asgard_midcom.admin.settings/'.$host->guid.'/');
+                midcom::relocate('__mfa/asgard_midcom.admin.settings/'.$host->guid.'/');
                 // This will exit.
         }
 
@@ -277,10 +277,10 @@ class midcom_admin_settings_editor extends midcom_baseclasses_components_handler
             MIDCOM_NAV_NAME => $data['hostname'],
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         // Set page title
-        $_MIDCOM->set_pagetitle($this->_l10n->get('host configuration')." : ". $data['hostname']);
+        midcom::set_pagetitle($this->_l10n->get('host configuration')." : ". $data['hostname']);
 
         return true;
     }
@@ -360,7 +360,7 @@ class midcom_admin_settings_editor extends midcom_baseclasses_components_handler
     function get_default_bool($key)
     {
 
-        return sprintf($_MIDCOM->i18n->get_string('default (%s)', 'midcom.admin.settings'), $GLOBALS['midcom_config_default'][$key] ? $_MIDCOM->i18n->get_string('yes', 'midcom') : $_MIDCOM->i18n->get_string('no', 'midcom'));
+        return sprintf(midcom::i18n()->get_string('default (%s)', 'midcom.admin.settings'), $GLOBALS['midcom_config_default'][$key] ? midcom::i18n()->get_string('yes', 'midcom') : midcom::i18n()->get_string('no', 'midcom'));
     }
 
     function get_default_val($key, $isprefix = false)
@@ -371,7 +371,7 @@ class midcom_admin_settings_editor extends midcom_baseclasses_components_handler
             $prefix = "{$key}_";
         }
 
-        return sprintf($_MIDCOM->i18n->get_string('default (%s)', 'midcom.admin.settings'), $_MIDCOM->i18n->get_string("{$prefix}{$GLOBALS['midcom_config_default'][$key]}", 'midcom.admin.settings'));
+        return sprintf(midcom::i18n()->get_string('default (%s)', 'midcom.admin.settings'), midcom::i18n()->get_string("{$prefix}{$GLOBALS['midcom_config_default'][$key]}", 'midcom.admin.settings'));
     }
 
     function navigation()
@@ -380,7 +380,7 @@ class midcom_admin_settings_editor extends midcom_baseclasses_components_handler
         $qb->add_order('name');
         $rst = $qb->execute();
 
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 
         echo '<ul class="midgard_admin_asgard_navigation">';
 

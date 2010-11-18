@@ -59,7 +59,7 @@ class org_openpsa_calendarwidget_interface extends midcom_baseclasses_components
         }
 
         // Make the calendar pretty
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (

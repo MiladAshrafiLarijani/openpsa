@@ -149,7 +149,7 @@ class org_openpsa_invoices_handler_crud extends midcom_baseclasses_components_ha
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $invoice);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to create a new invoice, cannot continue. Error: " . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -190,7 +190,7 @@ class org_openpsa_invoices_handler_crud extends midcom_baseclasses_components_ha
      */
     function _handler_callback($handler_id, $args, &$data)
     {
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -205,7 +205,7 @@ class org_openpsa_invoices_handler_crud extends midcom_baseclasses_components_ha
             $this->_count_invoice_hours();
             org_openpsa_core_ui::enable_jqgrid();
 
-            $_MIDCOM->add_link_head
+            midcom::add_link_head
             (
                 array
                 (
@@ -306,7 +306,7 @@ class org_openpsa_invoices_handler_crud extends midcom_baseclasses_components_ha
                 MIDCOM_TOOLBAR_LABEL => $this->_l10n_midcom->get('edit'),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/edit.png',
-                MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:update', $this->_object),
+                MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:update', $this->_object),
                 MIDCOM_TOOLBAR_ACCESSKEY => 'e',
             )
         );
@@ -322,7 +322,7 @@ class org_openpsa_invoices_handler_crud extends midcom_baseclasses_components_ha
                     MIDCOM_TOOLBAR_HELPTEXT => null,
                     MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/stock_mail-reply.png',
                     MIDCOM_TOOLBAR_POST => true,
-                    MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:update', $this->_object),
+                    MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:update', $this->_object),
                 )
             );
         }
@@ -337,7 +337,7 @@ class org_openpsa_invoices_handler_crud extends midcom_baseclasses_components_ha
                     MIDCOM_TOOLBAR_HELPTEXT => null,
                     MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/ok.png',
                     MIDCOM_TOOLBAR_POST => true,
-                    MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:update', $this->_object),
+                    MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:update', $this->_object),
                 )
             );
         }
@@ -350,7 +350,7 @@ class org_openpsa_invoices_handler_crud extends midcom_baseclasses_components_ha
                 MIDCOM_TOOLBAR_LABEL => $this->_l10n_midcom->get('delete'),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/trash.png',
-                MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:delete', $this->_object),
+                MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:delete', $this->_object),
             )
         );
 
@@ -362,7 +362,7 @@ class org_openpsa_invoices_handler_crud extends midcom_baseclasses_components_ha
                 MIDCOM_TOOLBAR_LABEL => $this->_l10n->get('edit invoice items'),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/edit.png',
-                MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:update', $this->_object),
+                MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:update', $this->_object),
             )
         );
 
@@ -432,7 +432,7 @@ class org_openpsa_invoices_handler_crud extends midcom_baseclasses_components_ha
                 break;
         }
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**
@@ -458,7 +458,7 @@ class org_openpsa_invoices_handler_crud extends midcom_baseclasses_components_ha
                 break;
         }
         
-        $_MIDCOM->set_pagetitle($view_title);
+        midcom::set_pagetitle($view_title);
     }
 
     /**
@@ -473,14 +473,14 @@ class org_openpsa_invoices_handler_crud extends midcom_baseclasses_components_ha
         try
         {
             $this->_object = new org_openpsa_invoices_invoice_dba($args[0]);
-            $this->_request_data['invoice_url'] = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "/invoice/" . $this->_object->guid . "/";
+            $this->_request_data['invoice_url'] = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "/invoice/" . $this->_object->guid . "/";
         }
         catch (Exception $e)
         {
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('Tried to get invoice with following guid :', $args[0]);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Invoice with GUID: " . $args[0] . " does not exist . Error: " . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -488,7 +488,7 @@ class org_openpsa_invoices_handler_crud extends midcom_baseclasses_components_ha
         $this->update_attachment = true;
         if (array_key_exists('cancel' , $_POST))
         {
-            $_MIDCOM->relocate($this->_request_data['invoice_url']);
+            midcom::relocate($this->_request_data['invoice_url']);
         }
         if (!array_key_exists('save' , $_POST))
         {
@@ -523,7 +523,7 @@ class org_openpsa_invoices_handler_crud extends midcom_baseclasses_components_ha
             $this->_request_data['customer'] = org_openpsa_contacts_group_dba::get_cached($this->_object->customer);
             $this->_request_data['customer_contact'] = org_openpsa_contacts_person_dba::get_cached($this->_object->customerContact);
             $this->_request_data['billing_data'] = $this->_object->get_billing_data();
-            $_MIDCOM->skip_page_style = true;
+            midcom::skip_page_style = true;
         }
         return true;
     }
@@ -561,14 +561,14 @@ class org_openpsa_invoices_handler_crud extends midcom_baseclasses_components_ha
                 debug_push_class(__CLASS__, __FUNCTION__);
                 debug_print_r('Tried to require invoice_pdf_class_file :', $this->_config->get('invoice_pdf_class'));
                 debug_pop();
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Could not require pdf class . Error: " . midcom_connection::get_error_string());
                 // This will exit.
             }
         }
         else
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "No invoice pdf class was found in config." );
         }
    }
@@ -591,7 +591,7 @@ class org_openpsa_invoices_handler_crud extends midcom_baseclasses_components_ha
      */
     public function _index_object(&$dm)
     {
-        $indexer = $_MIDCOM->get_service('indexer');
+        $indexer = midcom::get_service('indexer');
 
         $nav = new midcom_helper_nav();
         //get the node to fill the required index-data for topic/component

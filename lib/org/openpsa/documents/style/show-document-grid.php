@@ -1,5 +1,5 @@
 <?php
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 $entries = array();
 
 $grid_id = 'documents_grid';
@@ -74,8 +74,8 @@ jQuery("#&(grid_id);").jqGrid({
       data: &(grid_id);_entries,
       colNames: ['id', 'index_title', <?php
                  echo '"' . $data['l10n']->get('title') . '",';
-                 echo '"index_filesize", "' . $_MIDCOM->i18n->get_string('size', 'midcom.admin.folder') . '",';
-                 echo '"' . $_MIDCOM->i18n->get_string('mimetype', 'midgard.admin.asgard') . '",';
+                 echo '"index_filesize", "' . midcom::i18n()->get_string('size', 'midcom.admin.folder') . '",';
+                 echo '"' . midcom::i18n()->get_string('mimetype', 'midgard.admin.asgard') . '",';
                  echo '"index_created", "' . $data['l10n_midcom']->get('created on') . '",';
                  echo '"index_author", "' . $data['l10n']->get('author') . '"';
       ?>],

@@ -1,5 +1,5 @@
 <?php
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 ?>
 <table class="org_openpsa_calendarwidget_month">
     <thead>
@@ -40,7 +40,7 @@ else
         </tr>
         <tr class="daynames">
             <th class="week">
-                <?php echo $_MIDCOM->i18n->get_string('week', 'org.openpsa.calendarwidget'); ?>
+                <?php echo midcom::i18n()->get_string('week', 'org.openpsa.calendarwidget'); ?>
             </th>
 <?php
 for ($i = 1; $i <= 7; ++$i)

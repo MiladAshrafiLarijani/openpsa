@@ -29,10 +29,10 @@ class midcom_admin_libconfig_handler_edit extends midcom_baseclasses_components_
     function _on_initialize()
     {
 
-        $this->_l10n = $_MIDCOM->i18n->get_l10n('midcom.admin.libconfig');
+        $this->_l10n = midcom::i18n()->get_l10n('midcom.admin.libconfig');
         $this->_request_data['l10n'] = $this->_l10n;
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -50,7 +50,7 @@ class midcom_admin_libconfig_handler_edit extends midcom_baseclasses_components_
     function _update_breadcrumb($name)
     {
         // Populate breadcrumb
-        $label = $_MIDCOM->i18n->get_string($name,$name);
+        $label = midcom::i18n()->get_string($name,$name);
         $tmp = Array();
         $tmp[] = Array
         (
@@ -65,10 +65,10 @@ class midcom_admin_libconfig_handler_edit extends midcom_baseclasses_components_
         $tmp[] = Array
         (
             MIDCOM_NAV_URL => "__mfa/asgard_midcom.admin.libconfig/edit/{$name}",
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('edit','midcom'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('edit','midcom'),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     function _prepare_toolbar(&$data)
@@ -85,16 +85,16 @@ class midcom_admin_libconfig_handler_edit extends midcom_baseclasses_components_
     function _handler_edit($handler_id, $args, &$data)
     {
 
-        if (array_key_exists($args[0],$_MIDCOM->componentloader->manifests))
+        if (array_key_exists($args[0],midcom::componentloader()->manifests))
         {
-            $lib = $_MIDCOM->componentloader->manifests[$args[0]];
+            $lib = midcom::componentloader()->manifests[$args[0]];
         }
         else
         {
             return false;
         }
 
-        $componentpath = MIDCOM_ROOT . $_MIDCOM->componentloader->path_to_snippetpath($args[0]);
+        $componentpath = MIDCOM_ROOT . midcom::componentloader()->path_to_snippetpath($args[0]);
 
         // Load and parse the global config
         $cfg = midcom_baseclasses_components_interface::read_array_from_file("{$componentpath}/config/config.inc");
@@ -176,7 +176,7 @@ class midcom_admin_libconfig_handler_edit extends midcom_baseclasses_components_
         $this->_controller->defaults = $defaults;
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for configuration.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for configuration.");
         // This will exit.
         }
 
@@ -192,7 +192,7 @@ class midcom_admin_libconfig_handler_edit extends midcom_baseclasses_components_
                     $sd->name = $GLOBALS['midcom_config']['midcom_sgconfig_basedir'];
                     if (!$sd->create())
                     {
-                        $_MIDCOM->generate_error(MIDCOM_ERRCRIT,"Failed to create {$GLOBALS['midcom_config']['midcom_sgconfig_basedir']}".midcom_connection::get_error_string());
+                        midcom::generate_error(MIDCOM_ERRCRIT,"Failed to create {$GLOBALS['midcom_config']['midcom_sgconfig_basedir']}".midcom_connection::get_error_string());
                     }
                     $sg_snippetdir = new midcom_db_snippetdir($sd->guid);
                     unset($sd);
@@ -207,7 +207,7 @@ class midcom_admin_libconfig_handler_edit extends midcom_baseclasses_components_
                     $sd->name = $args[0];
                     if (!$sd->create())
                     {
-                        $_MIDCOM->generate_error(MIDCOM_ERRCRIT,"Failed to create {$args[0]}".midcom_connection::get_error_string());
+                        midcom::generate_error(MIDCOM_ERRCRIT,"Failed to create {$args[0]}".midcom_connection::get_error_string());
                     }
                     $lib_snippetdir = new midcom_db_snippetdir($sd->guid);
                     unset($sd);
@@ -222,7 +222,7 @@ class midcom_admin_libconfig_handler_edit extends midcom_baseclasses_components_
                     $sn->name = "config";
                     if (!$sn->create())
                     {
-                        $_MIDCOM->generate_error(MIDCOM_ERRCRIT,"Failed to create config snippet".midcom_connection::get_error_string());
+                        midcom::generate_error(MIDCOM_ERRCRIT,"Failed to create config snippet".midcom_connection::get_error_string());
                     }
                     $snippet = new midcom_db_snippet($sn->id);
                 }
@@ -232,7 +232,7 @@ class midcom_admin_libconfig_handler_edit extends midcom_baseclasses_components_
                 if (   $snippet->code == ''
                     || !$snippet->code)
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                    midcom::generate_error(MIDCOM_ERRCRIT,
                         "code-init content generation failed.");
                     // This will exit.
                 }
@@ -242,21 +242,21 @@ class midcom_admin_libconfig_handler_edit extends midcom_baseclasses_components_
                 if ($rst)
                 {
                     mgd_cache_invalidate();
-                    $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('host configuration', 'midcom.admin.settings'),
-                    $_MIDCOM->i18n->get_string('settings saved successfully', 'midcom.admin.settings')
+                    midcom::uimessages()->add(midcom::i18n()->get_string('host configuration', 'midcom.admin.settings'),
+                    midcom::i18n()->get_string('settings saved successfully', 'midcom.admin.settings')
                     . $this->_codeinit->id,
                                                 'ok');
                 }
                 else
                 {
-                    $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('host configuration', 'midcom.admin.settings'),
-                      sprintf($_MIDCOM->i18n->get_string('failed to save settings, reason %s', 'midc')),
+                    midcom::uimessages()->add(midcom::i18n()->get_string('host configuration', 'midcom.admin.settings'),
+                      sprintf(midcom::i18n()->get_string('failed to save settings, reason %s', 'midc')),
                                                 'error');
                 }
                 // *** FALL-THROUGH ***
 
             case 'cancel':
-                $_MIDCOM->relocate('__mfa/asgard_midcom.admin.libconfig/edit/'.$args[0]);
+                midcom::relocate('__mfa/asgard_midcom.admin.libconfig/edit/'.$args[0]);
                 // This will exit.
         }
 
@@ -265,7 +265,7 @@ class midcom_admin_libconfig_handler_edit extends midcom_baseclasses_components_
 
         $this->_update_breadcrumb($args[0]);
         $this->_prepare_toolbar($data);
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
 
         return true;
     }

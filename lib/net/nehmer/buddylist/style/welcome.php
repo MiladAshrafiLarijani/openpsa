@@ -4,7 +4,7 @@
 //
 // Available metadata keys, see net_nehmer_buddylist_handler_welcome::_buddies_meta
 
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 ?>
 
 <h2><?php echo $data['topic']->extra; ?></h2>
@@ -19,8 +19,8 @@ $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
         <th align="center"><?php $data['l10n_midcom']->show('online state'); ?></th>
         <th align="center">&nbsp;</th>
         <?php
-        if (   $_MIDCOM->auth->user
-            && $data['user']->guid == $_MIDCOM->auth->user->guid)
+        if (   midcom::auth->user
+            && $data['user']->guid == midcom::auth->user->guid)
         {
             ?>
             <th align="center"><?php $data['l10n_midcom']->show('delete'); ?></th>
@@ -68,8 +68,8 @@ $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
                 <?php
             }
 
-            if (   $_MIDCOM->auth->user
-                && $data['user']->guid == $_MIDCOM->auth->user->guid)
+            if (   midcom::auth->user
+                && $data['user']->guid == midcom::auth->user->guid)
             {
                 ?>
                 <td align="center">
@@ -89,8 +89,8 @@ $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <?php
-            if (   $_MIDCOM->auth->user
-                && $data['user']->guid == $_MIDCOM->auth->user->guid)
+            if (   midcom::auth->user
+                && $data['user']->guid == midcom::auth->user->guid)
             {
                 ?>
                 <td align="center">
@@ -115,7 +115,7 @@ else
 <?php } ?>
 
 <?php
-if (   $_MIDCOM->auth->user
+if (   midcom::auth->user
     && net_nehmer_buddylist_entry::get_unapproved_count() > 0)
 {
     ?>

@@ -132,9 +132,9 @@ $status = $data['deliverable']->get_status();
                 && $data['deliverable']->orgOpenpsaObtype == ORG_OPENPSA_PRODUCTS_PRODUCT_TYPE_SERVICE
                 && $data['deliverable']->state >= ORG_OPENPSA_SALESPROJECT_DELIVERABLE_STATUS_ORDERED)
             {
-                $_MIDCOM->dynamic_load($data['projects_url'] . "task/list/all/agreement/{$data['deliverable']->id}");
+                midcom::dynamic_load($data['projects_url'] . "task/list/all/agreement/{$data['deliverable']->id}");
                 // FIXME: This is a rather ugly hack
-                $_MIDCOM->style->enter_context(0);
+                midcom::style->enter_context(0);
             }
             ?>
         </div>
@@ -143,9 +143,9 @@ $status = $data['deliverable']->get_status();
             if (   $data['invoices_url']
                 && $data['deliverable']->invoiced > 0)
             {
-                $_MIDCOM->dynamic_load($data['invoices_url'] . "list/deliverable/{$data['deliverable']->guid}");
+                midcom::dynamic_load($data['invoices_url'] . "list/deliverable/{$data['deliverable']->guid}");
                 // FIXME: This is a rather ugly hack
-                $_MIDCOM->style->enter_context(0);
+                midcom::style->enter_context(0);
             }
             ?>
         </div>

@@ -55,7 +55,7 @@ foreach($invoices as $invoice)
         $migration_invoice_item->invoice = $invoice->id;
         $migration_invoice_item->units = 1;
         $migration_invoice_item->pricePerUnit = $price;
-        $migration_invoice_item->description = $_MIDCOM->i18n->get_string('Conversion to invoice items difference' , 'org.openpsa.invoices' ) ." - " . date("d.m.Y");
+        $migration_invoice_item->description = midcom::i18n()->get_string('Conversion to invoice items difference' , 'org.openpsa.invoices' ) ." - " . date("d.m.Y");
         $migration_invoice_item->create();
 
         echo "Created invoice_item to cover up the difference with pricePerUnit:" . $price . " and units: 1 \n";

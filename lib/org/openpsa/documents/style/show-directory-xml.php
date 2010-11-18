@@ -10,7 +10,7 @@ else
     $parent = "null";
     $level = 0;
 }
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 
 echo "<rows>";
 echo "<page>1</page>";

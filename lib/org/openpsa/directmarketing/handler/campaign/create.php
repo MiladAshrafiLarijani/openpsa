@@ -107,7 +107,7 @@ class org_openpsa_directmarketing_handler_campaign_create extends midcom_basecla
         $this->_controller->callback_object =& $this;
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
             // This will exit.
         }
     }
@@ -125,7 +125,7 @@ class org_openpsa_directmarketing_handler_campaign_create extends midcom_basecla
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $this->_campaign);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Failed to create a new campaign, cannot continue. Last Midgard error was: ' . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -143,7 +143,7 @@ class org_openpsa_directmarketing_handler_campaign_create extends midcom_basecla
      */
     function _handler_create($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_user_do('midgard:create', null, 'org_openpsa_directmarketing_campaign_dba');
+        midcom::auth->require_user_do('midgard:create', null, 'org_openpsa_directmarketing_campaign_dba');
 
         $this->_schema = $args[0];
         $this->_load_schemadb();
@@ -161,22 +161,22 @@ class org_openpsa_directmarketing_handler_campaign_create extends midcom_basecla
         {
             case 'save':
                 // Index the campaign
-                //$indexer = $_MIDCOM->get_service('indexer');
+                //$indexer = midcom::get_service('indexer');
                 //org_openpsa_directmarketing_viewer::index($this->_controller->datamanager, $indexer, $this->_topic);
 
-                $_MIDCOM->relocate("campaign/{$this->_campaign->guid}/");
+                midcom::relocate("campaign/{$this->_campaign->guid}/");
 
             case 'cancel':
-                $_MIDCOM->relocate('');
+                midcom::relocate('');
                 // This will exit.
         }
 
         if ($this->_campaign != null)
         {
-            $_MIDCOM->set_26_request_metadata($this->_campaign->metadata->revised, $this->_campaign->guid);
+            midcom::set_26_request_metadata($this->_campaign->metadata->revised, $this->_campaign->guid);
         }
         $data['view_title'] = sprintf($this->_l10n_midcom->get('create %s'), $this->_l10n->get($this->_schemadb[$this->_schema]->description));
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
         $this->_update_breadcrumb_line($handler_id);
 
         org_openpsa_helpers::dm2_savecancel($this);
@@ -199,7 +199,7 @@ class org_openpsa_directmarketing_handler_campaign_create extends midcom_basecla
             MIDCOM_NAV_NAME => sprintf($this->_l10n_midcom->get('create %s'), $this->_l10n->get($this->_schemadb[$this->_schema]->description)),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**

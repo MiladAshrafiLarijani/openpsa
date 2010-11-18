@@ -36,10 +36,10 @@ class midcom_admin_user_handler_group_list extends midcom_baseclasses_components
     function _on_initialize()
     {
 
-        $this->_l10n = $_MIDCOM->i18n->get_l10n('midcom.admin.user');
+        $this->_l10n = midcom::i18n()->get_l10n('midcom.admin.user');
         $this->_request_data['l10n'] = $this->_l10n;
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -77,11 +77,11 @@ class midcom_admin_user_handler_group_list extends midcom_baseclasses_components
             $tmp[] = Array
             (
                 MIDCOM_NAV_URL => "__mfa/asgard_midcom.admin.user/group/move/{$this->_request_data['group']->guid}/",
-                MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('move', 'midcom'),
+                MIDCOM_NAV_NAME => midcom::i18n()->get_string('move', 'midcom'),
             );
         }
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**
@@ -104,11 +104,11 @@ class midcom_admin_user_handler_group_list extends midcom_baseclasses_components
         }
 
         // Get the prefix
-        $data['prefix'] = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $data['prefix'] = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 
         if (isset($_POST['f_cancel']))
         {
-            $_MIDCOM->relocate("__mfa/asgard_midcom.admin.user/group/edit/{$data['group']->guid}/");
+            midcom::relocate("__mfa/asgard_midcom.admin.user/group/edit/{$data['group']->guid}/");
             // This will exit
         }
 
@@ -121,8 +121,8 @@ class midcom_admin_user_handler_group_list extends midcom_baseclasses_components
 
             if ($data['group']->update())
             {
-                $_MIDCOM->uimessages->add($this->_l10n->get('midcom.admin.user'), $_MIDCOM->i18n->get_string('updated', 'midcom'));
-                $_MIDCOM->relocate("__mfa/asgard_midcom.admin.user/group/edit/{$data['group']->guid}/");
+                midcom::uimessages()->add($this->_l10n->get('midcom.admin.user'), midcom::i18n()->get_string('updated', 'midcom'));
+                midcom::relocate("__mfa/asgard_midcom.admin.user/group/edit/{$data['group']->guid}/");
                 // This will exit
             }
             else
@@ -132,7 +132,7 @@ class midcom_admin_user_handler_group_list extends midcom_baseclasses_components
                 debug_print_r('We operated on this object', $data['group'], MIDCOM_LOG_ERROR);
                 debug_pop();
 
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to update the group, see error level log for details');
+                midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to update the group, see error level log for details');
                 // This will exit
             }
         }
@@ -142,7 +142,7 @@ class midcom_admin_user_handler_group_list extends midcom_baseclasses_components
         midgard_admin_asgard_plugin::get_common_toolbar($data);
 
         $data['view_title'] = sprintf($this->_l10n->get('move %s'), $data['group']->official);
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
 
         $this->_update_breadcrumb($handler_id);
         return true;
@@ -184,15 +184,15 @@ class midcom_admin_user_handler_group_list extends midcom_baseclasses_components
     function _handler_list($handler_id, $args, &$data)
     {
         // Get the prefix
-        $data['prefix'] = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $data['prefix'] = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 
-        $data['view_title'] = $_MIDCOM->i18n->get_string('groups', 'midcom.admin.user');
+        $data['view_title'] = midcom::i18n()->get_string('groups', 'midcom.admin.user');
 
         // Set the toolbar
         $data['asgard_toolbar'] = new midcom_helper_toolbar();
         midgard_admin_asgard_plugin::get_common_toolbar($data);
 
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
 
         $this->_update_breadcrumb($handler_id);
         return true;
@@ -268,7 +268,7 @@ class midcom_admin_user_handler_group_list extends midcom_baseclasses_components
 
             if (!$data['title'])
             {
-                $data['title'] = $_MIDCOM->i18n->get_string('unknown', 'midcom.admin.user');
+                $data['title'] = midcom::i18n()->get_string('unknown', 'midcom.admin.user');
             }
 
             // Show the group

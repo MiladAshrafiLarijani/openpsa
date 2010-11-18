@@ -48,7 +48,7 @@ class midgard_admin_asgard_handler_object_attachments extends midcom_baseclasses
         $this->_component = 'midgard.admin.asgard';
         parent::__construct();
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -58,7 +58,7 @@ class midgard_admin_asgard_handler_object_attachments extends midcom_baseclasses
             )
         );
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -72,8 +72,8 @@ class midgard_admin_asgard_handler_object_attachments extends midcom_baseclasses
     function _on_initialize()
     {
         // Ensure we get the correct styles
-        $_MIDCOM->style->prepend_component_styledir('midgard.admin.asgard');
-        $_MIDCOM->skip_page_style = true;
+        midcom::style->prepend_component_styledir('midgard.admin.asgard');
+        midcom::skip_page_style = true;
     }
 
     /**
@@ -119,7 +119,7 @@ class midgard_admin_asgard_handler_object_attachments extends midcom_baseclasses
 
                 if (!$local_file->create())
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to create attachment, reason: ' . midcom_connection::get_error_string());
+                    midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to create attachment, reason: ' . midcom_connection::get_error_string());
                     // This will exit.
                 }
             }
@@ -177,7 +177,7 @@ class midgard_admin_asgard_handler_object_attachments extends midcom_baseclasses
 
                 if (!$local_file->create())
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to create attachment, reason: ' . midcom_connection::get_error_string());
+                    midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to create attachment, reason: ' . midcom_connection::get_error_string());
                     // This will exit.
                 }
             }
@@ -267,9 +267,9 @@ class midgard_admin_asgard_handler_object_attachments extends midcom_baseclasses
         {
 
             // Add Thickbox
-            $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/midgard.admin.asgard/object_browser.js');
-            $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/jQuery/thickbox/jquery-thickbox-3.1.pack.js');
-            $_MIDCOM->add_link_head
+            midcom::add_jsfile(MIDCOM_STATIC_URL . '/midgard.admin.asgard/object_browser.js');
+            midcom::add_jsfile(MIDCOM_STATIC_URL . '/jQuery/thickbox/jquery-thickbox-3.1.pack.js');
+            midcom::add_link_head
             (
                 array
                 (
@@ -279,11 +279,11 @@ class midgard_admin_asgard_handler_object_attachments extends midcom_baseclasses
                     'media' => 'screen',
                 )
             );
-            $_MIDCOM->add_jscript('var tb_pathToImage = "' . MIDCOM_STATIC_URL . '/jQuery/thickbox/loadingAnimation.gif"');
+            midcom::add_jscript('var tb_pathToImage = "' . MIDCOM_STATIC_URL . '/jQuery/thickbox/loadingAnimation.gif"');
 
             //add table widget
-            $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.tablesorter.pack.js');
-            $_MIDCOM->add_link_head
+            midcom::add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.tablesorter.pack.js');
+            midcom::add_link_head
             (
                 array
                 (
@@ -306,16 +306,16 @@ class midgard_admin_asgard_handler_object_attachments extends midcom_baseclasses
      */
     function _handler_create($handler_id, $args, &$data)
     {
-        $this->_object = $_MIDCOM->dbfactory->get_object_by_guid($args[0]);
+        $this->_object = midcom::dbfactory()->get_object_by_guid($args[0]);
         if (   !$this->_object
             || !$this->_object->guid)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The GUID '{$args[0]}' was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The GUID '{$args[0]}' was not found.");
             // This will exit.
         }
         $this->_object->require_do('midgard:update');
         $this->_object->require_do('midgard:attachments');
-        $_MIDCOM->auth->require_user_do('midgard.admin.asgard:manage_objects', null, 'midgard_admin_asgard_plugin');
+        midcom::auth->require_user_do('midgard.admin.asgard:manage_objects', null, 'midgard_admin_asgard_plugin');
 
         $filename = $this->_process_form();
         if (!$filename)
@@ -324,7 +324,7 @@ class midgard_admin_asgard_handler_object_attachments extends midcom_baseclasses
         }
         else
         {
-            $_MIDCOM->relocate("__mfa/asgard/object/attachments/{$this->_object->guid}/{$filename}/");
+            midcom::relocate("__mfa/asgard/object/attachments/{$this->_object->guid}/{$filename}/");
         }
 
         $this->_list_files();
@@ -368,16 +368,16 @@ class midgard_admin_asgard_handler_object_attachments extends midcom_baseclasses
      */
     function _handler_edit($handler_id, $args, &$data)
     {
-        $this->_object = $_MIDCOM->dbfactory->get_object_by_guid($args[0]);
+        $this->_object = midcom::dbfactory()->get_object_by_guid($args[0]);
         if (   !$this->_object
             || !$this->_object->guid)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The GUID '{$args[0]}' was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The GUID '{$args[0]}' was not found.");
             // This will exit.
         }
         $this->_object->require_do('midgard:update');
         $this->_object->require_do('midgard:attachments');
-        $_MIDCOM->auth->require_user_do('midgard.admin.asgard:manage_objects', null, 'midgard_admin_asgard_plugin');
+        midcom::auth->require_user_do('midgard.admin.asgard:manage_objects', null, 'midgard_admin_asgard_plugin');
 
         $data['filename'] = $args[1];
         $this->_file = $this->_get_file($data['filename']);
@@ -386,7 +386,7 @@ class midgard_admin_asgard_handler_object_attachments extends midcom_baseclasses
             return false;
         }
         $this->_file->require_do('midgard:update');
-        $_MIDCOM->bind_view_to_object($this->_file);
+        midcom::bind_view_to_object($this->_file);
 
         $filename = $this->_process_form();
         if (!$filename)
@@ -397,7 +397,7 @@ class midgard_admin_asgard_handler_object_attachments extends midcom_baseclasses
         {
             if ($filename != $data['filename'])
             {
-                $_MIDCOM->relocate("__mfa/asgard/object/attachments/{$this->_object->guid}/{$filename}/");
+                midcom::relocate("__mfa/asgard/object/attachments/{$this->_object->guid}/{$filename}/");
             }
         }
 
@@ -444,7 +444,7 @@ class midgard_admin_asgard_handler_object_attachments extends midcom_baseclasses
     {
         midgard_admin_asgard_plugin::asgard_header();
 
-        $host_prefix = $_MIDCOM->get_host_prefix();
+        $host_prefix = midcom::get_host_prefix();
         $delete_url = $host_prefix . '__mfa/asgard/object/attachments/delete/' . $this->_object->guid . '/' . $this->_file->name;
 
         $data['delete_url'] =& $delete_url;
@@ -469,22 +469,22 @@ class midgard_admin_asgard_handler_object_attachments extends midcom_baseclasses
      */
     function _handler_delete($handler_id, $args, &$data)
     {
-        $this->_object = $_MIDCOM->dbfactory->get_object_by_guid($args[0]);
+        $this->_object = midcom::dbfactory()->get_object_by_guid($args[0]);
         if (   !$this->_object
             || !$this->_object->guid)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The GUID '{$args[0]}' was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The GUID '{$args[0]}' was not found.");
             // This will exit.
         }
         $this->_object->require_do('midgard:update');
         $this->_object->require_do('midgard:attachments');
-        $_MIDCOM->auth->require_user_do('midgard.admin.asgard:manage_objects', null, 'midgard_admin_asgard_plugin');
+        midcom::auth->require_user_do('midgard.admin.asgard:manage_objects', null, 'midgard_admin_asgard_plugin');
 
         $data['filename'] = $args[1];
         $this->_file = $this->_get_file($data['filename']);
         if (!$this->_file)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "Attachment '{$data['filename']}' of object {$this->_object->guid} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "Attachment '{$data['filename']}' of object {$this->_object->guid} was not found.");
             // This will exit.
         }
 
@@ -493,8 +493,8 @@ class midgard_admin_asgard_handler_object_attachments extends midcom_baseclasses
 
         if (isset($_POST['f_cancel']))
         {
-            $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('midgard.admin.asgard', 'midgard.admin.asgard'), $_MIDCOM->i18n->get_string('delete cancelled', 'midgard.admin.asgard'));
-            $_MIDCOM->relocate("__mfa/asgard/object/attachments/{$this->_object->guid}/{$data['filename']}/");
+            midcom::uimessages()->add(midcom::i18n()->get_string('midgard.admin.asgard', 'midgard.admin.asgard'), midcom::i18n()->get_string('delete cancelled', 'midgard.admin.asgard'));
+            midcom::relocate("__mfa/asgard/object/attachments/{$this->_object->guid}/{$data['filename']}/");
             // This will exit
         }
 
@@ -502,8 +502,8 @@ class midgard_admin_asgard_handler_object_attachments extends midcom_baseclasses
         {
             if ($this->_file->delete())
             {
-                $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('midgard.admin.asgard', 'midgard.admin.asgard'), sprintf($_MIDCOM->i18n->get_string('file %s deleted', 'midgard.admin.asgard'), $data['filename']));
-                $_MIDCOM->relocate("__mfa/asgard/object/attachments/{$this->_object->guid}/");
+                midcom::uimessages()->add(midcom::i18n()->get_string('midgard.admin.asgard', 'midgard.admin.asgard'), sprintf(midcom::i18n()->get_string('file %s deleted', 'midgard.admin.asgard'), $data['filename']));
+                midcom::relocate("__mfa/asgard/object/attachments/{$this->_object->guid}/");
                 // This will exit
             }
 

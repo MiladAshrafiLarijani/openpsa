@@ -89,7 +89,7 @@ class net_nemein_wiki_handler_edit extends midcom_baseclasses_components_handler
         if (   ! $this->_datamanager
             || ! $this->_datamanager->autoset_storage($page))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for article {$this->_article->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for article {$this->_article->id}.");
             // This will exit.
         }
     }
@@ -107,7 +107,7 @@ class net_nemein_wiki_handler_edit extends midcom_baseclasses_components_handler
         $this->_controller->set_storage($this->_page);
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for article {$this->_article->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for article {$this->_article->id}.");
             // This will exit.
         }
     }
@@ -157,18 +157,18 @@ class net_nemein_wiki_handler_edit extends midcom_baseclasses_components_handler
                 break;
             case 'save':
                 // Reindex the article
-                $indexer = $_MIDCOM->get_service('indexer');
+                $indexer = midcom::get_service('indexer');
                 net_nemein_wiki_viewer::index($this->_controller->datamanager, $indexer, $this->_topic);
-                $_MIDCOM->uimessages->add($this->_request_data['l10n']->get('net.nemein.wiki'), sprintf($this->_request_data['l10n']->get('page %s saved'), $this->_page->title), 'ok');
+                midcom::uimessages()->add($this->_request_data['l10n']->get('net.nemein.wiki'), sprintf($this->_request_data['l10n']->get('page %s saved'), $this->_page->title), 'ok');
                 // *** FALL-THROUGH ***
             case 'cancel':
                 if ($this->_page->name == 'index')
                 {
-                    $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX));
+                    midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX));
                 }
                 else
                 {
-                    $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "{$this->_page->name}/");
+                    midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . "{$this->_page->name}/");
                 }
                 // This will exit.
         }
@@ -228,10 +228,10 @@ class net_nemein_wiki_handler_edit extends midcom_baseclasses_components_handler
             );
         }
 
-        $_MIDCOM->bind_view_to_object($this->_page, $this->_controller->datamanager->schema->name);
+        midcom::bind_view_to_object($this->_page, $this->_controller->datamanager->schema->name);
 
         $data['view_title'] = sprintf($this->_request_data['l10n']->get('edit %s'), $this->_page->title);
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
 
         // Set the breadcrumb pieces
         $tmp = Array();
@@ -245,7 +245,7 @@ class net_nemein_wiki_handler_edit extends midcom_baseclasses_components_handler
             MIDCOM_NAV_URL => "edit/{$this->_page->name}/",
             MIDCOM_NAV_NAME => $this->_request_data['l10n_midcom']->get('edit'),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         // Set the help object in the toolbar
         $this->_view_toolbar->add_help_item('markdown', 'net.nemein.wiki');
@@ -313,7 +313,7 @@ class net_nemein_wiki_handler_edit extends midcom_baseclasses_components_handler
     {
         if ($_SERVER['REQUEST_METHOD'] != 'POST')
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRFORBIDDEN, 'Only POST requests are allowed here.');
+            midcom::generate_error(MIDCOM_ERRFORBIDDEN, 'Only POST requests are allowed here.');
         }
 
         if (!$this->_load_page($args[0]))
@@ -326,7 +326,7 @@ class net_nemein_wiki_handler_edit extends midcom_baseclasses_components_handler
         $this->_page->parameter('midcom.helper.datamanager2', 'schema_name', $_POST['change_to']);
 
         // Redirect to editing
-        $_MIDCOM->relocate("edit/{$this->_page->name}/");
+        midcom::relocate("edit/{$this->_page->name}/");
         // This will exit
     }
 }

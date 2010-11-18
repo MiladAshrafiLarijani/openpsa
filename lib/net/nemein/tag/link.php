@@ -25,12 +25,12 @@ class net_nemein_tag_link_dba extends midcom_core_dbaobject
     
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
     
     function get_parent_guid_uncached()
@@ -52,7 +52,7 @@ class net_nemein_tag_link_dba extends midcom_core_dbaobject
                 debug_pop();
                 return null;
             }
-            if (!$_MIDCOM->componentloader->load_graceful($this->fromComponent))
+            if (!midcom::componentloader->load_graceful($this->fromComponent))
             {
                 debug_push_class(__CLASS__, __FUNCTION__);
                 debug_add("Could not load component '{$this->fromComponent}' (to load missing class '{$class}')", MIDCOM_LOG_ERROR);
@@ -183,10 +183,10 @@ class net_nemein_tag_link_dba extends midcom_core_dbaobject
             return false;
         }
 
-        $_MIDCOM->load_library('org.routamc.positioning');
+        midcom::load_library('org.routamc.positioning');
 
         // Get all "geo" tags of the object
-        $object = $_MIDCOM->dbfactory->get_object_by_guid($this->fromGuid);
+        $object = midcom::dbfactory()->get_object_by_guid($this->fromGuid);
         $geotags = net_nemein_tag_handler::get_object_machine_tags_in_context($object, 'geo');
 
         $position = array

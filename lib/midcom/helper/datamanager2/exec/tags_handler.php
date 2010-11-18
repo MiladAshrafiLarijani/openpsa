@@ -17,8 +17,8 @@ $_callback = null;
 $callback_args = array();
 
 // Common headers
-$_MIDCOM->cache->content->content_type('text/xml');
-$_MIDCOM->header('Content-type: text/xml; charset=' . $encoding);
+midcom::cache()->content->content_type('text/xml');
+midcom::header('Content-type: text/xml; charset=' . $encoding);
 echo '<?xml version="1.0" encoding="' . $encoding . '" standalone="yes"?>' . "\n";
 echo "<response>\n";
 
@@ -30,7 +30,7 @@ if (! isset($_REQUEST["query"]))
 
     debug_add("Empty query string. Quitting now.");
     debug_pop();
-    $_MIDCOM->finish();
+    midcom::finish();
     _midcom_stop_request();
 }
 
@@ -65,12 +65,12 @@ if (   !empty($component)
 
 if ($mode == 'object')
 {
-    $_MIDCOM->load_library('net.nemein.tag');
+    midcom::load_library('net.nemein.tag');
 
     // Load component if required
     if (!class_exists($class))
     {
-        $_MIDCOM->componentloader->load_graceful($component);
+        midcom::componentloader()->load_graceful($component);
     }
     // Could not get required class defined, abort
     if (!class_exists($class))
@@ -78,7 +78,7 @@ if ($mode == 'object')
         echo "    <status>0</status>\n";
         echo "    <errstr>Class {$class} could not be loaded</errstr>\n";
         echo "</response>\n";
-        $_MIDCOM->finish();
+        midcom::finish();
         _midcom_stop_request();
     }
 
@@ -91,7 +91,7 @@ if ($mode == 'object')
         echo "    <status>0</status>\n";
         echo "    <errstr>Error when executing QB</errstr>\n";
         echo "</response>\n";
-        $_MIDCOM->finish();
+        midcom::finish();
         _midcom_stop_request();
     }
 
@@ -168,7 +168,7 @@ if (empty($results))
 
     debug_add("No results.");
     debug_pop();
-    $_MIDCOM->finish();
+    midcom::finish();
     _midcom_stop_request();
 }
 
@@ -186,7 +186,7 @@ echo "    </results>\n";
 echo "</response>\n";
 
 debug_pop();
-$_MIDCOM->finish();
+midcom::finish();
 _midcom_stop_request();
 
 ?>

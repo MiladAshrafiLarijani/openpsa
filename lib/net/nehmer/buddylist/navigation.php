@@ -27,7 +27,7 @@ class net_nehmer_buddylist_navigation extends midcom_baseclasses_components_navi
     {
         $leaves = Array();
 
-        if ($_MIDCOM->auth->user)
+        if (midcom::auth->user)
         {
             $leaves[NET_NEHMER_BUDDYLIST_LEAFID_PENDING] = array
             (

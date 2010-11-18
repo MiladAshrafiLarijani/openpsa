@@ -76,7 +76,7 @@ class midcom_admin_folder_handler_metadata extends midcom_baseclasses_components
 
         // Check if we have metadata schema defined in the schemadb specific for the object's schema or component
         $object_schema = $this->_object->get_parameter('midcom.helper.datamanager2', 'schema_name');
-        $component_schema = str_replace('.', '_', $_MIDCOM->get_context_data(MIDCOM_CONTEXT_COMPONENT));
+        $component_schema = str_replace('.', '_', midcom::get_context_data(MIDCOM_CONTEXT_COMPONENT));
         if (   $object_schema == ''
             || !isset($this->_schemadb[$object_schema]))
         {
@@ -97,7 +97,7 @@ class midcom_admin_folder_handler_metadata extends midcom_baseclasses_components
 
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for article {$this->_article->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for article {$this->_article->id}.");
             // This will exit.
         }
     }
@@ -116,13 +116,13 @@ class midcom_admin_folder_handler_metadata extends midcom_baseclasses_components
     {
         debug_push_class(__CLASS__, __FUNCTION__);
 
-        $this->_object = $_MIDCOM->dbfactory->get_object_by_guid($args[0]);
+        $this->_object = midcom::dbfactory()->get_object_by_guid($args[0]);
         if (! $this->_object)
         {
             debug_add("Object with GUID '{$args[0]}' was not found!", MIDCOM_LOG_ERROR);
             debug_pop();
 
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The GUID '{$args[0]}' was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The GUID '{$args[0]}' was not found.");
             // This will exit.
         }
 
@@ -137,14 +137,14 @@ class midcom_admin_folder_handler_metadata extends midcom_baseclasses_components
         else
         {
             // This is a regular object, bind to view
-            $_MIDCOM->bind_view_to_object($this->_object);
+            midcom::bind_view_to_object($this->_object);
         }
 
         $this->_metadata = midcom_helper_metadata::retrieve($this->_object);
 
         if (! $this->_metadata)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to retrieve Metadata for " . get_class($this->_object) . " {$object->guid}.");
             // This will exit.
         }
@@ -155,9 +155,9 @@ class midcom_admin_folder_handler_metadata extends midcom_baseclasses_components
         switch ($this->_controller->process_form())
         {
             case 'save':
-                $_MIDCOM->cache->invalidate($this->_object->guid);
+                midcom::cache()->invalidate($this->_object->guid);
             case 'cancel':
-                $_MIDCOM->relocate('');
+                midcom::relocate('');
                 // This will exit
         }
 
@@ -171,7 +171,7 @@ class midcom_admin_folder_handler_metadata extends midcom_baseclasses_components
         {
             $tmp[] = array
             (
-                MIDCOM_NAV_URL => $_MIDCOM->permalinks->create_permalink($this->_object->guid),
+                MIDCOM_NAV_URL => midcom::permalinks()->create_permalink($this->_object->guid),
                 MIDCOM_NAV_NAME => $this->_get_object_title($this->_object),
             );
             $this->_view_toolbar->hide_item("__ais/folder/metadata/{$this->_object->guid}/");
@@ -180,19 +180,19 @@ class midcom_admin_folder_handler_metadata extends midcom_baseclasses_components
         $tmp[] = Array
         (
             MIDCOM_NAV_URL => "__ais/folder/metadata/{$this->_object->guid}/",
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('edit metadata', 'midcom.admin.folder'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('edit metadata', 'midcom.admin.folder'),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
-        $data['title'] = sprintf($_MIDCOM->i18n->get_string('edit metadata of %s', 'midcom.admin.folder'), $this->_get_object_title($this->_object));
-        $_MIDCOM->set_pagetitle($data['title']);
+        $data['title'] = sprintf(midcom::i18n()->get_string('edit metadata of %s', 'midcom.admin.folder'), $this->_get_object_title($this->_object));
+        midcom::set_pagetitle($data['title']);
 
         // Set the help object in the toolbar
-        $help_toolbar = $_MIDCOM->toolbars->get_help_toolbar();
+        $help_toolbar = midcom::toolbars()->get_help_toolbar();
         $help_toolbar->add_help_item('edit_metadata', 'midcom.admin.folder', null, null, 1);
 
         // Ensure we get the correct styles
-        $_MIDCOM->style->prepend_component_styledir('midcom.admin.folder');
+        midcom::style()->prepend_component_styledir('midcom.admin.folder');
 
         return true;
     }

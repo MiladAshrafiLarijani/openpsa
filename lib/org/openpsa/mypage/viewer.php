@@ -33,7 +33,7 @@ class org_openpsa_mypage_viewer extends midcom_baseclasses_components_request
     function _on_initialize()
     {
         // Always run in uncached mode
-        $_MIDCOM->cache->content->no_cache();
+        midcom::cache()->content->no_cache();
 
         // Match /savefilter
         $this->_request_switch['savefilter'] = array
@@ -116,7 +116,7 @@ class org_openpsa_mypage_viewer extends midcom_baseclasses_components_request
 
     function _on_handle($handler, $args)
     {
-        $_MIDCOM->load_library('org.openpsa.contactwidget');
+        midcom::load_library('org.openpsa.contactwidget');
 
         return parent::_on_handle($handler, $args);
     }
@@ -128,7 +128,7 @@ class org_openpsa_mypage_viewer extends midcom_baseclasses_components_request
      */
     function _handler_savefilter($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         if (array_key_exists('org_openpsa_workgroup_filter', $_POST))
         {
             $session = new midcom_services_session('org.openpsa.core');
@@ -152,15 +152,15 @@ class org_openpsa_mypage_viewer extends midcom_baseclasses_components_request
      */
     function _handler_userinfo($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
-        if ($_MIDCOM->auth->user)
+        midcom::auth->require_valid_user();
+        if (midcom::auth->user)
         {
             $this->_request_data['virtual_groups']['all'] = $this->_l10n->get('all groups');
             $this->_request_data['virtual_groups'] += org_openpsa_helpers_list::workgroups();
         }
 
         // This handler uses Ajax, include the handler javascripts
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL."/org.openpsa.helpers/ajaxutils.js");
+        midcom::add_jsfile(MIDCOM_STATIC_URL."/org.openpsa.helpers/ajaxutils.js");
 
         return true;
     }
@@ -172,7 +172,7 @@ class org_openpsa_mypage_viewer extends midcom_baseclasses_components_request
      */
     function _show_userinfo($handler_id, &$data)
     {
-        if ($_MIDCOM->auth->user)
+        if (midcom::auth->user)
         {
             midcom_show_style("show-userinfo");
         }
@@ -186,17 +186,17 @@ class org_openpsa_mypage_viewer extends midcom_baseclasses_components_request
      */
     function _handler_updates($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         // Instantiate indexer
-        $indexer = $_MIDCOM->get_service('indexer');
+        $indexer = midcom::get_service('indexer');
 
         $start = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
-        $query = '__TOPIC_URL:"' . $_MIDCOM->get_host_name() . '*"';
+        $query = '__TOPIC_URL:"' . midcom::get_host_name() . '*"';
         $filter = new midcom_services_indexer_filter_date('__EDITED', $start, 0);
         $this->_request_data['today'] = $indexer->query($query, $filter);
         $start = mktime(0, 0, 0, date('m'), date('d')-1, date('Y'));
         $end = mktime(23, 59, 59, date('m'), date('d')-1, date('Y'));
-        $query = '__TOPIC_URL:"' . $_MIDCOM->get_host_name() . '*"';
+        $query = '__TOPIC_URL:"' . midcom::get_host_name() . '*"';
         $filter = new midcom_services_indexer_filter_date('__EDITED', $start, $end);
         $this->_request_data['yesterday'] = $indexer->query($query, $filter);
         return true;

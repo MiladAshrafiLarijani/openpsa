@@ -36,8 +36,8 @@ class midgard_admin_asgard_handler_object_deleted extends midcom_baseclasses_com
     function _on_initialize()
     {
         // Ensure we get the correct styles
-        $_MIDCOM->style->prepend_component_styledir('midgard.admin.asgard');
-        $_MIDCOM->skip_page_style = true;
+        midcom::style->prepend_component_styledir('midgard.admin.asgard');
+        midcom::skip_page_style = true;
     }
 
     /**
@@ -70,14 +70,14 @@ class midgard_admin_asgard_handler_object_deleted extends midcom_baseclasses_com
          */
         $this->_prepare_request_data();
 
-        if ($_MIDCOM->auth->admin)
+        if (midcom::auth->admin)
         {
             $data['asgard_toolbar']->add_item
             (
                 array
                 (
                     MIDCOM_TOOLBAR_URL => '__mfa/asgard/trash/',
-                    MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('trash', 'midgard.admin.asgard'),
+                    MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('trash', 'midgard.admin.asgard'),
                     MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/trash-full.png',
                 )
             );
@@ -88,14 +88,14 @@ class midgard_admin_asgard_handler_object_deleted extends midcom_baseclasses_com
         $tmp[] = array
         (
             MIDCOM_NAV_URL => '__mfa/asgard/',
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('midgard.admin.asgard', 'midgard.admin.asgard'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('midgard.admin.asgard', 'midgard.admin.asgard'),
         );
         $tmp[] = array
         (
             MIDCOM_NAV_URL => "",
             MIDCOM_NAV_NAME => $this->_l10n->get('object deleted')
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         return true;
     }

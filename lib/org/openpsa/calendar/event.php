@@ -120,17 +120,17 @@ class org_openpsa_calendar_event_dba extends  midcom_core_dbaobject
 
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
 
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
 
     function get_parent_guid_uncached()
@@ -164,7 +164,7 @@ class org_openpsa_calendar_event_dba extends  midcom_core_dbaobject
 
     function _on_loaded()
     {
-        $l10n = $_MIDCOM->i18n->get_l10n('org.openpsa.calendar');
+        $l10n = midcom::i18n()->get_l10n('org.openpsa.calendar');
 
         // Check for empty title in existing events
         if (   $this->id
@@ -183,7 +183,7 @@ class org_openpsa_calendar_event_dba extends  midcom_core_dbaobject
         $this->_get_em();
 
         // Hide details if we're not allowed to see them
-        if (!$_MIDCOM->auth->can_do('org.openpsa.calendar:read', $this))
+        if (!midcom::auth->can_do('org.openpsa.calendar:read', $this))
         {
             // Hide almost all properties
             $properties = $this->get_properties();
@@ -412,9 +412,9 @@ class org_openpsa_calendar_event_dba extends  midcom_core_dbaobject
     {
         //TODO: handle the repeats somehow (if set)
         // When anonymous creation is allowed creating the members can be problematic, this works around that
-        $_MIDCOM->auth->request_sudo('org.openpsa.calendar');
+        midcom::auth->request_sudo('org.openpsa.calendar');
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         if ($this->search_relatedtos)
         {
             //TODO: add check for failed additions
@@ -633,7 +633,7 @@ class org_openpsa_calendar_event_dba extends  midcom_core_dbaobject
         // Handle ACL accordingly
         foreach ($this->participants as $person_id => $selected)
         {
-            $user = $_MIDCOM->auth->get_user($person_id);
+            $user = midcom::auth->get_user($person_id);
 
             // All participants can read and update
             $this->set_privilege('org.openpsa.calendar:read', $user->id, MIDCOM_PRIVILEGE_ALLOW);
@@ -703,7 +703,7 @@ class org_openpsa_calendar_event_dba extends  midcom_core_dbaobject
     {
         $this->_get_em();
         //Remove participants
-        $_MIDCOM->auth->request_sudo('org.openpsa.calendar');
+        midcom::auth->request_sudo('org.openpsa.calendar');
         reset ($this->participants);
         while (list ($id, $bool) = each ($this->participants))
         {
@@ -736,7 +736,7 @@ class org_openpsa_calendar_event_dba extends  midcom_core_dbaobject
         }
 
         //Remove event parameters
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
 
         return true;
     }
@@ -814,7 +814,7 @@ class org_openpsa_calendar_event_dba extends  midcom_core_dbaobject
             $rob_tentative = false;
         }
         //We need sudo to see busys in events we normally don't see and to rob resources from tentative events
-        $_MIDCOM->auth->request_sudo('org.openpsa.calendar');
+        midcom::auth->request_sudo('org.openpsa.calendar');
 
         //Storage for events that have been modified due the course of this method
         $modified_events = array();
@@ -874,7 +874,7 @@ class org_openpsa_calendar_event_dba extends  midcom_core_dbaobject
             )
         {
             //No busy events found within the timeframe
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
             debug_add('no overlaps found');
             debug_pop();
             return false;
@@ -1040,7 +1040,7 @@ class org_openpsa_calendar_event_dba extends  midcom_core_dbaobject
             || is_array($this->busy_er))
         {
             //Unresolved conflicts (note return value is for conflicts not lack of them)
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
             debug_add('unresolvable conflicts found, returning true');
             debug_pop();
             midcom_connection::set_error(MGD_ERR_ERROR);
@@ -1073,7 +1073,7 @@ class org_openpsa_calendar_event_dba extends  midcom_core_dbaobject
             }
         }
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         //No conflicts found or they could be automatically resolved
         $this->busy_em = false;
         $this->busy_er = false;
@@ -1190,7 +1190,7 @@ class org_openpsa_calendar_event_dba extends  midcom_core_dbaobject
     function details_text($display_title = true, $member = false, $nl = "\n")
     {
         debug_push_class(__CLASS__, __FUNCTION__);
-        $l10n = $_MIDCOM->i18n->get_l10n('org.openpsa.calendar');
+        $l10n = midcom::i18n()->get_l10n('org.openpsa.calendar');
         $str = '';
         if ($display_title)
         {

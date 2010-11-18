@@ -66,7 +66,7 @@ class midcom_baseclasses_components_handler_dataexport extends midcom_baseclasse
     {
         if (empty($this->_schema))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Export schema ($this->_schema) must be defined, hint: do it in "_load_schemadb"');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Export schema ($this->_schema) must be defined, hint: do it in "_load_schemadb"');
             // This will exit
         }
         $this->_datamanager = new midcom_helper_datamanager2_datamanager($schemadb);
@@ -74,24 +74,24 @@ class midcom_baseclasses_components_handler_dataexport extends midcom_baseclasse
         if (   ! $this->_datamanager
             || ! $this->_datamanager->set_schema($this->_schema))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for schemadb schema '{$this->_schema}'.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for schemadb schema '{$this->_schema}'.");
             // This will exit.
         }
     }
 
     function _load_schemadb()
     {
-        $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Method "_load_schemadb" must be overridden in implementation');
+        midcom::generate_error(MIDCOM_ERRCRIT, 'Method "_load_schemadb" must be overridden in implementation');
     }
 
     function _load_data()
     {
-        $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Method "_load_data" must be overridden in implementation');
+        midcom::generate_error(MIDCOM_ERRCRIT, 'Method "_load_data" must be overridden in implementation');
     }
 
     function _handler_csv($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth()->require_valid_user();
 
         //Disable limits
         @ini_set('memory_limit', -1);
@@ -100,7 +100,7 @@ class midcom_baseclasses_components_handler_dataexport extends midcom_baseclasse
         $this->_load_datamanager($this->_load_schemadb($handler_id, $args, $data));
         $this->_objects = $this->_load_data($handler_id, $args, $data);
 
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
 
         if (   !isset($args[0])
             || empty($args[0]))
@@ -109,11 +109,11 @@ class midcom_baseclasses_components_handler_dataexport extends midcom_baseclasse
             $fname = preg_replace('/[^a-z0-9-]/i', '_', strtolower($this->_topic->extra)) . '_' . date('Y-m-d') . '.csv';
             if (strpos(midcom_connection::get_url('uri'), '/', strlen(midcom_connection::get_url('uri')) - 2))
             {
-                $_MIDCOM->relocate(midcom_connection::get_url('uri') . $fname);
+                midcom::relocate(midcom_connection::get_url('uri') . $fname);
             }
             else
             {
-                $_MIDCOM->relocate(midcom_connection::get_url('uri') . "/{$fname}");
+                midcom::relocate(midcom_connection::get_url('uri') . "/{$fname}");
             }
             // This will exit
         }
@@ -125,11 +125,11 @@ class midcom_baseclasses_components_handler_dataexport extends midcom_baseclasse
         }
 
         $this->_init_csv_variables();
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
 
         // FIXME: Use global configuration
-        //$_MIDCOM->cache->content->content_type($this->_config->get('csv_export_content_type'));
-        $_MIDCOM->cache->content->content_type('application/csv');
+        //midcom::cache()->content->content_type($this->_config->get('csv_export_content_type'));
+        midcom::cache()->content->content_type('application/csv');
         _midcom_header('Content-Disposition: filename=' . $data['filename']);
 
         return true;
@@ -177,7 +177,7 @@ class midcom_baseclasses_components_handler_dataexport extends midcom_baseclasse
         }
         if ($this->csv['s'] == $this->csv['d'])
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "CSV decimal separator (configured as '{$this->csv['d']}') may not be the same as field separator (configured as '{$this->csv['s']}')");
+            midcom::generate_error(MIDCOM_ERRCRIT, "CSV decimal separator (configured as '{$this->csv['d']}') may not be the same as field separator (configured as '{$this->csv['s']}')");
         }
     }
 
@@ -239,7 +239,7 @@ class midcom_baseclasses_components_handler_dataexport extends midcom_baseclasse
     function _show_csv($handler_id, &$data)
     {
         // Make real sure we're dumping data live
-        $_MIDCOM->cache->content->enable_live_mode();
+        midcom::cache()->content->enable_live_mode();
         while(@ob_end_flush());
 
         // Dump headers
@@ -261,7 +261,7 @@ class midcom_baseclasses_components_handler_dataexport extends midcom_baseclasse
             {
                 $totals[$name] = 0;
             }
-            $title = $_MIDCOM->i18n->get_string($title, $this->_component);
+            $title = midcom::i18n()->get_string($title, $this->_component);
             $i++;
             if ($i < count($datamanager->schema->field_order))
             {

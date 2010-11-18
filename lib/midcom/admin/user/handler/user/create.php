@@ -30,11 +30,11 @@ class midcom_admin_user_handler_user_create extends midcom_baseclasses_component
     function _on_initialize()
     {
 
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
-        $this->_l10n = $_MIDCOM->i18n->get_l10n('midcom.admin.user');
+        midcom::load_library('midcom.helper.datamanager2');
+        $this->_l10n = midcom::i18n()->get_l10n('midcom.admin.user');
         $this->_request_data['l10n'] = $this->_l10n;
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -56,14 +56,14 @@ class midcom_admin_user_handler_user_create extends midcom_baseclasses_component
         $tmp[] = Array
         (
             MIDCOM_NAV_URL => "__mfa/asgard_midcom.admin.user/",
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('midcom.admin.user', 'midcom.admin.user'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('midcom.admin.user', 'midcom.admin.user'),
         );
         $tmp[] = Array
         (
             MIDCOM_NAV_URL => "__mfa/asgard_midcom.admin.user/create/",
             MIDCOM_NAV_NAME => $this->_request_data['view_title'],
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**
@@ -88,7 +88,7 @@ class midcom_admin_user_handler_user_create extends midcom_baseclasses_component
         $this->_controller->callback_object =& $this;
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to initialize a DM2 create controller.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to initialize a DM2 create controller.');
             // This will exit.
         }
     }
@@ -107,7 +107,7 @@ class midcom_admin_user_handler_user_create extends midcom_baseclasses_component
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $this->_person);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Failed to create a new person, cannot continue. Last Midgard error was: '. midcom_connection::get_error_string());
             // This will exit.
         }
@@ -131,16 +131,16 @@ class midcom_admin_user_handler_user_create extends midcom_baseclasses_component
         {
             case 'save':
                 // Show confirmation for the user
-                $_MIDCOM->uimessages->add($this->_l10n->get('midcom.admin.user'), sprintf($this->_l10n->get('person %s saved'), $this->_person->name));
-                $_MIDCOM->relocate("__mfa/asgard_midcom.admin.user/edit/{$this->_person->guid}/");
+                midcom::uimessages()->add($this->_l10n->get('midcom.admin.user'), sprintf($this->_l10n->get('person %s saved'), $this->_person->name));
+                midcom::relocate("__mfa/asgard_midcom.admin.user/edit/{$this->_person->guid}/");
                 
             case 'cancel':
-                $_MIDCOM->relocate('__mfa/asgard_midcom.admin.user/');
+                midcom::relocate('__mfa/asgard_midcom.admin.user/');
                 // This will exit.
         }
         
-        $data['view_title'] = $_MIDCOM->i18n->get_string('create user', 'midcom.admin.user');
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        $data['view_title'] = midcom::i18n()->get_string('create user', 'midcom.admin.user');
+        midcom::set_pagetitle($data['view_title']);
         $this->_update_breadcrumb();
         
         return true;

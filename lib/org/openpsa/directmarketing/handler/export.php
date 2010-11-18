@@ -49,14 +49,14 @@ class org_openpsa_directmarketing_handler_export extends midcom_baseclasses_comp
     private function _prepare_handler($args)
     {
         // TODO: Add smarter per-type ACL checks
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         // Try to load the correct campaign
         $this->_request_data['campaign'] = new org_openpsa_directmarketing_campaign_dba($args[0]);
         if (   !$this->_request_data['campaign']
             || $this->_request_data['campaign']->node != $this->_topic->id)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The campaign {$args[0]} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The campaign {$args[0]} was not found.");
             // This will exit.
         }
 
@@ -72,7 +72,7 @@ class org_openpsa_directmarketing_handler_export extends midcom_baseclasses_comp
             )
         );
 
-        $_MIDCOM->bind_view_to_object($this->_request_data['campaign']);
+        midcom::bind_view_to_object($this->_request_data['campaign']);
 
         $this->_load_schemas();
 
@@ -86,31 +86,31 @@ class org_openpsa_directmarketing_handler_export extends midcom_baseclasses_comp
     private function _load_schemas()
     {
         // Load contacts explicitly to get constants for schema
-        $_MIDCOM->componentloader->load('org.openpsa.contacts');
+        midcom::componentloader->load('org.openpsa.contacts');
 
         // We try to combine these schemas to provide a single centralized controller
         $this->_schemadbs['campaign_member'] = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb_campaign_member'));
         if (!$this->_schemadbs['campaign_member'])
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Could not load campaign member schema database.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Could not load campaign member schema database.');
             // This will exit.
         }
         $this->_schemadbs['person'] = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb_person'));
         if (!$this->_schemadbs['person'])
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Could not load person schema database.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Could not load person schema database.');
             // This will exit.
         }
         $this->_schemadbs['organization_member'] = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb_organization_member'));
         if (!$this->_schemadbs['organization_member'])
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Could not load organization member schema database.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Could not load organization member schema database.');
             // This will exit.
         }
         $this->_schemadbs['organization'] = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb_organization'));
         if (!$this->_schemadbs['organization'])
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Could not load organization schema database.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Could not load organization schema database.');
             // This will exit.
         }
     }
@@ -120,7 +120,7 @@ class org_openpsa_directmarketing_handler_export extends midcom_baseclasses_comp
         $this->_datamanagers['campaign_member'] = new midcom_helper_datamanager2_datamanager($this->_schemadbs['campaign_member']);
         if (!$this->_datamanagers['campaign_member'])
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for campaign members.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for campaign members.");
             // This will exit.
         }
         if (array_key_exists('export', $this->_datamanagers['campaign_member']->_schemadb))
@@ -134,7 +134,7 @@ class org_openpsa_directmarketing_handler_export extends midcom_baseclasses_comp
         $this->_datamanagers['person'] = new midcom_helper_datamanager2_datamanager($this->_schemadbs['person']);
         if (!$this->_datamanagers['person'])
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for persons.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for persons.");
             // This will exit.
         }
         if (array_key_exists('export', $this->_datamanagers['person']->_schemadb))
@@ -148,7 +148,7 @@ class org_openpsa_directmarketing_handler_export extends midcom_baseclasses_comp
         $this->_datamanagers['organization_member'] = new midcom_helper_datamanager2_datamanager($this->_schemadbs['organization_member']);
         if (!$this->_datamanagers['organization_member'])
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for organization members.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for organization members.");
             // This will exit.
         }
         if (array_key_exists('export', $this->_datamanagers['organization_member']->_schemadb))
@@ -162,7 +162,7 @@ class org_openpsa_directmarketing_handler_export extends midcom_baseclasses_comp
         $this->_datamanagers['organization'] = new midcom_helper_datamanager2_datamanager($this->_schemadbs['organization']);
         if (!$this->_datamanagers['organization'])
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for organizations.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for organizations.");
             // This will exit.
         }
         if (array_key_exists('export', $this->_datamanagers['organization']->_schemadb))
@@ -202,8 +202,8 @@ class org_openpsa_directmarketing_handler_export extends midcom_baseclasses_comp
             debug_add('Filename part not specified in URL, generating');
             //We do not have filename in URL, generate one and redirect
             $fname = preg_replace('/[^a-z0-9-]/i', '_', strtolower($this->_request_data['campaign']->title)) . '_' . date('Y-m-d') . '.csv';
-            $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-            $_MIDCOM->relocate("{$prefix}campaign/export/csv/{$this->_request_data['campaign']->guid}/{$fname}");
+            $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+            midcom::relocate("{$prefix}campaign/export/csv/{$this->_request_data['campaign']->guid}/{$fname}");
             // This will exit
         }
         $this->_disable_limits();
@@ -288,8 +288,8 @@ class org_openpsa_directmarketing_handler_export extends midcom_baseclasses_comp
 
         $this->_load_datamanagers();
         $this->_init_csv_variables();
-        $_MIDCOM->skip_page_style = true;
-        $_MIDCOM->cache->content->content_type($this->_config->get('csv_export_content_type'));
+        midcom::skip_page_style = true;
+        midcom::cache()->content->content_type($this->_config->get('csv_export_content_type'));
         return true;
     }
 
@@ -317,7 +317,7 @@ class org_openpsa_directmarketing_handler_export extends midcom_baseclasses_comp
         }
         if ($this->csv['s'] == $this->csv['d'])
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "CSV decimal separator (configured as '{$this->csv['d']}') may not be the same as field separator (configured as '{$this->csv['s']}')");
+            midcom::generate_error(MIDCOM_ERRCRIT, "CSV decimal separator (configured as '{$this->csv['d']}') may not be the same as field separator (configured as '{$this->csv['s']}')");
         }
     }
 
@@ -362,7 +362,7 @@ class org_openpsa_directmarketing_handler_export extends midcom_baseclasses_comp
     {
         debug_push_class(__CLASS__, __FUNCTION__);
         // Make absolutely sure we're in live output
-        $_MIDCOM->cache->content->enable_live_mode();
+        midcom::cache()->content->enable_live_mode();
         while(@ob_end_flush());
 
         $object_types = array('person', 'campaign_member', 'organization', 'organization_member');
@@ -431,7 +431,7 @@ class org_openpsa_directmarketing_handler_export extends midcom_baseclasses_comp
                 if (!$datamanager->set_storage($object))
                 {
                     // Major error, panic
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Could not set_storage for row #{$num} ({$type} {$object->guid})");
+                    midcom::generate_error(MIDCOM_ERRCRIT, "Could not set_storage for row #{$num} ({$type} {$object->guid})");
                 }
                 //$this->_init_csv_variables();
                 foreach ($datamanager->schema->field_order as $fieldname)

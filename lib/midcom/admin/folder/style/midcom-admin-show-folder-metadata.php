@@ -4,11 +4,11 @@
 if (isset($data['symlink']))
 {
     ?><p><?php
-    echo sprintf($_MIDCOM->i18n->get_string('this folder is a symlink to: <a href="%s">%s</a>', 'midcom.admin.folder'), $data['symlink'], $data['symlink']);
+    echo sprintf(midcom::i18n()->get_string('this folder is a symlink to: <a href="%s">%s</a>', 'midcom.admin.folder'), $data['symlink'], $data['symlink']);
     if (!$GLOBALS['midcom_config']['symlinks'])
     {
         ?><p><?php
-        echo sprintf($_MIDCOM->i18n->get_string('symlinks are currently disabled', 'midcom.admin.folder'));
+        echo sprintf(midcom::i18n()->get_string('symlinks are currently disabled', 'midcom.admin.folder'));
         ?></p><?php
     }
 }

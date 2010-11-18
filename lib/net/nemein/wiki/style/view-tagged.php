@@ -4,7 +4,7 @@
 <?php
 foreach ($data['wikipages'] as $wikipage) 
 {
-    $wikipage_link = $_MIDCOM->permalinks->create_permalink($wikipage->guid);
+    $wikipage_link = midcom::permalinks->create_permalink($wikipage->guid);
     ?>
     <li><a href="&(wikipage_link);">&(wikipage.title);</a></li>
     <?php

@@ -109,7 +109,7 @@
                 'type' => 'select',
                 'type_config' => array
                 (
-                    'options' => array_merge(array('' => 'default setting'), $_MIDCOM->i18n->list_languages()),
+                    'options' => array_merge(array('' => 'default setting'), midcom::i18n()->list_languages()),
                 ),
                 'widget' => 'select',
                 'readonly' => net_nehmer_blog_viewer::disable_language_select(),
@@ -163,12 +163,12 @@
                         array
                         (
                             'name' => 'extra',
-                            'title' => $_MIDCOM->i18n->get_string('title', 'midcom'),
+                            'title' => midcom::i18n()->get_string('title', 'midcom'),
                         ),
                         array
                         (
                             'name' => 'name',
-                            'title' => $_MIDCOM->i18n->get_string('name', 'midcom'),
+                            'title' => midcom::i18n()->get_string('name', 'midcom'),
                         ),
                     ),
                     'generate_path_for' => 'extra',
@@ -419,12 +419,12 @@
                         array
                         (
                             'name' => 'extra',
-                            'title' => $_MIDCOM->i18n->get_string('title', 'midcom'),
+                            'title' => midcom::i18n()->get_string('title', 'midcom'),
                         ),
                         array
                         (
                             'name' => 'name',
-                            'title' => $_MIDCOM->i18n->get_string('name', 'midcom'),
+                            'title' => midcom::i18n()->get_string('name', 'midcom'),
                         ),
                     ),
                     'generate_path_for' => 'extra',

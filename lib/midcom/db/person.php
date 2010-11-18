@@ -85,17 +85,17 @@ class midcom_db_person extends midcom_core_dbaobject
      */
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
     
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
     
     /**
@@ -123,7 +123,7 @@ class midcom_db_person extends midcom_core_dbaobject
     {
         parent::_on_deleted();
 
-        if (! $_MIDCOM->auth->request_sudo('midcom'))
+        if (! midcom::auth()->request_sudo('midcom'))
         {
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_add('Failed to get SUDO privileges, skipping membership deletion silently.', MIDCOM_LOG_ERROR);
@@ -165,7 +165,7 @@ class midcom_db_person extends midcom_core_dbaobject
             }
         }
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth()->drop_sudo();
 
         return;
     }
@@ -244,7 +244,7 @@ class midcom_db_person extends midcom_core_dbaobject
      */
     function add_to_group($name)
     {
-        $group = $_MIDCOM->auth->get_midgard_group_by_name($name);
+        $group = midcom::auth()->get_midgard_group_by_name($name);
         if (! $group)
         {
             debug_push_class(__CLASS__, __FUNCTION__);

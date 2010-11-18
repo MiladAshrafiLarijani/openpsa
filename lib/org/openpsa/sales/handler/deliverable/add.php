@@ -72,7 +72,7 @@ class org_openpsa_sales_handler_deliverable_add extends midcom_baseclasses_compo
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $deliverable);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Failed to create a new deliverable, cannot continue. Last Midgard error was: ' . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -102,7 +102,7 @@ class org_openpsa_sales_handler_deliverable_add extends midcom_baseclasses_compo
     {
         if ($_SERVER['REQUEST_METHOD'] != 'POST')
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRFORBIDDEN, 'Only POST requests are allowed here.');
+            midcom::generate_error(MIDCOM_ERRFORBIDDEN, 'Only POST requests are allowed here.');
         }
 
         $this->_salesproject = new org_openpsa_sales_salesproject_dba($args[0]);
@@ -115,7 +115,7 @@ class org_openpsa_sales_handler_deliverable_add extends midcom_baseclasses_compo
 
         if (!array_key_exists('product', $_POST))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'No product specified, aborting.');
         }
 
@@ -136,14 +136,14 @@ class org_openpsa_sales_handler_deliverable_add extends midcom_baseclasses_compo
             if ($this->_deliverable)
             {
                 // Go to deliverable edit screen
-                $_MIDCOM->relocate("deliverable/edit/{$this->_deliverable->guid}/");
+                midcom::relocate("deliverable/edit/{$this->_deliverable->guid}/");
                 // This will exit.
             }
             else
             {
                 // Get user back to the sales project
                 // TODO: Add UImessage on why this failed
-                $_MIDCOM->relocate("salesproject/{$this->_salesproject->guid}/");
+                midcom::relocate("salesproject/{$this->_salesproject->guid}/");
                 // This will exit.
             }
         }
@@ -169,14 +169,14 @@ class org_openpsa_sales_handler_deliverable_add extends midcom_baseclasses_compo
                 }
 
                 // Go to deliverable edit screen
-                $_MIDCOM->relocate("deliverable/edit/{$this->_deliverable->guid}/");
+                midcom::relocate("deliverable/edit/{$this->_deliverable->guid}/");
                 // This will exit.
             }
             else
             {
                 // Get user back to the sales project
                 // TODO: Add UImessage on why this failed
-                $_MIDCOM->relocate("salesproject/{$this->_salesproject->guid}/");
+                midcom::relocate("salesproject/{$this->_salesproject->guid}/");
                 // This will exit.
             }
         }
@@ -192,7 +192,7 @@ class org_openpsa_sales_handler_deliverable_add extends midcom_baseclasses_compo
             MIDCOM_NAV_URL => "deliverable/add/{$this->_salesproject->guid}/",
             MIDCOM_NAV_NAME => sprintf($this->_l10n->get('add products to %s'), $this->_salesproject->title),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         return true;
     }

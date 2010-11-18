@@ -220,7 +220,7 @@ function midcom_autoload($class_name)
         // DBA object files are named objectname.php
 
         // Ensure we have the component loaded
-        if (!$_MIDCOM->dbclassloader->load_component_for_class($class_name))
+        if (!midcom::dbclassloader->load_component_for_class($class_name))
         {
             // Failed to load the component
             return;
@@ -237,7 +237,7 @@ function midcom_autoload($class_name)
         && $class_name != 'midcom_baseclasses_components_interface')
     {
         // MidCOM component interfaces are named midcom/interface.php
-        $_MIDCOM->dbclassloader->load_component_for_class($class_name);
+        midcom::dbclassloader->load_component_for_class($class_name);
         return;
     }
 
@@ -293,21 +293,7 @@ require(MIDCOM_ROOT . '/midcom/helper/formatters.php');
 /////////////////////////////////////
 // Instantiate the MidCOM main class
 
-/**
- * Doublecheck before requiring, in certain corner cases autoloader might have been faster then us
- *
- * @see http://trac.midgard-project.org/ticket/1324
- */
-if (!class_exists('midcom_application'))
-{
-    require_once(MIDCOM_ROOT . '/midcom/application.php');
-}
-
-$_MIDCOM = new midcom_application();
-$_MIDCOM->auth = $auth;
-$_MIDCOM->cache = $GLOBALS['midcom_cache'];
-
-$_MIDCOM->initialize();
+midcom::setup($auth, $GLOBALS['midcom_cache']);
 
 if (file_exists(MIDCOM_CONFIG_FILE_AFTER))
 {

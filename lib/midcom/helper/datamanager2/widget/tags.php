@@ -174,9 +174,9 @@ class midcom_helper_datamanager2_widget_tags extends midcom_helper_datamanager2_
             }
         }
 
-        $_MIDCOM->enable_jquery();
+        midcom::enable_jquery();
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -186,8 +186,8 @@ class midcom_helper_datamanager2_widget_tags extends midcom_helper_datamanager2_
             )
         );
 
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.bgiframe.min.js');
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/tags/jquery.tags_widget.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.bgiframe.min.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/tags/jquery.tags_widget.js');
 
         $this->_input_element_id = "{$this->_namespace}{$this->name}-tags-widget";
 

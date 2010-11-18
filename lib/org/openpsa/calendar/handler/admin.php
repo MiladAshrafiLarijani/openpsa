@@ -40,10 +40,10 @@ class org_openpsa_calendar_handler_admin extends midcom_baseclasses_components_h
 
     function _on_initialize()
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         // This is a popup
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
     }
 
     /**
@@ -71,7 +71,7 @@ class org_openpsa_calendar_handler_admin extends midcom_baseclasses_components_h
         $this->_controller->set_storage($this->_event);
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for article {$this->_article->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for article {$this->_article->id}.");
             // This will exit.
         }
         
@@ -79,8 +79,8 @@ class org_openpsa_calendar_handler_admin extends midcom_baseclasses_components_h
         {
             case 'save':
             case 'cancel':
-                $_MIDCOM->add_jsonload('window.opener.location.reload();');
-                $_MIDCOM->add_jsonload('window.close();');
+                midcom::add_jsonload('window.opener.location.reload();');
+                midcom::add_jsonload('window.close();');
                 // This will _midcom_stop_request(well, in a way...)
         }
 
@@ -129,7 +129,7 @@ class org_openpsa_calendar_handler_admin extends midcom_baseclasses_components_h
         // Cancel pressed
         if (isset($_POST['org_openpsa_calendar_delete_cancel']))
         {
-            $_MIDCOM->relocate("event/{$this->_event->guid}/");
+            midcom::relocate("event/{$this->_event->guid}/");
             // This will exit
         }
         
@@ -138,8 +138,8 @@ class org_openpsa_calendar_handler_admin extends midcom_baseclasses_components_h
         {
             $this->_request_data['delete_succeeded'] = true;
             $this->_event->delete();
-            $_MIDCOM->add_jsonload('window.opener.location.reload();');
-            $_MIDCOM->add_jsonload('window.close();');
+            midcom::add_jsonload('window.opener.location.reload();');
+            midcom::add_jsonload('window.close();');
         }
         $this->_request_data['event'] =& $this->_event;
         return true;

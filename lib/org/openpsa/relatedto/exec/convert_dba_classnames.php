@@ -12,7 +12,7 @@
  * @copyright The Midgard Project, http://www.midgard-project.org
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  */
-$_MIDCOM->auth->require_admin_user();
+midcom::auth->require_admin_user();
 
 $replaces = array
 (
@@ -57,7 +57,7 @@ foreach ($results as $result)
     }
 }
 
-$_MIDCOM->cache->invalidate_all();
+midcom::cache()->invalidate_all();
 
 echo "</pre>";
 ob_start();

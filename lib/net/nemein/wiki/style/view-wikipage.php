@@ -45,7 +45,7 @@ $node = $nap->get_node($nap->get_current_node());
             $context = $link->context;
             if (!$context)
             {
-                $context = $_MIDCOM->i18n->get_string('tagged', 'net.nemein.tag');
+                $context = midcom::i18n()->get_string('tagged', 'net.nemein.tag');
             }
 
             if (!array_key_exists($context, $contexts_shown))
@@ -68,7 +68,7 @@ $node = $nap->get_node($nap->get_current_node());
         {
             if (!$context)
             {
-                $context = $_MIDCOM->i18n->get_string('tagged', 'net.nemein.tag');
+                $context = midcom::i18n()->get_string('tagged', 'net.nemein.tag');
             }
             echo "    <dt>{$context}</dt>\n";
             foreach ($tags as $tag => $url)

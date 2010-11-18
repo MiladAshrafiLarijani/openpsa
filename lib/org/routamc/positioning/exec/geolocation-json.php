@@ -1,5 +1,5 @@
 <?php
-$_MIDCOM->header('Content-type: application/json');
+midcom::header('Content-type: application/json');
 
 if (   isset($_POST['latitude'])
     && isset($_POST['longitude']))

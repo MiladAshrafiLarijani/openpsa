@@ -27,7 +27,7 @@ class org_openpsa_contacts_handler_frontpage extends midcom_baseclasses_componen
      */
     function _handler_frontpage($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         $this->_view_toolbar->add_item
         (
@@ -37,7 +37,7 @@ class org_openpsa_contacts_handler_frontpage extends midcom_baseclasses_componen
                 MIDCOM_TOOLBAR_LABEL => $this->_l10n->get('create person'),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/stock_person.png',
-                MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_user_do('midgard:create', null, 'org_openpsa_contacts_person_dba'),
+                MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_user_do('midgard:create', null, 'org_openpsa_contacts_person_dba'),
             )
         );
 
@@ -49,7 +49,7 @@ class org_openpsa_contacts_handler_frontpage extends midcom_baseclasses_componen
                 MIDCOM_TOOLBAR_LABEL => $this->_l10n->get('create organization'),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/stock_people.png',
-                MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_user_do('midgard:create', null, 'org_openpsa_contacts_group_dba'),
+                MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_user_do('midgard:create', null, 'org_openpsa_contacts_group_dba'),
             )
         );
 
@@ -64,7 +64,7 @@ class org_openpsa_contacts_handler_frontpage extends midcom_baseclasses_componen
                     MIDCOM_TOOLBAR_LABEL => $this->_l10n->get('merge persons'),
                     MIDCOM_TOOLBAR_HELPTEXT => null,
                     MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/repair.png',
-                    MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_user_do('midgard:update', null, 'org_openpsa_contacts_person_dba'),
+                    MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_user_do('midgard:update', null, 'org_openpsa_contacts_person_dba'),
                 )
             );
             $leaves['persons_merge'] = array
@@ -90,7 +90,7 @@ class org_openpsa_contacts_handler_frontpage extends midcom_baseclasses_componen
             );
         }
 
-        $_MIDCOM->set_pagetitle($this->_l10n->get("my contacts"));
+        midcom::set_pagetitle($this->_l10n->get("my contacts"));
 
         return true;
     }

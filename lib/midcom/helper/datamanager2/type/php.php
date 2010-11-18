@@ -41,7 +41,7 @@ class midcom_helper_datamanager2_type_php extends midcom_helper_datamanager2_typ
 
         if ($this->editarea_enabled)
         {
-            $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/edit_area/edit_area_full.js');
+            midcom::add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/edit_area/edit_area_full.js');
         }
 
         return true;
@@ -117,7 +117,7 @@ class midcom_helper_datamanager2_type_php extends midcom_helper_datamanager2_typ
 
         $html = "<textarea rows=\"30\" cols=\"100%\" class=\"editarea php\" id=\"editarea_{$this->name}\" name=\"editarea_{$this->name}\">{$this->value}</textarea>";
 
-        $_MIDCOM->add_jscript("
+        midcom::add_jscript("
             editAreaLoader.init({
                 id : 'editarea_" . $this->name . "',
                 syntax: 'php',

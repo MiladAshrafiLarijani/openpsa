@@ -97,9 +97,9 @@ class org_openpsa_sales_viewer extends midcom_baseclasses_components_request
      */
     function _on_handle($handler, $args)
     {
-        $_MIDCOM->load_library('org.openpsa.contactwidget');
+        midcom::load_library('org.openpsa.contactwidget');
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -109,7 +109,7 @@ class org_openpsa_sales_viewer extends midcom_baseclasses_components_request
             )
         );
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -119,7 +119,7 @@ class org_openpsa_sales_viewer extends midcom_baseclasses_components_request
             )
         );
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -129,7 +129,7 @@ class org_openpsa_sales_viewer extends midcom_baseclasses_components_request
             )
         );
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -139,7 +139,7 @@ class org_openpsa_sales_viewer extends midcom_baseclasses_components_request
             )
         );
 
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         return true;
     }
@@ -156,7 +156,7 @@ class org_openpsa_sales_viewer extends midcom_baseclasses_components_request
 
         while ($object)
         {
-            if ($_MIDCOM->dbfactory->is_a($object, 'org_openpsa_sales_salesproject_deliverable_dba'))
+            if (midcom::dbfactory()->is_a($object, 'org_openpsa_sales_salesproject_deliverable_dba'))
             {
                 $tmp[] = array
                 (

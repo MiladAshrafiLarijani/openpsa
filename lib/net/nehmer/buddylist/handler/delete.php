@@ -33,12 +33,12 @@ class net_nehmer_buddylist_handler_delete extends midcom_baseclasses_components_
      */
     function _handler_delete($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         // Check for basic resultset validity
         if (! array_key_exists('net_nehmer_buddylist_delete', $_REQUEST))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Incomplete request.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Incomplete request.');
             // This will exit.
         }
 
@@ -63,12 +63,12 @@ class net_nehmer_buddylist_handler_delete extends midcom_baseclasses_components_
         {
             // In case we have no checks in the request, we just return to the welcome
             // page and do nothing.
-            $_MIDCOM->uimessages->add($this->_l10n->get('net.nehmer.buddylist'), $this->_l10n->get('no entries to be deleted.'), 'ok');
-            $_MIDCOM->relocate($relocate_to);
+            midcom::uimessages()->add($this->_l10n->get('net.nehmer.buddylist'), $this->_l10n->get('no entries to be deleted.'), 'ok');
+            midcom::relocate($relocate_to);
             // This will exit.
         }
 
-        $user_guid = $_MIDCOM->auth->user->guid;
+        $user_guid = midcom::auth->user->guid;
         foreach ($to_delete as $buddy_guid)
         {
             $qb = net_nehmer_buddylist_entry::new_query_builder();
@@ -89,12 +89,12 @@ class net_nehmer_buddylist_handler_delete extends midcom_baseclasses_components_
 
         if ($relocate_to != '')
         {
-            $_MIDCOM->uimessages->add($this->_l10n->get('net.nehmer.buddylist'), $this->_l10n->get('the buddies have been deleted.'), 'ok');
-            $_MIDCOM->relocate($relocate_to);
+            midcom::uimessages()->add($this->_l10n->get('net.nehmer.buddylist'), $this->_l10n->get('the buddies have been deleted.'), 'ok');
+            midcom::relocate($relocate_to);
         }
 
-        $_MIDCOM->set_26_request_metadata(time(), null);
-        $_MIDCOM->set_pagetitle("{$this->_topic->extra}: " . $this->_l10n->get('buddies deleted'));
+        midcom::set_26_request_metadata(time(), null);
+        midcom::set_pagetitle("{$this->_topic->extra}: " . $this->_l10n->get('buddies deleted'));
         $tmp = Array
         (
             Array
@@ -103,7 +103,7 @@ class net_nehmer_buddylist_handler_delete extends midcom_baseclasses_components_
                 MIDCOM_NAV_NAME => $this->_l10n->get('buddies deleted'),
             ),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
 
         return true;

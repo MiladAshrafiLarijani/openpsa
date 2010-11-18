@@ -84,7 +84,7 @@ class midcom_baseclasses_components_purecode
     public function __construct()
     {
         $this->_component_data =& $GLOBALS['midcom_component_data'][$this->_component];
-        $this->_i18n = $_MIDCOM->get_service('i18n');
+        $this->_i18n = midcom::get_service('i18n');
         $this->_l10n = $this->_i18n->get_l10n($this->_component);
         $this->_l10n_midcom = $this->_i18n->get_l10n('midcom');
         $this->_load_topic_configuration(null);
@@ -116,7 +116,7 @@ class midcom_baseclasses_components_purecode
      */
     private function _bind_to_request_data()
     {
-        $this->_request_data =& $_MIDCOM->get_custom_context_data('request_data');
+        $this->_request_data =& midcom::get_custom_context_data('request_data');
         $this->_config =& $this->_request_data['config'];
         $this->_topic =& $this->_request_data['topic'];
         $this->_l10n =& $this->_request_data['l10n'];

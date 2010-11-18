@@ -183,7 +183,7 @@ class org_routamc_positioning_utils extends midcom_baseclasses_components_pureco
             else
             {
                 $bearing = org_routamc_positioning_utils::get_bearing($city_coordinates, $coordinates);
-                $city_string = sprintf($_MIDCOM->i18n->get_string('%skm %s of %s', 'org.routamc.positioning'), $city_distance, $bearing, "{$city->city}, {$city->country}");
+                $city_string = sprintf(midcom::i18n()->get_string('%skm %s of %s', 'org.routamc.positioning'), $city_distance, $bearing, "{$city->city}, {$city->country}");
             }
         }
         return $city_string;
@@ -246,7 +246,7 @@ class org_routamc_positioning_utils extends midcom_baseclasses_components_pureco
             else
             {
                 $bearing = org_routamc_positioning_utils::get_bearing($city_coordinates, $coordinates);
-                $city_string .= sprintf($_MIDCOM->i18n->get_string('%skm %s of %s', 'org.routamc.positioning'), $city_distance, $bearing, $city_label);
+                $city_string .= sprintf(midcom::i18n()->get_string('%skm %s of %s', 'org.routamc.positioning'), $city_distance, $bearing, $city_label);
             }
 
             $city_string .= "</span>";
@@ -302,7 +302,7 @@ class org_routamc_positioning_utils extends midcom_baseclasses_components_pureco
         {
             $direct = true;
         }
-        $qb =  $_MIDCOM->dbfactory->new_query_builder($classname);
+        $qb =  midcom::dbfactory()->new_query_builder($classname);
 
         if (!$direct)
         {
@@ -354,7 +354,7 @@ class org_routamc_positioning_utils extends midcom_baseclasses_components_pureco
         if ($result_count == 0)
         {
             // Check that there are any in the DB before proceeding further
-            $qb_check =  $_MIDCOM->dbfactory->new_query_builder($classname);
+            $qb_check =  midcom::dbfactory()->new_query_builder($classname);
             if ($qb_check->count_unchecked() == 0)
             {
                 return array();
@@ -395,9 +395,9 @@ class org_routamc_positioning_utils extends midcom_baseclasses_components_pureco
                         if (!$located_object->guid)
                         {
                             // This one has been deleted
-                            $_MIDCOM->auth->request_sudo('org.routamc.positioning');
+                            midcom::auth->request_sudo('org.routamc.positioning');
                             $result->delete();
-                            $_MIDCOM->auth->drop_sudo();
+                            midcom::auth->drop_sudo();
                             continue;
                         }
                         $result = $located_object;
@@ -443,9 +443,9 @@ class org_routamc_positioning_utils extends midcom_baseclasses_components_pureco
                 if (!$located_object->guid)
                 {
                     // This one has been deleted
-                    $_MIDCOM->auth->request_sudo('org.routamc.positioning');
+                    midcom::auth->request_sudo('org.routamc.positioning');
                     $result->delete();
-                    $_MIDCOM->auth->drop_sudo();
+                    midcom::auth->drop_sudo();
                     continue;
                 }
                 $result = $located_object;

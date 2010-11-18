@@ -40,7 +40,7 @@ class net_nemein_wiki_handler_latest extends midcom_baseclasses_components_handl
         $qb->add_order('metadata.revised', 'DESC');
         $result = $qb->execute();
 
-        $rcs = $_MIDCOM->get_service('rcs');
+        $rcs = midcom::get_service('rcs');
 
         foreach ($result as $page)
         {
@@ -116,7 +116,7 @@ class net_nemein_wiki_handler_latest extends midcom_baseclasses_components_handl
         }
 
         $data['view_title'] = sprintf($this->_request_data['l10n']->get('latest updates in %s'), $this->_topic->extra);
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
 
         $tmp = array();
         $tmp[] = Array
@@ -124,7 +124,7 @@ class net_nemein_wiki_handler_latest extends midcom_baseclasses_components_handl
             MIDCOM_NAV_URL => 'latest/',
             MIDCOM_NAV_NAME => $data['view_title'],
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         return true;
     }
@@ -136,7 +136,7 @@ class net_nemein_wiki_handler_latest extends midcom_baseclasses_components_handl
      */
     function _show_latest($handler_id, &$data)
     {
-        $_MIDCOM->load_library('org.openpsa.contactwidget');
+        midcom::load_library('org.openpsa.contactwidget');
         $data['wikiname'] = $this->_topic->extra;
         if (count($data['latest_pages']) > 0)
         {

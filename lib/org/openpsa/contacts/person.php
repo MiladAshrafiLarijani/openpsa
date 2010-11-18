@@ -26,12 +26,12 @@ class org_openpsa_contacts_person_dba extends midcom_core_dbaobject
 
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
 
     /**
@@ -42,7 +42,7 @@ class org_openpsa_contacts_person_dba extends midcom_core_dbaobject
      */
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
 
     function _on_loaded()
@@ -118,7 +118,7 @@ class org_openpsa_contacts_person_dba extends midcom_core_dbaobject
             if (   strtolower($username) != strtolower($this->username)
                 && $this->check_account_exists($username))
             {
-                $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('org.openpsa.contacts', 'org.openpsa.contacts'), $_MIDCOM->i18n->get_string('username already exists' , 'org.openpsa.contacts') , 'error');
+                midcom::uimessages()->add(midcom::i18n()->get_string('org.openpsa.contacts', 'org.openpsa.contacts'), midcom::i18n()->get_string('username already exists' , 'org.openpsa.contacts') , 'error');
                 return false;
             }
             $this->username = $username;
@@ -129,9 +129,9 @@ class org_openpsa_contacts_person_dba extends midcom_core_dbaobject
         }
 
         //sets privilege
-        $_MIDCOM->auth->request_sudo('org.openpsa.contacts');
+        midcom::auth->request_sudo('org.openpsa.contacts');
         $this->set_privilege('midgard:owner', "user:" . $this->guid);
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
 
         return $this->update();
     }
@@ -158,7 +158,7 @@ class org_openpsa_contacts_person_dba extends midcom_core_dbaobject
             debug_pop();
             return false;
         }
-        $this_user = $_MIDCOM->auth->get_user($this->id);
+        $this_user = midcom::auth->get_user($this->id);
         if (!is_object($this_user))
         {
             debug_pop();
@@ -180,10 +180,10 @@ class org_openpsa_contacts_person_dba extends midcom_core_dbaobject
 
         // PONDER: Can't we just use midgard:owner ???
         debug_add("Checking privilege midgard:update for person #{$this->id}");
-        if (!$_MIDCOM->auth->can_do('midgard:update', $this, $this_user))
+        if (!midcom::auth->can_do('midgard:update', $this, $this_user))
         {
             debug_add("Person #{$this->id} lacks privilege midgard:update, adding");
-            $_MIDCOM->auth->request_sudo();
+            midcom::auth->request_sudo();
             if (!$this->set_privilege('midgard:update', $this_user, MIDCOM_PRIVILEGE_ALLOW))
             {
                 debug_add("\$this->set_privilege('midgard:update', {$this_user->guid}, MIDCOM_PRIVILEGE_ALLOW) failed, errstr: " . midcom_connection::get_error_string(), MIDCOM_LOG_WARN);
@@ -192,14 +192,14 @@ class org_openpsa_contacts_person_dba extends midcom_core_dbaobject
             {
                 debug_add("Added privilege 'midgard:update' for person #{$this->id}", MIDCOM_LOG_INFO);
             }
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
         }
         //Could be useful, I'm not certain if absolutely needed.
         debug_add("Checking privilege midgard:parameters for person #{$this->id}");
-        if (!$_MIDCOM->auth->can_do('midgard:parameters', $this, $this_user))
+        if (!midcom::auth->can_do('midgard:parameters', $this, $this_user))
         {
             debug_add("Person #{$this->id} lacks privilege midgard:parameters, adding");
-            $_MIDCOM->auth->request_sudo();
+            midcom::auth->request_sudo();
             if (!$this->set_privilege('midgard:parameters', $this_user, MIDCOM_PRIVILEGE_ALLOW))
             {
                 debug_add("\$this->set_privilege('midgard:parameters', {$this_user->guid}, MIDCOM_PRIVILEGE_ALLOW) failed, errstr: " . midcom_connection::get_error_string(), MIDCOM_LOG_WARN);
@@ -208,14 +208,14 @@ class org_openpsa_contacts_person_dba extends midcom_core_dbaobject
             {
                 debug_add("Added privilege 'midgard:parameters' for person #{$this->id}", MIDCOM_LOG_INFO);
             }
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
         }
         //Adding attachments requires both midgard:create and midgard:attachments
         debug_add("Checking privilege midgard:create for person #{$this->id}");
-        if (!$_MIDCOM->auth->can_do('midgard:create', $this, $this_user))
+        if (!midcom::auth->can_do('midgard:create', $this, $this_user))
         {
             debug_add("Person #{$this->id} lacks privilege midgard:create, adding");
-            $_MIDCOM->auth->request_sudo();
+            midcom::auth->request_sudo();
             if (!$this->set_privilege('midgard:create', $this_user, MIDCOM_PRIVILEGE_ALLOW))
             {
                 debug_add("\$this->set_privilege('midgard:create', {$this_user->guid}, MIDCOM_PRIVILEGE_ALLOW) failed, errstr: " . midcom_connection::get_error_string(), MIDCOM_LOG_WARN);
@@ -224,13 +224,13 @@ class org_openpsa_contacts_person_dba extends midcom_core_dbaobject
             {
                 debug_add("Added privilege 'midgard:create' for person #{$this->id}", MIDCOM_LOG_INFO);
             }
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
         }
         debug_add("Checking privilege midgard:attachments for person #{$this->id}");
-        if (!$_MIDCOM->auth->can_do('midgard:attachments', $this, $this_user))
+        if (!midcom::auth->can_do('midgard:attachments', $this, $this_user))
         {
             debug_add("Person #{$this->id} lacks privilege midgard:attachments, adding");
-            $_MIDCOM->auth->request_sudo();
+            midcom::auth->request_sudo();
             if (!$this->set_privilege('midgard:attachments', $this_user, MIDCOM_PRIVILEGE_ALLOW))
             {
                 debug_add("\$this->set_privilege('midgard:attachments', {$this_user->guid}, MIDCOM_PRIVILEGE_ALLOW) failed, errstr: " . midcom_connection::get_error_string(), MIDCOM_LOG_WARN);
@@ -239,7 +239,7 @@ class org_openpsa_contacts_person_dba extends midcom_core_dbaobject
             {
                 debug_add("Added privilege 'midgard:attachments' for person #{$this->id}", MIDCOM_LOG_INFO);
             }
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
         }
 
         $GLOBALS['org_openpsa_contacts_person__verify_privileges'][$this->id] = false;
@@ -269,7 +269,7 @@ class org_openpsa_contacts_person_dba extends midcom_core_dbaobject
             (
                 'person' => $this->guid,
             );
-            $_MIDCOM->load_library('midcom.services.at');
+            midcom::load_library('midcom.services.at');
             $atstat = midcom_services_at_interface::register(time() + 60, 'org.openpsa.contacts', 'check_url', $args);
         }
 
@@ -336,7 +336,7 @@ class org_openpsa_contacts_person_dba extends midcom_core_dbaobject
         //check current password
         if(($this->password == $password) && $check_same_password)
         {
-            $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('org.openpsa.contacts', 'org.openpsa.contacts'), $_MIDCOM->i18n->get_string('password is the same as the current one' , 'org.openpsa.contacts') , 'error');
+            midcom::uimessages()->add(midcom::i18n()->get_string('org.openpsa.contacts', 'org.openpsa.contacts'), midcom::i18n()->get_string('password is the same as the current one' , 'org.openpsa.contacts') , 'error');
             return false;
         }
 
@@ -346,7 +346,7 @@ class org_openpsa_contacts_person_dba extends midcom_core_dbaobject
         //check last passwords
         if(in_array($password, $old_passwords))
         {
-            $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('org.openpsa.contacts', 'org.openpsa.contacts'), $_MIDCOM->i18n->get_string('password was already used' , 'org.openpsa.contacts') , 'error');
+            midcom::uimessages()->add(midcom::i18n()->get_string('org.openpsa.contacts', 'org.openpsa.contacts'), midcom::i18n()->get_string('password was already used' , 'org.openpsa.contacts') , 'error');
             return false;
         }
         return true;
@@ -507,13 +507,13 @@ class org_openpsa_contacts_person_dba extends midcom_core_dbaobject
         $result = eval ("\$contents = array ( {$data_snippet}\n );");
         if ($result === false)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to parse the schema definition in '{$rules}', see above for PHP errors.");
             // This will exit.
         }
         if($password_length < $max)
         {
-            $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('org.openpsa.contacts', 'org.openpsa.contacts'), $_MIDCOM->i18n->get_string('password too short' , 'org.openpsa.contacts') , 'error');
+            midcom::uimessages()->add(midcom::i18n()->get_string('org.openpsa.contacts', 'org.openpsa.contacts'), midcom::i18n()->get_string('password too short' , 'org.openpsa.contacts') , 'error');
             return false;
         }
         //check $password with rules
@@ -527,7 +527,7 @@ class org_openpsa_contacts_person_dba extends midcom_core_dbaobject
         }
         if($score <= $GLOBALS['midcom_component_data']['org.openpsa.contacts']['config']->get('min_password_score'))
         {
-            $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('org.openpsa.contacts', 'org.openpsa.contacts'), $_MIDCOM->i18n->get_string('password weak' , 'org.openpsa.contacts') , 'error');
+            midcom::uimessages()->add(midcom::i18n()->get_string('org.openpsa.contacts', 'org.openpsa.contacts'), midcom::i18n()->get_string('password weak' , 'org.openpsa.contacts') , 'error');
             return false;
         }
         return true;
@@ -626,7 +626,7 @@ class org_openpsa_contacts_person_dba extends midcom_core_dbaobject
         $atstat = midcom_services_at_interface::register(time() + $timeframe, 'org.openpsa.contacts', 'reopen_account', $args);
         if(!$atstat)
         {
-             $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to register interface for re_open the user account, last Midgard error was: " . midcom_connection::get_error_string());
+             midcom::generate_error(MIDCOM_ERRCRIT, "Failed to register interface for re_open the user account, last Midgard error was: " . midcom_connection::get_error_string());
         }
         $this->set_parameter("org_openpsa_contacts_blocked_account", "account_password" , $this->password);
         $this->password = "";

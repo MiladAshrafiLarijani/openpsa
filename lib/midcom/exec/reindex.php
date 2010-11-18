@@ -19,21 +19,21 @@ $ip_sudo = false;
 if (   $ips 
     && in_array($_SERVER['REMOTE_ADDR'], $ips))
 {
-    if (! $_MIDCOM->auth->request_sudo('midcom.services.indexer'))
+    if (! midcom::auth()->request_sudo('midcom.services.indexer'))
     {
-        $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to acquire SUDO rights. Aborting.');
+        midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to acquire SUDO rights. Aborting.');
     }
     $ip_sudo = true;
 }
 else
 {
-    $_MIDCOM->auth->require_valid_user('basic');
-    $_MIDCOM->auth->require_admin_user();
+    midcom::auth()->require_valid_user('basic');
+    midcom::auth()->require_admin_user();
 }
 
 if ($GLOBALS['midcom_config']['indexer_backend'] === false)
 {
-    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'No indexer backend has been defined. Aborting.');
+    midcom::generate_error(MIDCOM_ERRCRIT, 'No indexer backend has been defined. Aborting.');
 }
 
 switch($_SERVER['SERVER_PORT'])
@@ -64,17 +64,17 @@ switch($_SERVER['SERVER_PORT'])
 }
 
 //check if language is passed - if not take the current-one
-$language = $_MIDCOM->i18n->get_current_language();
+$language = midcom::i18n()->get_current_language();
 if (isset($_REQUEST['language']))
 {
     $language = $_REQUEST['language'];
 }
 
-$_MIDCOM->load_library('org.openpsa.httplib');
+midcom::load_library('org.openpsa.httplib');
 if (!class_exists('org_openpsa_httplib'))
 {
     $singlep_uri = str_replace('midcom-exec-midcom/reindex.php', 'midcom-exec-midcom/reindex_singleprocess.php', $current_uri);
-    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "We need org.openpsa.httplib installed to use the granular reindex, use {$singlep_uri} to get the old way.");
+    midcom::generate_error(MIDCOM_ERRCRIT, "We need org.openpsa.httplib installed to use the granular reindex, use {$singlep_uri} to get the old way.");
 }
 
 debug_push('exec-reindex');
@@ -88,8 +88,8 @@ ini_set('memory_limit', "{$GLOBALS['midcom_config']['indexer_reindex_memorylimit
 $nap = new midcom_helper_nav();
 $nodes = Array();
 $nodeid = $nap->get_root_node();
-$loader = $_MIDCOM->get_component_loader();
-$indexer = $_MIDCOM->get_service('indexer');
+$loader = midcom::get_component_loader();
+$indexer = midcom::get_service('indexer');
 
 // Use this to check that indexer is on-line (and hope the root topic isn't a gigantic wiki)
 $root_node = $nap->get_node($nodeid);
@@ -97,7 +97,7 @@ $existing_documents = $indexer->query("__TOPIC_GUID:{$root_node[MIDCOM_NAV_OBJEC
 if ($existing_documents === false)
 {
     $msg = "Query '__TOPIC_GUID:{$root_node[MIDCOM_NAV_OBJECT]->guid}' returned false, indicating problem with indexer";
-    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, $msg);
+    midcom::generate_error(MIDCOM_ERRCRIT, $msg);
     // this will exit
 }
 unset($existing_documents, $root_node);
@@ -168,7 +168,7 @@ while (! is_null($nodeid))
     if ($childs === false)
     {
         debug_pop();
-        $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to list the child nodes of {$nodeid}. Aborting.");
+        midcom::generate_error(MIDCOM_ERRCRIT, "Failed to list the child nodes of {$nodeid}. Aborting.");
     }
     $nodes = array_merge($nodes, $childs);
     $nodeid = array_shift($nodes);
@@ -180,7 +180,7 @@ ignore_user_abort(false);
 
 if ($ip_sudo)
 {
-    $_MIDCOM->auth->drop_sudo();
+    midcom::auth()->drop_sudo();
 }
 
 debug_pop();

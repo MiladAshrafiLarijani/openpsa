@@ -1,6 +1,6 @@
 <?php
 $preview = $data['preview'];
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 ?>
 <div class="rcs_navigation">
 <?php

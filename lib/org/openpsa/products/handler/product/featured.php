@@ -27,7 +27,7 @@ class org_openpsa_products_handler_product_featured extends midcom_baseclasses_c
 
     function _on_initialize()
     {
-        $_MIDCOM->load_library('org.openpsa.qbpager');
+        midcom::load_library('org.openpsa.qbpager');
     }
 
     function _list_products($show_products = 1,$product_group = '')
@@ -142,7 +142,7 @@ class org_openpsa_products_handler_product_featured extends midcom_baseclasses_c
      */
     function _show_featured($handler_id, &$data)
     {
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 
         if (count($data['products']) > 0)
         {
@@ -195,9 +195,9 @@ class org_openpsa_products_handler_product_featured extends midcom_baseclasses_c
      */
     function _handler_feed($handler_id, $args, &$data)
     {
-        $_MIDCOM->cache->content->content_type("text/xml; charset=UTF-8");
-        $_MIDCOM->header("Content-type: text/xml; charset=UTF-8");
-        $_MIDCOM->skip_page_style = true;
+        midcom::cache()->content->content_type("text/xml; charset=UTF-8");
+        midcom::header("Content-type: text/xml; charset=UTF-8");
+        midcom::skip_page_style = true;
 
         if ($handler_id == 'featured_products_intree')
         {
@@ -226,9 +226,9 @@ class org_openpsa_products_handler_product_featured extends midcom_baseclasses_c
      */
     function _show_feed($handler_id, &$data)
     {
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 
-        $_MIDCOM->load_library('de.bitfolge.feedcreator'); //Load the feed library here, because we disabled autoloading.
+        midcom::load_library('de.bitfolge.feedcreator'); //Load the feed library here, because we disabled autoloading.
 
         $data['rss_creator'] = new UniversalFeedCreator();
         $data['rss_creator']->title = $this->_topic->extra;
@@ -284,7 +284,7 @@ class org_openpsa_products_handler_product_featured extends midcom_baseclasses_c
                 MIDCOM_NAV_NAME => 'Featured Products',
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', array_reverse($tmp));
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', array_reverse($tmp));
     }
 
 }

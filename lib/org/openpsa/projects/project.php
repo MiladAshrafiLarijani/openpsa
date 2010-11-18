@@ -22,17 +22,17 @@ class org_openpsa_projects_project extends org_openpsa_projects_task_dba
 
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
     
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
 
     function _on_creating()
@@ -57,20 +57,20 @@ class org_openpsa_projects_project extends org_openpsa_projects_task_dba
         {
             // Register workgroups here
             debug_add("Registering workgroup: " . $vgroup->name);
-            $_MIDCOM->auth->request_sudo('org.openpsa.projects');
-            $_MIDCOM->auth->register_virtual_group('org.openpsa.projects', $identifier, $title);
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->request_sudo('org.openpsa.projects');
+            midcom::auth->register_virtual_group('org.openpsa.projects', $identifier, $title);
+            midcom::auth->drop_sudo();
         }
         else if ($vgroup->name != $title)
         {
             //Renaming vgroup is made with delete+register cycle
             debug_add("Deleting previous workgroup: " . $vgroup->name);
-            $_MIDCOM->auth->request_sudo('org.openpsa.projects');
-            $_MIDCOM->auth->delete_virtual_group($vgroup);
+            midcom::auth->request_sudo('org.openpsa.projects');
+            midcom::auth->delete_virtual_group($vgroup);
             debug_add("Registering workgroup: " . $title);
             // TODO: localize
-            $_MIDCOM->auth->register_virtual_group('org.openpsa.projects', $identifier, $title);
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->register_virtual_group('org.openpsa.projects', $identifier, $title);
+            midcom::auth->drop_sudo();
             
         }
         debug_pop();
@@ -89,16 +89,16 @@ class org_openpsa_projects_project extends org_openpsa_projects_task_dba
         if (is_object($contacts_vgroup))
         {
             //TODO: This can be a problem for vgroup ACL selector...
-            $_MIDCOM->auth->request_sudo('org.openpsa.projects');
-            $_MIDCOM->auth->delete_virtual_group($contacts_vgroup);
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->request_sudo('org.openpsa.projects');
+            midcom::auth->delete_virtual_group($contacts_vgroup);
+            midcom::auth->drop_sudo();
         }
         if (is_object($participants_vgroup))
         {
             //TODO: This can be a problem for vgroup ACL selector...
-            $_MIDCOM->auth->request_sudo('org.openpsa.projects');
-            $_MIDCOM->auth->delete_virtual_group($participants_vgroup);
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->request_sudo('org.openpsa.projects');
+            midcom::auth->delete_virtual_group($participants_vgroup);
+            midcom::auth->drop_sudo();
         }
     } 
 

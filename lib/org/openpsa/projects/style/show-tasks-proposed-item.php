@@ -1,5 +1,5 @@
 <?php
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 $task =& $data['task'];
 echo "<tr class=\"{$data['class']}\">\n<td class='multivalue'>\n<a class='celltitle' href=\"{$prefix}task/{$task->guid}/\">{$task->title}</a>\n";
 if ($task->manager)
@@ -8,7 +8,7 @@ if ($task->manager)
     echo sprintf($data['l10n']->get("from %s"), $contact->show_inline());
 }
 $task->get_members();
-if ($_MIDCOM->auth->can_do('midgard:update', $task)
+if (midcom::auth->can_do('midgard:update', $task)
     && isset($task->resources[midcom_connection::get_user()]))
 {
 ?>

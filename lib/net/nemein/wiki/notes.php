@@ -29,10 +29,10 @@ class net_nemein_wiki_notes extends midcom_baseclasses_components_purecode
         
         $this->target_node = $target_node;
         
-        $this->target = $_MIDCOM->dbfactory->get_object_by_guid($target_object);
+        $this->target = midcom::dbfactory()->get_object_by_guid($target_object);
         if (!$this->target)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Could not instantiate object for wiki note lookup.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Could not instantiate object for wiki note lookup.');
             // This will exit.
         }
         
@@ -47,10 +47,10 @@ class net_nemein_wiki_notes extends midcom_baseclasses_components_purecode
     function _list_related_guids_of_a_person($person)
     {
         // We're in person, so we need to also look events he/she participates to
-        $qb = $_MIDCOM->dbfactory->new_query_builder('midcom_db_eventmember');
+        $qb = midcom::dbfactory()->new_query_builder('midcom_db_eventmember');
         $qb->add_constraint('uid', '=', $person->id);
         
-        $memberships = $_MIDCOM->dbfactory->exec_query_builder($qb);
+        $memberships = midcom::dbfactory()->exec_query_builder($qb);
         if ($memberships)
         {
             foreach ($memberships as $membership)
@@ -84,9 +84,9 @@ class net_nemein_wiki_notes extends midcom_baseclasses_components_purecode
         else if (is_subclass_of($this->target, 'midgard_group'))
         {
             // Include notes about members of the group
-            $qb = $_MIDCOM->dbfactory->new_query_builder('midcom_db_member');
+            $qb = midcom::dbfactory()->new_query_builder('midcom_db_member');
             $qb->add_constraint('gid', '=', $this->target->id);
-            $members = $_MIDCOM->dbfactory->exec_query_builder($qb);
+            $members = midcom::dbfactory()->exec_query_builder($qb);
             foreach ($members as $member)
             {
                 $person = new midcom_db_person($member->uid);
@@ -143,7 +143,7 @@ class net_nemein_wiki_notes extends midcom_baseclasses_components_purecode
     function populate_toolbar(&$toolbar)
     {
         $enable_creation = false;
-        if (   $_MIDCOM->auth->can_do('midgard:create', $this->wiki[MIDCOM_NAV_OBJECT])
+        if (   midcom::auth->can_do('midgard:create', $this->wiki[MIDCOM_NAV_OBJECT])
             && $this->new_wikipage)
         {
             $enable_creation = true;

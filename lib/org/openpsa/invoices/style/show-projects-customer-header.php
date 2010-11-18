@@ -35,8 +35,8 @@ function calculate_row(id)
         <thead>
             <tr>
                 <th><?php echo $data['l10n']->get('invoice'); ?></th>
-                <th><?php echo $_MIDCOM->i18n->get_string('task', 'org.openpsa.projects'); ?></th>
-                <th><?php echo $_MIDCOM->i18n->get_string('hours', 'org.openpsa.projects'); ?></th>
+                <th><?php echo midcom::i18n()->get_string('task', 'org.openpsa.projects'); ?></th>
+                <th><?php echo midcom::i18n()->get_string('hours', 'org.openpsa.projects'); ?></th>
                 <th><?php echo $data['l10n']->get('price'); ?></th>
                 <th><?php echo $data['l10n']->get('sum'); ?></th>
             </tr>

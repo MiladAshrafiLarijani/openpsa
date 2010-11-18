@@ -26,12 +26,12 @@ class net_nehmer_buddylist_entry extends midcom_core_dbaobject
     
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
         
     function get_parent_guid_uncached()
@@ -52,7 +52,7 @@ class net_nehmer_buddylist_entry extends midcom_core_dbaobject
         if ($this->buddy)
         {
             $buddy = new midcom_db_person($this->buddy);
-            return sprintf($_MIDCOM->i18n->get_string('buddy %s', 'net.nehmer.buddylist'), $buddy->name);
+            return sprintf(midcom::i18n()->get_string('buddy %s', 'net.nehmer.buddylist'), $buddy->name);
         }
         return "buddy #{$this->id}";
     }
@@ -108,8 +108,8 @@ class net_nehmer_buddylist_entry extends midcom_core_dbaobject
     {
         if ($user === null)
         {
-            $_MIDCOM->auth->require_valid_user();
-            $user =& $_MIDCOM->auth->user;
+            midcom::auth->require_valid_user();
+            $user =& midcom::auth->user;
         }
         
         $qb = net_nehmer_buddylist_entry::_get_buddy_qb($user);
@@ -160,8 +160,8 @@ class net_nehmer_buddylist_entry extends midcom_core_dbaobject
     {
         if ($user === null)
         {
-            $_MIDCOM->auth->require_valid_user();
-            $user =& $_MIDCOM->auth->user;
+            midcom::auth->require_valid_user();
+            $user =& midcom::auth->user;
         }
 
         $qb = net_nehmer_buddylist_entry::_get_unapproved_qb($user);
@@ -180,8 +180,8 @@ class net_nehmer_buddylist_entry extends midcom_core_dbaobject
      */
     function get_unapproved_count()
     {
-        $_MIDCOM->auth->require_valid_user();
-        $user =& $_MIDCOM->auth->user;
+        midcom::auth->require_valid_user();
+        $user =& midcom::auth->user;
 
         $qb = net_nehmer_buddylist_entry::_get_unapproved_qb($user);
         return $qb->count_unchecked();
@@ -217,8 +217,8 @@ class net_nehmer_buddylist_entry extends midcom_core_dbaobject
     {
         static $cache = Array();
 
-        $_MIDCOM->auth->require_valid_user();
-        $user =& $_MIDCOM->auth->user;
+        midcom::auth->require_valid_user();
+        $user =& midcom::auth->user;
 
         if (array_key_exists($user->guid, $cache))
         {
@@ -294,17 +294,17 @@ class net_nehmer_buddylist_entry extends midcom_core_dbaobject
         $buddy = $buddy_user->get_storage();
         if (! $buddy)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Could not load the person {$this->buddy} to adjust the privileges accordingly.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Could not load the person {$this->buddy} to adjust the privileges accordingly.");
             // This will exit.
         }
 
-        $_MIDCOM->auth->require_do('midgard:owner', $this);
-        $_MIDCOM->auth->require_do('midgard:update', $buddy);
-        $_MIDCOM->auth->require_do('midgard:privileges', $buddy);
+        midcom::auth->require_do('midgard:owner', $this);
+        midcom::auth->require_do('midgard:update', $buddy);
+        midcom::auth->require_do('midgard:privileges', $buddy);
         
         // Invalidate cache for both users
-        $_MIDCOM->cache->invalidate($buddy_user->guid);
-        $_MIDCOM->cache->invalidate($buddy->guid);
+        midcom::cache()->invalidate($buddy_user->guid);
+        midcom::cache()->invalidate($buddy->guid);
 
         $this->isapproved = true;
         $this->update();
@@ -321,7 +321,7 @@ class net_nehmer_buddylist_entry extends midcom_core_dbaobject
     function reject()
     {
         // Check privileges
-        $_MIDCOM->auth->require_do('midgard:owner', $this);
+        midcom::auth->require_do('midgard:owner', $this);
         $this->delete();
     }
 
@@ -333,9 +333,9 @@ class net_nehmer_buddylist_entry extends midcom_core_dbaobject
     {
         if ($this->isapproved)
         {
-            if (! $_MIDCOM->auth->request_sudo('net.nehmer.buddylist'))
+            if (! midcom::auth->request_sudo('net.nehmer.buddylist'))
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     'Failed to optain sudo privileges for the buddylist_entry on_deleted handler');
                 // This will exit.
             }
@@ -344,7 +344,7 @@ class net_nehmer_buddylist_entry extends midcom_core_dbaobject
             $buddy = new midcom_db_person($this->buddy);
             $buddy->unset_privilege('midcom:isonline', "user:{$this->account}");
 
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
         }
     }
 
@@ -373,7 +373,7 @@ class net_nehmer_buddylist_entry extends midcom_core_dbaobject
      */
     function & get_account_user()
     {
-        return $_MIDCOM->auth->get_user($this->account);
+        return midcom::auth->get_user($this->account);
     }
 
     /**
@@ -383,7 +383,7 @@ class net_nehmer_buddylist_entry extends midcom_core_dbaobject
      */
     function & get_buddy_user()
     {
-        return $_MIDCOM->auth->get_user($this->buddy);
+        return midcom::auth->get_user($this->buddy);
     }
 
     /**
@@ -398,8 +398,8 @@ class net_nehmer_buddylist_entry extends midcom_core_dbaobject
     {
         if ($user === null)
         {
-            $_MIDCOM->auth->require_valid_user();
-            $user =& $_MIDCOM->auth->user;
+            midcom::auth->require_valid_user();
+            $user =& midcom::auth->user;
         }
 
         $qb = net_nehmer_buddylist_entry::new_query_builder();

@@ -21,7 +21,7 @@ class org_routamc_positioning_geocoder_tiny extends org_routamc_positioning_geoc
     function __construct()
     {
          $this->_component = 'org.routamc.positioning';
-         $_MIDCOM->load_library('org.openpsa.httplib');
+         midcom::load_library('org.openpsa.httplib');
          parent::__construct();
     }
 

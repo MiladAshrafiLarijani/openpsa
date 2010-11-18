@@ -60,17 +60,17 @@ class org_openpsa_directmarketing_campaign_message_dba extends midcom_core_dbaob
 
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
 
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
 
     function get_parent_guid_uncached()
@@ -245,9 +245,9 @@ class org_openpsa_directmarketing_campaign_message_dba extends midcom_core_dbaob
      */
     function _check_campaign_up_to_date()
     {
-        $_MIDCOM->auth->request_sudo('org.openpsa.directmarketing');
+        midcom::auth->request_sudo('org.openpsa.directmarketing');
         $campaign = new org_openpsa_directmarketing_campaign_dba($this->campaign);
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         if ($campaign->orgOpenpsaObtype == ORG_OPENPSA_OBTYPE_CAMPAIGN_SMART)
         {
             $campaign->update_smart_campaign_members();
@@ -317,9 +317,9 @@ class org_openpsa_directmarketing_campaign_message_dba extends midcom_core_dbaob
                 'url_base' => $url_base,
             );
             debug_add("Registering batch #{$args['batch']} for {$args['url_base']}");
-            $_MIDCOM->auth->request_sudo('org.openpsa.directmarketing');
+            midcom::auth->request_sudo('org.openpsa.directmarketing');
             $atstat = midcom_services_at_interface::register(time()+60, 'org.openpsa.directmarketing', 'background_send_message', $args);
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
             if (!$atstat)
             {
                 debug_add("FAILED to register batch #{$args['batch']} for {$args['url_base']}, errstr: " . midcom_connection::get_error_string(), MIDCOM_LOG_ERROR);
@@ -748,9 +748,9 @@ class org_openpsa_directmarketing_campaign_message_dba extends midcom_core_dbaob
             debug_add('Mail sent to: ' . $mail->to);
             if (!$this->test_mode)
             {
-                $_MIDCOM->auth->request_sudo('org.openpsa.directmarketing');
+                midcom::auth->request_sudo('org.openpsa.directmarketing');
                 $member->create_receipt($this->id, ORG_OPENPSA_MESSAGERECEIPT_SENT, $token);
-                $_MIDCOM->auth->drop_sudo();
+                midcom::auth->drop_sudo();
             }
         }
         else
@@ -768,13 +768,13 @@ class org_openpsa_directmarketing_campaign_message_dba extends midcom_core_dbaob
                         'value' => $message,
                     ),
                 );
-                $_MIDCOM->auth->request_sudo('org.openpsa.directmarketing');
+                midcom::auth->request_sudo('org.openpsa.directmarketing');
                 $member->create_receipt($this->id, ORG_OPENPSA_MESSAGERECEIPT_FAILURE, $token, $params);
-                $_MIDCOM->auth->drop_sudo();
+                midcom::auth->drop_sudo();
             }
             if ($this->send_output)
             {
-                $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('org.openpsa.directmarketing', 'org.openpsa.directmarketing'), sprintf($_MIDCOM->i18n->get_string('FAILED to send mail to: %s, reason: %s', 'org.openpsa.directmarketing'), $mail->to, $mail->get_error_message()), 'error');
+                midcom::uimessages()->add(midcom::i18n()->get_string('org.openpsa.directmarketing', 'org.openpsa.directmarketing'), sprintf(midcom::i18n()->get_string('FAILED to send mail to: %s, reason: %s', 'org.openpsa.directmarketing'), $mail->to, $mail->get_error_message()), 'error');
             }
         }
         unset($mail);
@@ -788,7 +788,7 @@ class org_openpsa_directmarketing_campaign_message_dba extends midcom_core_dbaob
         $callback_method = "_callback_get_qb_{$callback_name}";
         if (!method_exists($this, $callback_method))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "method '{$callback_method}' does not exist");
+            midcom::generate_error(MIDCOM_ERRCRIT, "method '{$callback_method}' does not exist");
         }
         $qb = $this->$callback_method();
         debug_push_class(__CLASS__, __FUNCTION__);
@@ -977,9 +977,9 @@ class org_openpsa_directmarketing_campaign_message_dba extends midcom_core_dbaob
             debug_add('SMS sent to: ' . $person->handphone);
             if (!$this->test_mode)
             {
-                $_MIDCOM->auth->request_sudo('org.openpsa.directmarketing');
+                midcom::auth->request_sudo('org.openpsa.directmarketing');
                 $member->create_receipt($this->id, ORG_OPENPSA_MESSAGERECEIPT_SENT);
-                $_MIDCOM->auth->drop_sudo();
+                midcom::auth->drop_sudo();
             }
         }
         else
@@ -997,13 +997,13 @@ class org_openpsa_directmarketing_campaign_message_dba extends midcom_core_dbaob
                         'value' => $message,
                     ),
                 );
-                $_MIDCOM->auth->request_sudo('org.openpsa.directmarketing');
+                midcom::auth->request_sudo('org.openpsa.directmarketing');
                 $member->create_receipt($this->id, ORG_OPENPSA_MESSAGERECEIPT_FAILURE, $token, $params);
-                $_MIDCOM->auth->drop_sudo();
+                midcom::auth->drop_sudo();
             }
             if ($this->send_output)
             {
-                $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('org.openpsa.directmarketing', 'org.openpsa.directmarketing'), sprintf($_MIDCOM->i18n->get_string('FAILED to send SMS to: %s, reason: %s', 'org.openpsa.directmarketing'), $person->handphone, $smsbroker->errstr), 'error');
+                midcom::uimessages()->add(midcom::i18n()->get_string('org.openpsa.directmarketing', 'org.openpsa.directmarketing'), sprintf(midcom::i18n()->get_string('FAILED to send SMS to: %s, reason: %s', 'org.openpsa.directmarketing'), $person->handphone, $smsbroker->errstr), 'error');
             }
         }
         debug_pop();

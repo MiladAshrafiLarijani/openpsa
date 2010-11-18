@@ -24,7 +24,7 @@ class org_openpsa_products_handler_product_csvimport extends midcom_baseclasses_
     {
         // Mass importing is for now better left for admins only
         // TODO: Add smarter per-type ACL checks
-        $_MIDCOM->auth->require_admin_user();
+        midcom::auth->require_admin_user();
         $this->_request_data['type'] = 'product';
 
         $this->_request_data['import_status'] = array
@@ -105,7 +105,7 @@ class org_openpsa_products_handler_product_csvimport extends midcom_baseclasses_
         static $iconv_target = null;
         if (empty($target_charset))
         {
-            $target_charset = $_MIDCOM->i18n->get_current_charset();
+            $target_charset = midcom::i18n()->get_current_charset();
         }
         if (empty($detect_list))
         {
@@ -421,19 +421,19 @@ class org_openpsa_products_handler_product_csvimport extends midcom_baseclasses_
 
         if (!array_key_exists('org_openpsa_products_import_separator', $_POST))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'No CSV separator specified.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'No CSV separator specified.');
             // This will exit.
         }
         
         if (!array_key_exists('org_openpsa_products_import_schema', $_POST))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'No schema specified.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'No schema specified.');
             // This will exit.
         }
 
         if (!file_exists($_POST['org_openpsa_products_import_tmp_file']))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'No CSV file available.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'No CSV file available.');
             // This will exit.
         }
 

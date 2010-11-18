@@ -53,7 +53,7 @@
  * This is done either using the append/prepend component_style functions or by setting it
  * to another directory by calling (append|prepend)_styledir directly.
  *
- * NB: This cannot happen after the $_MIDCOM->content() stage in midcom is called,
+ * NB: This cannot happen after the midcom::content() stage in midcom is called,
  * i.e. you cannot change this in another style element or in a _show() function in a component.
  *
  * @todo Document Style Inheritance
@@ -268,7 +268,7 @@ class midcom_helper__styleloader
             foreach ($styles as $style_guid => $value)
             {
                 $current_style = $mc->get_subkey($style_guid, 'id');
-                $_MIDCOM->cache->content->register($style_guid);
+                midcom::cache()->content->register($style_guid);
             }
         }
 
@@ -406,7 +406,7 @@ class midcom_helper__styleloader
             foreach ($elements as $element_guid => $value)
             {
                 $value = $element_mc->get_subkey($element_guid, 'value');
-                $_MIDCOM->cache->content->register($element_guid);
+                midcom::cache()->content->register($element_guid);
                 $cached[$id][$name] = $value;
                 if ($GLOBALS['midcom_debugger']->firephp)
                 {
@@ -426,7 +426,7 @@ class midcom_helper__styleloader
         foreach ($styles as $style_guid => $value)
         {
             // FIXME: Should we register this also in the other case
-            $_MIDCOM->cache->content->register($style_guid);
+            midcom::cache()->content->register($style_guid);
 
             $up = $style_mc->get_subkey($style_guid, 'up');
             if (   $up
@@ -456,7 +456,7 @@ class midcom_helper__styleloader
             return $results;
         }
 
-        $style_nodes = $_MIDCOM->style->get_nodes_using_style($style);
+        $style_nodes = midcom::style()->get_nodes_using_style($style);
 
         foreach ($style_nodes as $node)
         {
@@ -471,7 +471,7 @@ class midcom_helper__styleloader
         foreach ($results['nodes'] as $component => $nodes)
         {
             // Get the list of style elements for the component
-            $results['elements'][$component] = $_MIDCOM->style->get_component_default_elements($component);
+            $results['elements'][$component] = midcom::style()->get_component_default_elements($component);
 
             // Arrange elements in alphabetical order
             ksort($results['elements'][$component]);
@@ -587,9 +587,9 @@ class midcom_helper__styleloader
 
                 if (!isset($_style))
                 {
-                    for ($i = 0; ! isset($_style) && $i < $this->_styledirs_count[$_MIDCOM->get_current_context()]; $i++)
+                    for ($i = 0; ! isset($_style) && $i < $this->_styledirs_count[midcom::get_current_context()]; $i++)
                     {
-                        $filename = MIDCOM_ROOT . $this->_styledirs[$_MIDCOM->get_current_context()][$i] .  "/{$_element}.php";
+                        $filename = MIDCOM_ROOT . $this->_styledirs[midcom::get_current_context()][$i] .  "/{$_element}.php";
                         if (file_exists($filename))
                         {
                             $_style = file_get_contents($filename);
@@ -604,7 +604,7 @@ class midcom_helper__styleloader
         if (isset($_style))
         {
             // This is a bit of a hack to allow &(); tags
-            $data =& $_MIDCOM->get_custom_context_data('request_data');
+            $data =& midcom::get_custom_context_data('request_data');
             $instance_id = false;
 
             if (   $guids
@@ -613,9 +613,9 @@ class midcom_helper__styleloader
                 // Cache style elements
                 $instance_id = $path . '-' . md5(serialize($guids));
 
-                if ($_MIDCOM->cache->memcache->exists('style', $instance_id))
+                if (midcom::cache()->memcache->exists('style', $instance_id))
                 {
-                    echo $_MIDCOM->cache->memcache->get('style', $instance_id);
+                    echo midcom::cache()->memcache->get('style', $instance_id);
                 }
             }
 
@@ -631,7 +631,7 @@ class midcom_helper__styleloader
                 ob_start();
                 $result = eval('?>' . mgd_preparse($_style));
                 $contents = ob_get_contents();
-                $_MIDCOM->cache->memcache->put('style', $instance_id, $result);
+                midcom::cache()->memcache->put('style', $instance_id, $result);
                 ob_end_flush();
             }
             else
@@ -643,7 +643,7 @@ class midcom_helper__styleloader
             {
                 // Note that src detection will be semi-reliable, as it depends on all errors being
                 // found before caching kicks in.
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Failed to parse style element '{$path}', content was loaded from '{$src}', see above for PHP errors.");
                 // This will exit.
             }
@@ -705,7 +705,7 @@ class midcom_helper__styleloader
 
         if (isset($_st))
         {
-            $substyle = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_SUBSTYLE);
+            $substyle = midcom::get_context_data(MIDCOM_CONTEXT_SUBSTYLE);
 
             if (   isset($substyle)
                 && is_string($substyle))
@@ -741,7 +741,7 @@ class midcom_helper__styleloader
     function _getComponentSnippetdir($topic)
     {
         // get component's snippetdir (for default styles)
-        $loader = $_MIDCOM->get_component_loader();
+        $loader = midcom::get_component_loader();
         if (   !$topic
             || !$topic->guid)
         {
@@ -763,9 +763,9 @@ class midcom_helper__styleloader
     function append_styledir ($dirname)
     {
         if (!file_exists(MIDCOM_ROOT . $dirname)) {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Style directory $dirname does not exist!");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Style directory $dirname does not exist!");
         }
-        $this->_styledirs_append[$_MIDCOM->get_current_context()][] = $dirname;
+        $this->_styledirs_append[midcom::get_current_context()][] = $dirname;
         return true;
     }
 
@@ -778,7 +778,7 @@ class midcom_helper__styleloader
      */
     function append_component_styledir ($component)
     {
-        $loader = $_MIDCOM->get_component_loader();
+        $loader = midcom::get_component_loader();
         $path = $loader->path_to_snippetpath($component ) . "/style";
         $this->append_styledir($path);
         return;
@@ -790,7 +790,7 @@ class midcom_helper__styleloader
      * @throws midcom exception if directory does not exist.
      */
     function prepend_component_styledir ($component) {
-        $loader = $_MIDCOM->get_component_loader();
+        $loader = midcom::get_component_loader();
         $path = $loader->path_to_snippetpath($component ) . "/style";
         $this->prepend_styledir($path);
         return;
@@ -806,9 +806,9 @@ class midcom_helper__styleloader
     {
         if (!file_exists(MIDCOM_ROOT . $dirname))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Style directory {$dirname} does not exist.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Style directory {$dirname} does not exist.");
         }
-        $this->_styledirs_prepend[$_MIDCOM->get_current_context()][] = $dirname;
+        $this->_styledirs_prepend[midcom::get_current_context()][] = $dirname;
         return true;
     }
 
@@ -822,12 +822,12 @@ class midcom_helper__styleloader
     function _merge_styledirs ($component_style)
     {
         /* first the prepend styles */
-        $this->_styledirs[$_MIDCOM->get_current_context()] = $this->_styledirs_prepend[$_MIDCOM->get_current_context()];
+        $this->_styledirs[midcom::get_current_context()] = $this->_styledirs_prepend[midcom::get_current_context()];
         /* then the contextstyle */
-        $this->_styledirs[$_MIDCOM->get_current_context()][count($this->_styledirs[$_MIDCOM->get_current_context()])] = $component_style;
+        $this->_styledirs[midcom::get_current_context()][count($this->_styledirs[midcom::get_current_context()])] = $component_style;
 
-        $this->_styledirs[$_MIDCOM->get_current_context()] =  array_merge($this->_styledirs[$_MIDCOM->get_current_context()], $this->_styledirs_append[$_MIDCOM->get_current_context()]);
-        $this->_styledirs_count[$_MIDCOM->get_current_context()] = count($this->_styledirs[$_MIDCOM->get_current_context()]);
+        $this->_styledirs[midcom::get_current_context()] =  array_merge($this->_styledirs[midcom::get_current_context()], $this->_styledirs_append[midcom::get_current_context()]);
+        $this->_styledirs_count[midcom::get_current_context()] = count($this->_styledirs[midcom::get_current_context()]);
     }
 
     /**
@@ -843,7 +843,7 @@ class midcom_helper__styleloader
         // set new context and topic
         array_unshift($this->_context, $context); // push into context stack
 
-        $this->_topic = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_CONTENTTOPIC);
+        $this->_topic = midcom::get_context_data(MIDCOM_CONTEXT_CONTENTTOPIC);
 
         // Prepare styledir stacks
         if (!isset($this->_styledirs[$context]))
@@ -895,7 +895,7 @@ class midcom_helper__styleloader
 
         // get our topic again
         // FIXME: does this have to be above _getComponentStyle($this->_topic) ??
-        $this->_topic = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_CONTENTTOPIC);
+        $this->_topic = midcom::get_context_data(MIDCOM_CONTEXT_CONTENTTOPIC);
 
         $this->_snippetdir = $this->_getComponentSnippetdir($this->_topic);
         return true;
@@ -931,7 +931,7 @@ class midcom_helper__styleloader
         {
             // TODO: Support media types
             $filename = $mc->get_subkey($guid, 'name');
-            $_MIDCOM->add_link_head
+            midcom::add_link_head
             (
                 array
                 (
@@ -953,7 +953,7 @@ class midcom_helper__styleloader
  */
 function midcom_show_style($param, $guids = null)
 {
-    return $_MIDCOM->style->show($param, $guids);
+    return midcom::style()->show($param, $guids);
 }
 
 ?>

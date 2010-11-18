@@ -28,7 +28,7 @@ class midcom_core_service_implementation_urlparsertopic implements midcom_core_s
 
     public function __construct()
     {
-        $this->root_topic = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ROOTTOPIC);
+        $this->root_topic = midcom::get_context_data(MIDCOM_CONTEXT_ROOTTOPIC);
         $this->current_object = $this->root_topic;
 
         // TODO: Remove

@@ -217,9 +217,9 @@ class midcom_helper_hostconfig
         $codeinit .= " * Generated on " . gmdate('Y-m-d H:i:s \Z', time()) . " using {$generator}\n";
 
         if (   isset($_MIDCOM)
-            && $_MIDCOM->auth->user)
+            && midcom::auth()->user)
         {
-            $user = $_MIDCOM->auth->user->get_storage();
+            $user = midcom::auth()->user->get_storage();
             $codeinit .= " * Settings selected by {$user->name} <{$user->email}>\n";
         }
 
@@ -251,7 +251,7 @@ class midcom_helper_hostconfig
         $codeinit .= "\n?><(code-init-after-midcom)><?php\n\n";
 
         // Run MidCOM codeinit() phase
-        $codeinit .= '$_MIDCOM->codeinit();' . "\n";
+        $codeinit .= 'midcom::codeinit();' . "\n";
         $codeinit .= "?>";
 
         return $codeinit;

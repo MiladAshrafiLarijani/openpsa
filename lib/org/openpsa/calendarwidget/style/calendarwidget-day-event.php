@@ -1,5 +1,5 @@
 <?php
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 $view = $data['view_event'];
 
 if (date('Y-m-d', $data['event']->start) === date('Y-m-d', $data['day']))

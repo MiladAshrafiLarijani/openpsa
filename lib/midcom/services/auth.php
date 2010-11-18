@@ -337,7 +337,7 @@ class midcom_services_auth
         {
             if (isset($_MIDCOM))
             {
-                $_MIDCOM->relocate($_REQUEST['midcom_services_auth_login_success_url']);
+                midcom::relocate($_REQUEST['midcom_services_auth_login_success_url']);
             }
             else
             {
@@ -457,14 +457,14 @@ class midcom_services_auth
         $user_id = $this->acl->get_user_id($user);
 
         //if we're handed the correct object type, we use it's class right away
-        if ($_MIDCOM->dbclassloader->is_midcom_db_object($content_object))
+        if (midcom::dbclassloader->is_midcom_db_object($content_object))
         {
             $content_object_class = get_class($content_object);
         }
         //otherwise, we assume (hope) that it's a midgard object
         else
         {
-            $content_object_class = $_MIDCOM->dbclassloader->get_midcom_class_name_for_mgdschema_object($content_object);
+            $content_object_class = midcom::dbclassloader->get_midcom_class_name_for_mgdschema_object($content_object);
         }
 
         return $this->acl->can_do_byguid($privilege, $content_object->guid, $content_object_class, $user_id);
@@ -572,7 +572,7 @@ class midcom_services_auth
 
         if (is_null($domain))
         {
-            $domain = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_COMPONENT);
+            $domain = midcom::get_context_data(MIDCOM_CONTEXT_COMPONENT);
             debug_add("Domain was not supplied, falling back to '{$domain}' which we got from the current component context.");
         }
 
@@ -676,7 +676,7 @@ class midcom_services_auth
         {
             if (is_null($message))
             {
-                $string = $_MIDCOM->i18n->get_string('access denied: privilege %s not granted', 'midcom');
+                $string = midcom::i18n()->get_string('access denied: privilege %s not granted', 'midcom');
                 $message = sprintf($string, $privilege);
             }
             $this->access_denied($message);
@@ -708,7 +708,7 @@ class midcom_services_auth
         {
             if (is_null($message))
             {
-                $string = $_MIDCOM->i18n->get_string('access denied: privilege %s not granted', 'midcom');
+                $string = midcom::i18n()->get_string('access denied: privilege %s not granted', 'midcom');
                 $message = sprintf($string, $privilege);
             }
             $this->access_denied($message);
@@ -736,7 +736,7 @@ class midcom_services_auth
         {
             if (is_null($message))
             {
-                $string = $_MIDCOM->i18n->get_string('access denied: user is not member of the group %s', 'midcom');
+                $string = midcom::i18n()->get_string('access denied: user is not member of the group %s', 'midcom');
                 if (is_object($group))
                 {
                     $message = sprintf($string, $group->name);
@@ -763,7 +763,7 @@ class midcom_services_auth
     {
         if ($message === null)
         {
-            $message = $_MIDCOM->i18n->get_string('access denied: admin level privileges required', 'midcom');
+            $message = midcom::i18n()->get_string('access denied: admin level privileges required', 'midcom');
         }
         if (   ! $this->admin
             && ! $this->_component_sudo)
@@ -815,7 +815,7 @@ class midcom_services_auth
             _midcom_header('HTTP/1.0 401 Unauthorized');
             // TODO: more fancy 401 output ?
             echo "<h1>Authorization required</h1>\n";
-            $_MIDCOM->finish();
+            midcom::finish();
             _midcom_stop_request();
         }
         else
@@ -827,7 +827,7 @@ class midcom_services_auth
                 $this->_http_basic_auth();
             }
             // Figure out how to update midcom auth status
-            $_MIDCOM->auth->_initialize_user_from_midgard();
+            midcom::auth->_initialize_user_from_midgard();
         }
     }
 
@@ -1269,7 +1269,7 @@ class midcom_services_auth
         // Check whether we have a valid component URL here
         // Note, just trigger loading it is not an option, as this function might be
         // called during component loading itself.
-        if (! $_MIDCOM->componentloader->validate_url($component))
+        if (! midcom::componentloader->validate_url($component))
         {
             debug_add("Failed to register the vgroup {$component}-{$identifier} ({$name}), the component name is invalid.",
                 MIDCOM_LOG_ERROR);
@@ -1357,7 +1357,7 @@ class midcom_services_auth
     function logout($destination = '')
     {
         $this->drop_login_session();
-        $_MIDCOM->relocate($destination);
+        midcom::relocate($destination);
     }
 
     /**
@@ -1409,7 +1409,7 @@ class midcom_services_auth
     }
 
     /**
-     * This is called by $_MIDCOM->generate_error(MIDCOM_ERRFORBIDDEN, ...) if and only if
+     * This is called by midcom::generate_error(MIDCOM_ERRFORBIDDEN, ...) if and only if
      * the headers have not yet been sent. It will display the error message and appends the
      * login form below it.
      *
@@ -1449,11 +1449,11 @@ class midcom_services_auth
         if (! is_null($this->user))
         {
             // The user has insufficient privileges
-            $login_warning = $_MIDCOM->i18n->get_string('login message - insufficient privileges', 'midcom');
+            $login_warning = midcom::i18n()->get_string('login message - insufficient privileges', 'midcom');
         }
         else if ($this->auth_credentials_found)
         {
-            $login_warning = $_MIDCOM->i18n->get_string('login message - user or password wrong', 'midcom');
+            $login_warning = midcom::i18n()->get_string('login message - user or password wrong', 'midcom');
         }
 
         if (   isset($_MIDGARD['config']['ragnaland'])
@@ -1463,7 +1463,7 @@ class midcom_services_auth
             throw new midgardmvc_exception_unauthorized($login_warning);
         }
 
-        $title = $_MIDCOM->i18n->get_string('access denied', 'midcom');
+        $title = midcom::i18n()->get_string('access denied', 'midcom');
 
         // Emergency check, if headers have been sent, kill MidCOM instantly, we cannot output
         // an error page at this point (dynamic_load from site style? Code in Site Style, something
@@ -1472,7 +1472,7 @@ class midcom_services_auth
         {
             debug_add('Cannot render an access denied page, page output has already started. Aborting directly.', MIDCOM_LOG_INFO);
             echo "<br />{$title}: {$login_warning}";
-            $_MIDCOM->finish();
+            midcom::finish();
             debug_add("Emergency Error Message output finished, exiting now", MIDCOM_LOG_DEBUG);
             _midcom_stop_request();
         }
@@ -1481,11 +1481,11 @@ class midcom_services_auth
         while (@ob_end_clean())
             // Empty Loop
         ;
-        $_MIDCOM->cache->content->_obrunning = false;
+        midcom::cache()->content->_obrunning = false;
 
         $this->_generate_http_response();
 
-        $_MIDCOM->cache->content->no_cache();
+        midcom::cache()->content->no_cache();
 
 
         if (   function_exists('mgd_is_element_loaded')
@@ -1499,7 +1499,7 @@ class midcom_services_auth
         }
         else
         {
-            $_MIDCOM->add_link_head
+            midcom::add_link_head
             (
                 array
                 (
@@ -1515,7 +1515,7 @@ class midcom_services_auth
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
     <head>
         <title><?php echo $title; ?></title>
-        <?php echo $_MIDCOM->print_head_elements(); ?>
+        <?php echo midcom::print_head_elements(); ?>
     </head>
 
     <body onload="self.focus();document.midcom_services_auth_frontend_form.username.focus();">
@@ -1528,7 +1528,7 @@ class midcom_services_auth
             <div id="content">
                 <div id="login">
                     <?php
-                    $_MIDCOM->auth->show_login_form();
+                    midcom::auth->show_login_form();
                     ?>
                     <div class="clear"></div>
                 </div>
@@ -1549,7 +1549,7 @@ class midcom_services_auth
 </html>
             <?php
         }
-        $_MIDCOM->finish();
+        midcom::finish();
         debug_add("Error Page output finished, exiting now", MIDCOM_LOG_DEBUG);
         _midcom_stop_request();
     }
@@ -1596,10 +1596,10 @@ class midcom_services_auth
 
         $this->_generate_http_response();
 
-        $_MIDCOM->cache->content->_obrunning = false;
-        $_MIDCOM->cache->content->no_cache();
+        midcom::cache()->content->_obrunning = false;
+        midcom::cache()->content->no_cache();
 
-        $title = $_MIDCOM->i18n->get_string('login', 'midcom');
+        $title = midcom::i18n()->get_string('login', 'midcom');
 
         if (   isset($_MIDGARD['config']['ragnaland'])
             && $_MIDGARD['config']['ragnaland'])
@@ -1613,7 +1613,7 @@ class midcom_services_auth
         if (   $this->auth_credentials_found
             && is_null($this->user))
         {
-            $login_warning = $_MIDCOM->i18n->get_string('login message - user or password wrong', 'midcom');
+            $login_warning = midcom::i18n()->get_string('login message - user or password wrong', 'midcom');
         }
 
 
@@ -1627,7 +1627,7 @@ class midcom_services_auth
         }
         else
         {
-            $_MIDCOM->add_link_head
+            midcom::add_link_head
             (
                 array
                 (
@@ -1643,7 +1643,7 @@ class midcom_services_auth
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
     <head>
         <title><?php echo $title; ?></title>
-        <?php echo $_MIDCOM->print_head_elements(); ?>
+        <?php echo midcom::print_head_elements(); ?>
     </head>
 
     <body onload="self.focus();document.midcom_services_auth_frontend_form.username.focus();">
@@ -1656,14 +1656,14 @@ class midcom_services_auth
             <div id="content">
                 <div id="login">
                     <?php
-                    $_MIDCOM->auth->show_login_form();
+                    midcom::auth->show_login_form();
                     ?>
                     <div class="clear"></div>
                 </div>
                 <?php
                 if ($login_warning == '')
                 {
-                    echo "<div id=\"ok\">" . $_MIDCOM->i18n->get_string('login message - please enter credentials', 'midcom') . "</div>\n";
+                    echo "<div id=\"ok\">" . midcom::i18n()->get_string('login message - please enter credentials', 'midcom') . "</div>\n";
                 }
                 else
                 {
@@ -1683,12 +1683,12 @@ class midcom_services_auth
             </div>
     </body>
     <?php
-    $_MIDCOM->uimessages->show();
+    midcom::uimessages()->show();
     ?>
 </html>
             <?php
         }
-        $_MIDCOM->finish();
+        midcom::finish();
         _midcom_stop_request();
     }
 

@@ -35,12 +35,12 @@ class net_nemein_wiki_handler_notfound extends midcom_baseclasses_components_han
         if (count($result) > 0)
         {
             // This wiki page actually exists, so go there as "Permanent Redirect"
-            $_MIDCOM->relocate("{$result[0]->name}/", 301);
+            midcom::relocate("{$result[0]->name}/", 301);
         }
 
         // This is a custom "not found" page, send appropriate headers to prevent indexing
-        $_MIDCOM->header('Not found', 404);
-        $_MIDCOM->set_pagetitle(sprintf($this->_l10n->get('"%s" not found'), $data['wikiword']));
+        midcom::header('Not found', 404);
+        midcom::set_pagetitle(sprintf($this->_l10n->get('"%s" not found'), $data['wikiword']));
 
         // TODO: List pages containing the wikiword via indexer
 
@@ -73,7 +73,7 @@ class net_nemein_wiki_handler_notfound extends midcom_baseclasses_components_han
         $data['wiki_tools']->add_item(
             array
             (
-                MIDCOM_TOOLBAR_URL => 'http://' . $_MIDCOM->i18n->get_current_language() . '.wikipedia.org/wiki/' . rawurlencode($data['wikiword']),
+                MIDCOM_TOOLBAR_URL => 'http://' . midcom::i18n()->get_current_language() . '.wikipedia.org/wiki/' . rawurlencode($data['wikiword']),
                 MIDCOM_TOOLBAR_LABEL => sprintf($this->_l10n->get('look for %s in wikipedia'), $data['wikiword']),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/search.png',
@@ -91,7 +91,7 @@ class net_nemein_wiki_handler_notfound extends midcom_baseclasses_components_han
             MIDCOM_NAV_URL => 'notfound/' . rawurlencode($data['wikiword']),
             MIDCOM_NAV_NAME => $data['wikiword'],
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         return true;
     }

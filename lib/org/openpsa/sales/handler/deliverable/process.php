@@ -68,7 +68,7 @@ class org_openpsa_sales_handler_deliverable_process extends midcom_baseclasses_c
     {
         if ($_SERVER['REQUEST_METHOD'] != 'POST')
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRFORBIDDEN, 'Only POST requests are allowed here.');
+            midcom::generate_error(MIDCOM_ERRFORBIDDEN, 'Only POST requests are allowed here.');
         }
 
         $this->_deliverable = new org_openpsa_sales_salesproject_deliverable_dba($args[0]);
@@ -94,7 +94,7 @@ class org_openpsa_sales_handler_deliverable_process extends midcom_baseclasses_c
         {
             if (!$this->_deliverable->propose())
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     'Failed to mark the deliverable as proposed, cannot continue. Last Midgard error was: ' . midcom_connection::get_error_string());
                 // This will exit.
             }
@@ -103,7 +103,7 @@ class org_openpsa_sales_handler_deliverable_process extends midcom_baseclasses_c
         {
             if (!$this->_deliverable->decline())
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     'Failed to mark the deliverable as declined, cannot continue. Last Midgard error was: ' . midcom_connection::get_error_string());
                 // This will exit.
             }
@@ -112,7 +112,7 @@ class org_openpsa_sales_handler_deliverable_process extends midcom_baseclasses_c
         {
             if (!$this->_deliverable->order())
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     'Failed to mark the deliverable as ordered, cannot continue. Last Midgard error was: ' . midcom_connection::get_error_string());
                 // This will exit.
             }
@@ -121,7 +121,7 @@ class org_openpsa_sales_handler_deliverable_process extends midcom_baseclasses_c
         {
             if (!$this->_deliverable->deliver())
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     'Failed to mark the deliverable as delivered, cannot continue. Last Midgard error was: ' . midcom_connection::get_error_string());
                 // This will exit.
             }
@@ -131,19 +131,19 @@ class org_openpsa_sales_handler_deliverable_process extends midcom_baseclasses_c
         {
             if (!$this->_deliverable->invoice($_POST['invoice']))
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     'Failed to mark the deliverable as invoiced, cannot continue. Last Midgard error was: ' . midcom_connection::get_error_string());
                 // This will exit.
             }
         }
         else
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'No procedure specified, aborting.');
         }
 
         // Get user back to the sales project
-        $_MIDCOM->relocate("salesproject/{$this->_salesproject->guid}/");
+        midcom::relocate("salesproject/{$this->_salesproject->guid}/");
         // This will exit.
     }
 }

@@ -74,7 +74,7 @@ class org_openpsa_sales_handler_edit extends midcom_baseclasses_components_handl
         $this->_controller->set_storage($this->_salesproject, $this->_schema);
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for document {$this->_document->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for document {$this->_document->id}.");
             // This will exit.
         }
     }
@@ -93,14 +93,14 @@ class org_openpsa_sales_handler_edit extends midcom_baseclasses_components_handl
         $this->_controller->defaults =& $this->_defaults;
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
             // This will exit.
         }
     }
 
     function _initialize_datamanager($schemadb_snippet)
     {
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
 
         // Initialize the datamanager with the schema
         $this->_schemadb = midcom_helper_datamanager2_schema::load_database($schemadb_snippet);
@@ -109,7 +109,7 @@ class org_openpsa_sales_handler_edit extends midcom_baseclasses_components_handl
 
         if (!$this->_datamanager)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Datamanager could not be instantiated.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Datamanager could not be instantiated.");
             // This will exit.
         }
     }
@@ -163,7 +163,7 @@ class org_openpsa_sales_handler_edit extends midcom_baseclasses_components_handl
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $salesproject);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to create a new invoice, cannot continue. Error: " . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -181,9 +181,9 @@ class org_openpsa_sales_handler_edit extends midcom_baseclasses_components_handl
      */
     function _handler_edit($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         $this->_request_data['salesproject'] = $this->_load_salesproject($args[0]);
-        $_MIDCOM->auth->require_do('midgard:update', $this->_salesproject);
+        midcom::auth->require_do('midgard:update', $this->_salesproject);
 
         $this->_load_edit_controller();
 
@@ -192,7 +192,7 @@ class org_openpsa_sales_handler_edit extends midcom_baseclasses_components_handl
             case 'save':
                 // Fall-through intentional
             case 'cancel':
-                $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+                midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                     . "salesproject/" . $this->_salesproject->guid);
         }
         $this->_request_data['controller'] =& $this->_controller;
@@ -204,7 +204,7 @@ class org_openpsa_sales_handler_edit extends midcom_baseclasses_components_handl
 
         $this->_update_breadcrumb_line();
 
-        $_MIDCOM->set_pagetitle(sprintf($this->_l10n_midcom->get('edit %s'), $this->_salesproject->title));
+        midcom::set_pagetitle(sprintf($this->_l10n_midcom->get('edit %s'), $this->_salesproject->title));
 
         return true;
     }
@@ -223,7 +223,7 @@ class org_openpsa_sales_handler_edit extends midcom_baseclasses_components_handl
             MIDCOM_NAV_NAME => sprintf($this->_l10n_midcom->get('edit %s'), $this->_l10n->get('salesproject')),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
 
@@ -245,8 +245,8 @@ class org_openpsa_sales_handler_edit extends midcom_baseclasses_components_handl
      */
     function _handler_new($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
-        $_MIDCOM->auth->require_user_do('midgard:create', null, 'org_openpsa_sales_salesproject_dba');
+        midcom::auth->require_valid_user();
+        midcom::auth->require_user_do('midgard:create', null, 'org_openpsa_sales_salesproject_dba');
 
         $this->_defaults['code'] = org_openpsa_sales_salesproject_dba::generate_salesproject_number();
         $this->_defaults['owner'] = midcom_connection::get_user(); 
@@ -262,16 +262,16 @@ class org_openpsa_sales_handler_edit extends midcom_baseclasses_components_handl
         {
             case 'save':
                 // Relocate to main view
-                $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-                $_MIDCOM->relocate($prefix . "salesproject/edit/" . $this->_salesproject->guid . "/");
+                $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+                midcom::relocate($prefix . "salesproject/edit/" . $this->_salesproject->guid . "/");
                 // This will exit
             case 'cancel':
-                $_MIDCOM->relocate('');
+                midcom::relocate('');
                 // This will exit
         }
         $this->_request_data['controller'] =& $this->_controller;
 
-        $_MIDCOM->set_pagetitle(sprintf($this->_l10n_midcom->get('create %s'), $this->_l10n->get('salesproject')));
+        midcom::set_pagetitle(sprintf($this->_l10n_midcom->get('create %s'), $this->_l10n->get('salesproject')));
 
         // Add toolbar items
         org_openpsa_helpers::dm2_savecancel($this);

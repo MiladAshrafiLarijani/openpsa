@@ -26,17 +26,17 @@ class org_openpsa_contacts_group_dba extends midcom_core_dbaobject
 
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
     
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
     
     function get_label()
@@ -151,7 +151,7 @@ class org_openpsa_contacts_group_dba extends midcom_core_dbaobject
             (
                 'group' => $this->guid,
             );
-            $_MIDCOM->load_library('midcom.services.at');
+            midcom::load_library('midcom.services.at');
             $atstat = midcom_services_at_interface::register(time() + 60, 'org.openpsa.contacts', 'check_url', $args);
         }
 

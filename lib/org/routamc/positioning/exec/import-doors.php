@@ -1,5 +1,5 @@
 <?php
-$_MIDCOM->auth->require_admin_user();
+midcom::auth->require_admin_user();
 
 //Disable limits
 @ini_set('memory_limit', -1);

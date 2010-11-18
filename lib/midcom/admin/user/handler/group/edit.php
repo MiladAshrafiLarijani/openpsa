@@ -29,11 +29,11 @@ class midcom_admin_user_handler_group_edit extends midcom_baseclasses_components
 
     function _on_initialize()
     {
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
-        $this->_l10n = $_MIDCOM->i18n->get_l10n('midcom.admin.user');
+        midcom::load_library('midcom.helper.datamanager2');
+        $this->_l10n = midcom::i18n()->get_l10n('midcom.admin.user');
         $this->_request_data['l10n'] = $this->_l10n;
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -65,16 +65,16 @@ class midcom_admin_user_handler_group_edit extends midcom_baseclasses_components
         $tmp[] = Array
         (
             MIDCOM_NAV_URL => '__mfa/asgard_midcom.admin.user/group',
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('groups', 'midcom.admin.user'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('groups', 'midcom.admin.user'),
         );
         $tmp[] = Array
         (
             MIDCOM_NAV_URL => "__mfa/asgard_midcom.admin.user/",
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('midcom.admin.user', 'midcom.admin.user'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('midcom.admin.user', 'midcom.admin.user'),
         );
         $tmp = array_reverse($tmp);
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**
@@ -113,7 +113,7 @@ class midcom_admin_user_handler_group_edit extends midcom_baseclasses_components
         $this->_controller->set_storage($this->_group, 'default');
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for group {$this->_group->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for group {$this->_group->id}.");
             // This will exit.
         }
     }
@@ -145,20 +145,20 @@ class midcom_admin_user_handler_group_edit extends midcom_baseclasses_components
         {
             case 'save':
                 // Show confirmation for the group
-                $_MIDCOM->uimessages->add($this->_l10n->get('midcom.admin.user'), sprintf($this->_l10n->get('group %s saved'), $this->_group->name));
-                $_MIDCOM->relocate("__mfa/asgard_midcom.admin.user/group/edit/{$this->_group->guid}/");
+                midcom::uimessages()->add($this->_l10n->get('midcom.admin.user'), sprintf($this->_l10n->get('group %s saved'), $this->_group->name));
+                midcom::relocate("__mfa/asgard_midcom.admin.user/group/edit/{$this->_group->guid}/");
                 // This will exit.
 
             case 'cancel':
-                $_MIDCOM->relocate('__mfa/asgard_midcom.admin.user/');
+                midcom::relocate('__mfa/asgard_midcom.admin.user/');
                 // This will exit.
         }
 
         midgard_admin_asgard_plugin::bind_to_object($this->_group, $handler_id, $data);
 
         $ref = new midcom_helper_reflector($this->_group);
-        $data['view_title'] = sprintf($_MIDCOM->i18n->get_string('edit %s', 'midcom.admin.user'), $ref->get_object_title($this->_group));
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        $data['view_title'] = sprintf(midcom::i18n()->get_string('edit %s', 'midcom.admin.user'), $ref->get_object_title($this->_group));
+        midcom::set_pagetitle($data['view_title']);
 
         $this->_update_breadcrumb();
 
@@ -167,20 +167,20 @@ class midcom_admin_user_handler_group_edit extends midcom_baseclasses_components
             array
             (
                 MIDCOM_TOOLBAR_URL => "__mfa/asgard_midcom.admin.user/group/folders/{$this->_group->guid}/",
-                MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('folders', 'midcom.admin.user'),
+                MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('folders', 'midcom.admin.user'),
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/folder.png',
             ),
-            $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+            midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
         );
         $data['asgard_toolbar']->add_item
         (
             array
             (
                 MIDCOM_TOOLBAR_URL => "__mfa/asgard_midcom.admin.user/group/move/{$this->_group->guid}/",
-                MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('move group', 'midcom.admin.user'),
+                MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('move group', 'midcom.admin.user'),
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/save-as.png',
             ),
-            $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+            midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
         );
 
         return true;

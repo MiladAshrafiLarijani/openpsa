@@ -365,7 +365,7 @@ class midcom_core_manifest extends midcom_baseclasses_core_object
     {
         if ($this->name_translated === null)
         {
-            $this->name_translated = $_MIDCOM->i18n->get_string($this->name, $this->name);
+            $this->name_translated = midcom::i18n()->get_string($this->name, $this->name);
         }
         return $this->name_translated;
     }

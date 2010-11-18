@@ -19,7 +19,7 @@
     ?>
     <td><input type="checkbox" name="midcom_admin_user[]" value="<?php echo $data['person']->id; ?>" <?php echo $checked; ?>/></td>
     <?php
-    $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+    $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
     $linked = 0;
     foreach ($data['list_fields'] as $field)
     {

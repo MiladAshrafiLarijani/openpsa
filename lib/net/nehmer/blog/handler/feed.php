@@ -76,11 +76,11 @@ class net_nehmer_blog_handler_feed extends midcom_baseclasses_components_handler
      */
     function _handler_feed ($handler_id, $args, &$data)
     {
-        $_MIDCOM->load_library('de.bitfolge.feedcreator');
-        $_MIDCOM->cache->content->content_type("text/xml; charset=UTF-8");
-        $_MIDCOM->header("Content-type: text/xml; charset=UTF-8");
+        midcom::load_library('de.bitfolge.feedcreator');
+        midcom::cache()->content->content_type("text/xml; charset=UTF-8");
+        midcom::header("Content-type: text/xml; charset=UTF-8");
 
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
 
         // Prepare control structures
         $this->_datamanager = new midcom_helper_datamanager2_datamanager($this->_request_data['schemadb']);
@@ -134,7 +134,7 @@ class net_nehmer_blog_handler_feed extends midcom_baseclasses_components_handler
         // Prepare the feed (this will also validate the handler_id)
         $this->_create_feed($handler_id);
 
-        $_MIDCOM->set_26_request_metadata(net_nehmer_blog_viewer::get_last_modified($this->_topic, $this->_content_topic), $this->_topic->guid);
+        midcom::set_26_request_metadata(net_nehmer_blog_viewer::get_last_modified($this->_topic, $this->_content_topic), $this->_topic->guid);
         return true;
     }
 
@@ -155,7 +155,7 @@ class net_nehmer_blog_handler_feed extends midcom_baseclasses_components_handler
         $this->_feed->description = $this->_config->get('rss_description');
         $this->_feed->language = $this->_config->get('rss_language');
         $this->_feed->editor = $this->_config->get('rss_webmaster');
-        $this->_feed->link = $_MIDCOM->get_host_name() . $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $this->_feed->link = midcom::get_host_name() . midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
         $this->_feed->cssStyleSheet = false;
 
         switch($handler_id)
@@ -182,7 +182,7 @@ class net_nehmer_blog_handler_feed extends midcom_baseclasses_components_handler
                 break;
 
             default:
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "The feed handler {$handler_id} is unsupported");
+                midcom::generate_error(MIDCOM_ERRCRIT, "The feed handler {$handler_id} is unsupported");
                 // This will exit.
         }
 
@@ -242,7 +242,7 @@ class net_nehmer_blog_handler_feed extends midcom_baseclasses_components_handler
     function _handler_index ($handler_id, $args, &$data)
     {
         $this->_component_data['active_leaf'] = NET_NEHMER_BLOG_LEAFID_FEEDS;
-        $_MIDCOM->set_26_request_metadata($this->_topic->metadata->revised, $this->_topic->guid);
+        midcom::set_26_request_metadata($this->_topic->metadata->revised, $this->_topic->guid);
         return true;
     }
 

@@ -21,7 +21,7 @@ class org_openpsa_calendar_handler_agenda extends midcom_baseclasses_components_
 
     function _on_initialize()
     {
-        $_MIDCOM->load_library('org.openpsa.calendarwidget');
+        midcom::load_library('org.openpsa.calendarwidget');
     }
 
     /**

@@ -81,7 +81,7 @@ abstract class midcom_core_dbaobject extends midcom_baseclasses_core_object
     {
         if (is_object($id))
         {
-            $this->__object = $_MIDCOM->dbfactory->convert_midcom_to_midgard($id);
+            $this->__object = midcom::dbfactory()->convert_midcom_to_midgard($id);
         }
         else
         {
@@ -466,7 +466,7 @@ abstract class midcom_core_dbaobject extends midcom_baseclasses_core_object
     public static function serve_attachment($guid)
     {
         $attachment = new midcom_db_attachment($guid);
-        $_MIDCOM->serve_attachment($guid);
+        midcom::serve_attachment($guid);
     }
     public function has_parameters()
     {
@@ -542,8 +542,8 @@ abstract class midcom_core_dbaobject extends midcom_baseclasses_core_object
         {
             return true;
         }
-        $_MIDCOM->cache->invalidate($this->guid);
-        $_MIDCOM->componentloader->trigger_watches(MIDCOM_OPERATION_DBA_UPDATE, $this);
+        midcom::cache()->invalidate($this->guid);
+        midcom::componentloader()->trigger_watches(MIDCOM_OPERATION_DBA_UPDATE, $this);
         return $this->__object->approve();
     }
     public function unapprove()
@@ -552,8 +552,8 @@ abstract class midcom_core_dbaobject extends midcom_baseclasses_core_object
         {
             return true;
         }
-        $_MIDCOM->cache->invalidate($this->guid);
-        $_MIDCOM->componentloader->trigger_watches(MIDCOM_OPERATION_DBA_UPDATE, $this);
+        midcom::cache()->invalidate($this->guid);
+        midcom::componentloader()->trigger_watches(MIDCOM_OPERATION_DBA_UPDATE, $this);
         return $this->__object->unapprove();
     }
     public function get_properties()
@@ -578,7 +578,7 @@ abstract class midcom_core_dbaobject extends midcom_baseclasses_core_object
     public static function new_reflection_property()
     {
         // TODO: This will work only in PHP 5.3 thanks to late static binding
-        $classname = $_MIDCOM->dbclassloader->get_mgdschema_class_name_for_midcom_class(__CLASS__);
+        $classname = midcom::dbclassloader()->get_mgdschema_class_name_for_midcom_class(__CLASS__);
         return call_user_func(array($classname, 'new_reflection_property'));
     }
 
@@ -609,19 +609,19 @@ abstract class midcom_core_dbaobject extends midcom_baseclasses_core_object
     // ACL Shortcuts
     public function can_do($privilege, $user = null)
     {
-        return $_MIDCOM->auth->can_do($privilege, $this->__object, $user);
+        return midcom::auth()->can_do($privilege, $this->__object, $user);
     }
     public function can_user_do($privilege, $user = null)
     {
-        return $_MIDCOM->auth->can_user_do($privilege, $user, $this->__midcom_class_name__);
+        return midcom::auth()->can_user_do($privilege, $user, $this->__midcom_class_name__);
     }
     public function require_do($privilege, $message = null)
     {
-        $_MIDCOM->auth->require_do($privilege, $this->__object, $message);
+        midcom::auth()->require_do($privilege, $this->__object, $message);
     }
     public function require_user_do($privilege, $message = null)
     {
-        $_MIDCOM->auth->require_user_do($privilege, $message, $this->__midcom_class_name__);
+        midcom::auth()->require_user_do($privilege, $message, $this->__midcom_class_name__);
     }
 
     // DBA API
@@ -701,7 +701,7 @@ abstract class midcom_core_dbaobject extends midcom_baseclasses_core_object
     {
         static $parent_mapping = array();
 
-        $class_name = $_MIDCOM->dbclassloader->get_mgdschema_class_name_for_midcom_class($class_name);
+        $class_name = midcom::dbclassloader()->get_mgdschema_class_name_for_midcom_class($class_name);
         $reflector = new midgard_reflection_property($class_name);
         $up_property = midgard_object_class::get_property_up($class_name);
         if (!empty($up_property))

@@ -24,7 +24,7 @@ class midcom_admin_folder_handler_order extends midcom_baseclasses_components_ha
     function __construct()
     {
         parent::__construct();
-        $_MIDCOM->componentloader->load('midcom.helper.reflector');
+        midcom::componentloader()->load('midcom.helper.reflector');
     }
 
     /**
@@ -43,8 +43,8 @@ class midcom_admin_folder_handler_order extends midcom_baseclasses_components_ha
         // Form has been handled if cancel has been pressed
         if (isset($_POST['f_cancel']))
         {
-            $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('midcom.admin.folder'), $_MIDCOM->i18n->get_string('cancelled'));
-            $_MIDCOM->relocate('');
+            midcom::uimessages()->add(midcom::i18n()->get_string('midcom.admin.folder'), midcom::i18n()->get_string('cancelled'));
+            midcom::relocate('');
             // This will exit
         }
 
@@ -75,7 +75,7 @@ class midcom_admin_folder_handler_order extends midcom_baseclasses_components_ha
                 $score_r = (int)($count - $i);
 
                 // Use the DB Factory to resolve the class and to get the object
-                $object = $_MIDCOM->dbfactory->get_object_by_guid($identificator);
+                $object = midcom::dbfactory()->get_object_by_guid($identificator);
 
                 // This is probably a pseudo leaf, store the score to the current node
                 if (   !$object
@@ -91,7 +91,7 @@ class midcom_admin_folder_handler_order extends midcom_baseclasses_components_ha
                 $metadata = midcom_helper_metadata::retrieve($object);
                 if (!is_object($metadata))
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Could not fetch metadata for object {$guid}");
+                    midcom::generate_error(MIDCOM_ERRCRIT, "Could not fetch metadata for object {$guid}");
                     // This will exit
                 }
                 // Make sure this is reference to correct direction (from our point of view)
@@ -111,10 +111,10 @@ class midcom_admin_folder_handler_order extends midcom_baseclasses_components_ha
                 if (!$metadata->set('score', $object->metadata->score))
                 {
                     // Show an error message on an update failure
-                    $_MIDCOM->load_library('midcom.helper.reflector');
+                    midcom::load_library('midcom.helper.reflector');
                     $reflector =& midcom_helper_reflector::get($object);
                     $title = $reflector->get_class_label() . ' ' . $reflector->get_object_label($object);
-                    $_MIDCOM->uimessages->add($this->_l10n->get('midcom.admin.folder'), sprintf($this->_l10n->get('failed to update %s due to: %s'), $title, midcom_connection::get_error_string()), 'error');
+                    midcom::uimessages()->add($this->_l10n->get('midcom.admin.folder'), sprintf($this->_l10n->get('failed to update %s due to: %s'), $title, midcom_connection::get_error_string()), 'error');
                     $success = false;
                     continue;
                 }
@@ -134,8 +134,8 @@ class midcom_admin_folder_handler_order extends midcom_baseclasses_components_ha
 
         if ($success)
         {
-            $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('midcom.admin.folder'), $_MIDCOM->i18n->get_string('order saved'));
-            $_MIDCOM->relocate('');
+            midcom::uimessages()->add(midcom::i18n()->get_string('midcom.admin.folder'), midcom::i18n()->get_string('order saved'));
+            midcom::relocate('');
             // This will exit
         }
     }
@@ -151,20 +151,20 @@ class midcom_admin_folder_handler_order extends midcom_baseclasses_components_ha
     function _handler_order($handler_id, $args, &$data)
     {
         // jQuery sorting
-        $_MIDCOM->enable_jquery();
+        midcom::enable_jquery();
 
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL.'/jQuery/jquery.form-2.21.js');
-        $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.core.min.js');
-        $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.widget.min.js');
-        $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.sortable.min.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL.'/jQuery/jquery.form-2.21.js');
+        midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.core.min.js');
+        midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.widget.min.js');
+        midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.sortable.min.js');
 
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL.'/midcom.admin.folder/jquery-postfix.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL.'/midcom.admin.folder/jquery-postfix.js');
 
         // These pages need no caching
-        $_MIDCOM->cache->content->no_cache();
+        midcom::cache()->content->no_cache();
 
         // Custom styles
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -185,9 +185,9 @@ class midcom_admin_folder_handler_order extends midcom_baseclasses_components_ha
         $tmp[] = array
         (
             MIDCOM_NAV_URL => '__ais/folder/order/',
-            MIDCOM_NAV_NAME => $_MIDCOM->i18n->get_string('order navigation', 'midcom.admin.folder'),
+            MIDCOM_NAV_NAME => midcom::i18n()->get_string('order navigation', 'midcom.admin.folder'),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         // Hide the button in toolbar
         $this->_node_toolbar->hide_item('__ais/folder/order/');
@@ -199,20 +199,20 @@ class midcom_admin_folder_handler_order extends midcom_baseclasses_components_ha
         {
             $folder_title = $data['folder']->name;
         }
-        $data['title'] = sprintf($_MIDCOM->i18n->get_string('order navigation in folder %s', 'midcom.admin.folder'), $folder_title);
-        $_MIDCOM->set_pagetitle($data['title']);
+        $data['title'] = sprintf(midcom::i18n()->get_string('order navigation in folder %s', 'midcom.admin.folder'), $folder_title);
+        midcom::set_pagetitle($data['title']);
 
         // Set the help object in the toolbar
-        $help_toolbar = $_MIDCOM->toolbars->get_help_toolbar();
+        $help_toolbar = midcom::toolbars()->get_help_toolbar();
         $help_toolbar->add_help_item('navigation_order', 'midcom.admin.folder', null, null, 1);
 
         // Ensure we get the correct styles
-        $_MIDCOM->style->prepend_component_styledir('midcom.admin.folder');
+        midcom::style()->prepend_component_styledir('midcom.admin.folder');
 
         // Skip the page style on AJAX form handling
         if (isset($_GET['ajax']))
         {
-            $_MIDCOM->skip_page_style = true;
+            midcom::skip_page_style = true;
         }
 
         return true;
@@ -233,10 +233,10 @@ class midcom_admin_folder_handler_order extends midcom_baseclasses_components_ha
         // Navorder list for the selection
         $data['navorder_list'] = array
         (
-            MIDCOM_NAVORDER_DEFAULT => $_MIDCOM->i18n->get_string('default sort order', 'midcom.admin.folder'),
-            MIDCOM_NAVORDER_TOPICSFIRST => $_MIDCOM->i18n->get_string('folders first', 'midcom.admin.folder'),
-            MIDCOM_NAVORDER_ARTICLESFIRST => $_MIDCOM->i18n->get_string('pages first', 'midcom.admin.folder'),
-            MIDCOM_NAVORDER_SCORE => $_MIDCOM->i18n->get_string('by score', 'midcom.admin.folder'),
+            MIDCOM_NAVORDER_DEFAULT => midcom::i18n()->get_string('default sort order', 'midcom.admin.folder'),
+            MIDCOM_NAVORDER_TOPICSFIRST => midcom::i18n()->get_string('folders first', 'midcom.admin.folder'),
+            MIDCOM_NAVORDER_ARTICLESFIRST => midcom::i18n()->get_string('pages first', 'midcom.admin.folder'),
+            MIDCOM_NAVORDER_SCORE => midcom::i18n()->get_string('by score', 'midcom.admin.folder'),
         );
 
         if (!isset($_GET['ajax']))

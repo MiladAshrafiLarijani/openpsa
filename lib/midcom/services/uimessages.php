@@ -19,7 +19,7 @@
  * the following call inside the HTML BODY tags of your style:
  *
  * <code>
- * $_MIDCOM->uimessages->show();
+ * midcom::uimessages()->show();
  * </code>
  *
  * <b>Adding UI messages to show:</b>
@@ -34,13 +34,13 @@
  * To add a UI message, call the following:
  *
  * <code>
- * $_MIDCOM->uimessages->add($title, $message, $type);
+ * midcom::uimessages()->add($title, $message, $type);
  * </code>
  *
  * For example:
  *
  * <code>
- * $_MIDCOM->uimessages->add($this->_request_data['l10n']->get('net.nemein.wiki'), sprintf($this->_request_data['l10n']->get('page "%s" added'), $this->_wikiword), 'ok');
+ * midcom::uimessages()->add($this->_request_data['l10n']->get('net.nemein.wiki'), sprintf($this->_request_data['l10n']->get('page "%s" added'), $this->_wikiword), 'ok');
  * </code>
  *
  * <b>Configuration:</b>
@@ -112,15 +112,15 @@ class midcom_services_uimessages extends midcom_baseclasses_core_object
      */
     function initialize()
     {
-        if ($_MIDCOM->auth->can_user_do('midcom:ajax', null, 'midcom_services_uimessages'))
+        if (midcom::auth->can_user_do('midcom:ajax', null, 'midcom_services_uimessages'))
         {
-            $_MIDCOM->enable_jquery();
-            $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/midcom.services.uimessages/jquery.midcom_services_uimessages.js');
-            $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.timers.src.js');
-            $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.effects.core.min.js');
-            $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.effects.pulsate.min.js');
+            midcom::enable_jquery();
+            midcom::add_jsfile(MIDCOM_STATIC_URL . '/midcom.services.uimessages/jquery.midcom_services_uimessages.js');
+            midcom::add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.timers.src.js');
+            midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.effects.core.min.js');
+            midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.effects.pulsate.min.js');
 
-            $_MIDCOM->add_link_head
+            midcom::add_link_head
             (
                 array
                 (
@@ -133,7 +133,7 @@ class midcom_services_uimessages extends midcom_baseclasses_core_object
         }
         else
         {
-            $_MIDCOM->add_link_head(
+            midcom::add_link_head(
                 array
                 (
                     'rel'   => 'stylesheet',
@@ -256,7 +256,7 @@ class midcom_services_uimessages extends midcom_baseclasses_core_object
         }
 
         // No privileges for showing the AJAX user interface messages
-        if (!$_MIDCOM->auth->can_user_do('midcom:ajax', null, 'midcom_services_uimessages'))
+        if (!midcom::auth->can_user_do('midcom:ajax', null, 'midcom_services_uimessages'))
         {
             return;
         }
@@ -306,7 +306,7 @@ class midcom_services_uimessages extends midcom_baseclasses_core_object
     function show_simple($prefer_fancy = false)
     {
         if (   $prefer_fancy
-            && $_MIDCOM->auth->can_user_do('midcom:ajax', null, 'midcom_services_uimessages'))
+            && midcom::auth->can_user_do('midcom:ajax', null, 'midcom_services_uimessages'))
         {
             return $this->show();
         }

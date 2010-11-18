@@ -118,7 +118,7 @@ class org_openpsa_notifications extends midcom_baseclasses_components_purecode
         }
 
         // Fall back to component defaults
-        $customdata = $_MIDCOM->componentloader->get_all_manifest_customdata('org.openpsa.notifications');
+        $customdata = midcom::componentloader->get_all_manifest_customdata('org.openpsa.notifications');
         if (array_key_exists($component, $customdata))
         {
             if (array_key_exists($action, $customdata[$component]))

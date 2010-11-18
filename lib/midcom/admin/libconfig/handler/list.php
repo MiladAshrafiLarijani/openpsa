@@ -29,10 +29,10 @@ class midcom_admin_libconfig_handler_list extends midcom_baseclasses_components_
     public function _on_initialize()
     {
 
-        $this->_l10n = $_MIDCOM->i18n->get_l10n('midcom.admin.libconfig');
+        $this->_l10n = midcom::i18n()->get_l10n('midcom.admin.libconfig');
         $this->_request_data['l10n'] = $this->_l10n;
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -56,7 +56,7 @@ class midcom_admin_libconfig_handler_list extends midcom_baseclasses_components_
             MIDCOM_NAV_URL => "__mfa/asgard_midcom.admin.libconfig/",
             MIDCOM_NAV_NAME => $this->_request_data['view_title'],
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     private function _prepare_toolbar(&$data)
@@ -79,7 +79,7 @@ class midcom_admin_libconfig_handler_list extends midcom_baseclasses_components_
         $this->_libs = midcom_admin_libconfig_plugin::get_libraries();
         $this->_update_breadcrumb();
         $this->_prepare_toolbar($data);
-        $_MIDCOM->set_pagetitle($data['view_title']);        
+        midcom::set_pagetitle($data['view_title']);        
 
         return true;
     }

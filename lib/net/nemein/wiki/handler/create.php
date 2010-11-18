@@ -79,7 +79,7 @@ class net_nemein_wiki_handler_create extends midcom_baseclasses_components_handl
         $this->_controller->callback_object =& $this;
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
             // This will exit.
         }
     }
@@ -102,7 +102,7 @@ class net_nemein_wiki_handler_create extends midcom_baseclasses_components_handl
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $this->_page);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Failed to create a new page, cannot continue. Last Midgard error was: '. midcom_connection::get_error_string());
             // This will exit.
         }
@@ -141,7 +141,7 @@ class net_nemein_wiki_handler_create extends midcom_baseclasses_components_handl
                     $topic->component = 'net.nemein.wiki';
                     if (!$topic->create())
                     {
-                        $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Could not create wiki namespace '{$folder_title}', last Midgard error was: " . midcom_connection::get_error_string());
+                        midcom::generate_error(MIDCOM_ERRCRIT, "Could not create wiki namespace '{$folder_title}', last Midgard error was: " . midcom_connection::get_error_string());
                         // This will exit()
                     }
                     // refresh
@@ -171,7 +171,7 @@ class net_nemein_wiki_handler_create extends midcom_baseclasses_components_handl
                         {
                             // Could not create index
                             $topic->delete();
-                            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Could not create index for new topic, errstr: " . midcom_connection::get_error_string());
+                            midcom::generate_error(MIDCOM_ERRCRIT, "Could not create index for new topic, errstr: " . midcom_connection::get_error_string());
                             // This will exit()
                         }
                     }
@@ -180,7 +180,7 @@ class net_nemein_wiki_handler_create extends midcom_baseclasses_components_handl
                 break;
             case (is_object($resolved['wikipage'])):
                     // Page exists
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Wiki page with that name already exists.');
+                    midcom::generate_error(MIDCOM_ERRCRIT, 'Wiki page with that name already exists.');
                     //This will exit()
                 break;
             default:
@@ -189,7 +189,7 @@ class net_nemein_wiki_handler_create extends midcom_baseclasses_components_handl
                     {
                         // Last parent is not this topic, redirect there
                         $wikiword_url = rawurlencode($resolved['remaining_path']);
-                        $_MIDCOM->relocate($to_node[MIDCOM_NAV_FULLURL] . "create/{$this->_schema}?wikiword={$wikiword_url}");
+                        midcom::relocate($to_node[MIDCOM_NAV_FULLURL] . "create/{$this->_schema}?wikiword={$wikiword_url}");
                         // This will exit()
                     }
                 break;
@@ -279,21 +279,21 @@ class net_nemein_wiki_handler_create extends midcom_baseclasses_components_handl
         {
             case 'save':
                 // Reindex the article
-                $indexer = $_MIDCOM->get_service('indexer');
+                $indexer = midcom::get_service('indexer');
                 net_nemein_wiki_viewer::index($this->_controller->datamanager, $indexer, $this->_topic);
 
-                $_MIDCOM->uimessages->add($this->_l10n->get('net.nemein.wiki'), sprintf($this->_l10n->get('page %s added'), $this->_wikiword), 'ok');
+                midcom::uimessages()->add($this->_l10n->get('net.nemein.wiki'), sprintf($this->_l10n->get('page %s added'), $this->_wikiword), 'ok');
 
-                $_MIDCOM->relocate("{$this->_page->name}/");
+                midcom::relocate("{$this->_page->name}/");
                 // This will exit.
 
             case 'cancel':
-                $_MIDCOM->relocate('');
+                midcom::relocate('');
                 // This will exit.
         }
 
         $data['view_title'] = sprintf($this->_request_data['l10n']->get('create wikipage %s'), $this->_wikiword);
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
         $data['preview_mode'] = false;
 
         $tmp = Array();
@@ -302,7 +302,7 @@ class net_nemein_wiki_handler_create extends midcom_baseclasses_components_handl
             MIDCOM_NAV_URL => "create/?wikiword=" . rawurlencode($this->_wikiword),
             MIDCOM_NAV_NAME => sprintf($this->_l10n->get('create wikipage %s'), $this->_wikiword),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         // Set the help object in the toolbar
         $this->_view_toolbar->add_help_item('markdown', 'net.nemein.wiki');

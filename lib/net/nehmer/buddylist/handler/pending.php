@@ -90,13 +90,13 @@ class net_nehmer_buddylist_handler_pending extends midcom_baseclasses_components
      */
     function _handler_list($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         $this->_load_pending();
 
         $this->_prepare_request_data();
-        $_MIDCOM->set_26_request_metadata(time(), null);
-        $_MIDCOM->set_pagetitle("{$this->_topic->extra}: " . $this->_l10n->get('buddy requests'));
+        midcom::set_26_request_metadata(time(), null);
+        midcom::set_pagetitle("{$this->_topic->extra}: " . $this->_l10n->get('buddy requests'));
         $this->_component_data['active_leaf'] = NET_NEHMER_BUDDYLIST_LEAFID_PENDING;
 
         return true;
@@ -112,10 +112,10 @@ class net_nehmer_buddylist_handler_pending extends midcom_baseclasses_components
         $this->_pending = Array();
 
         $pending = net_nehmer_buddylist_entry::list_unapproved();
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . 'pending/';
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . 'pending/';
         if ($this->_config->get('net_nehmer_account_integration'))
         {
-            $account_prefix = $_MIDCOM->get_page_prefix() . $this->_config->get('net_nehmer_account_integration') . 'view/';
+            $account_prefix = midcom::get_page_prefix() . $this->_config->get('net_nehmer_account_integration') . 'view/';
         }
         else
         {
@@ -181,19 +181,19 @@ class net_nehmer_buddylist_handler_pending extends midcom_baseclasses_components
      */
     function _handler_process($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         // Validate request integrity as far as we can.
         if (! array_key_exists('guid', $_REQUEST))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Incomplete Request');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Incomplete Request');
             // This will exit.
         }
 
         $this->_entry = new net_nehmer_buddylist_entry($_REQUEST['guid']);
         if (! $this->_entry)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Request invalid: Failed to load {$_REQUEST['guid']}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Request invalid: Failed to load {$_REQUEST['guid']}.");
             // This will exit.
         }
 
@@ -211,13 +211,13 @@ class net_nehmer_buddylist_handler_pending extends midcom_baseclasses_components
         }
         else
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Incomplete Request');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Incomplete Request');
             // This will exit.
         }
 
         $this->_prepare_request_data();
-        $_MIDCOM->set_26_request_metadata(time(), null);
-        $_MIDCOM->set_pagetitle("{$this->_topic->extra}: " . $this->_l10n->get('buddy requests'));
+        midcom::set_26_request_metadata(time(), null);
+        midcom::set_pagetitle("{$this->_topic->extra}: " . $this->_l10n->get('buddy requests'));
         $this->_component_data['active_leaf'] = NET_NEHMER_BUDDYLIST_LEAFID_PENDING;
 
         return true;
@@ -267,7 +267,7 @@ class net_nehmer_buddylist_handler_pending extends midcom_baseclasses_components
             // we enter sudo mode and auto-approve the new record.
             if ($this->_config->get('auto_approve_return_requests'))
             {
-                if (! $_MIDCOM->auth->request_sudo($this->_component))
+                if (! midcom::auth->request_sudo($this->_component))
                 {
                     debug_push_class(__CLASS__, __FUNCTION__);
                     debug_add('Failed to auto-approve the return request, could not acquire sudo. This will be ignored, the user will have to clear the record manually.',
@@ -279,7 +279,7 @@ class net_nehmer_buddylist_handler_pending extends midcom_baseclasses_components
                 $buddy->approve();
                 $this->_processing_msg_raw = 'request approved and buddy added to own list.';
 
-                $_MIDCOM->auth->drop_sudo();
+                midcom::auth->drop_sudo();
             }
         }
     }
@@ -294,12 +294,12 @@ class net_nehmer_buddylist_handler_pending extends midcom_baseclasses_components
     {
         if (net_nehmer_buddylist_entry::get_unapproved_count() > 0)
         {
-            $data['return_url'] = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+            $data['return_url'] = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                 . 'pending/list.html';
         }
         else
         {
-            $data['return_url'] = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+            $data['return_url'] = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
         }
         midcom_show_style('pending-processed');
     }

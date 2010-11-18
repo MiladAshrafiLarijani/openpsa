@@ -29,12 +29,12 @@ class org_openpsa_projects_task_resource_dba extends midcom_core_dbaobject
 
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
 
     function get_parent_guid_uncached()
@@ -59,12 +59,12 @@ class org_openpsa_projects_task_resource_dba extends midcom_core_dbaobject
 
     function _add_to_buddylist_of($account)
     {
-        if (!$_MIDCOM->auth->user)
+        if (!midcom::auth->user)
         {
             return false;
         }
         $account = new midcom_db_person($account);
-        $user = $_MIDCOM->auth->user->get_storage();
+        $user = midcom::auth->user->get_storage();
         
         $mc = org_openpsa_contacts_buddy_dba::new_collector('account', (string) $account->guid);
         $mc->add_constraint('buddy', '=', (string) $this->_personobject->guid);
@@ -263,13 +263,13 @@ class org_openpsa_projects_task_resource_dba extends midcom_core_dbaobject
 
     static function pid_to_obj($pid)
     {
-        return $_MIDCOM->auth->get_user($pid);
+        return midcom::auth->get_user($pid);
     }
 
     static function get_resource_tasks($key = 'id', $list_finished = false)
     {
         $task_array = array();
-        if (!$_MIDCOM->auth->user)
+        if (!midcom::auth->user)
         {
             return $task_array;
         }

@@ -84,7 +84,7 @@ class org_openpsa_helpers_handler_chooser extends midcom_baseclasses_components_
     function __construct()
     {
         parent::__construct();
-        $_MIDCOM->style->prepend_component_styledir('org.openpsa.helpers');
+        midcom::style->prepend_component_styledir('org.openpsa.helpers');
     }
 
     /**
@@ -96,7 +96,7 @@ class org_openpsa_helpers_handler_chooser extends midcom_baseclasses_components_
     function _handler_create($handler_id, $args, &$data)
     {
         $this->_dbaclass = $args[0];
-        $_MIDCOM->auth->require_user_do('midgard:create', null, $this->_dbaclass);
+        midcom::auth->require_user_do('midgard:create', null, $this->_dbaclass);
 
         $this->_load_component_node();
 
@@ -120,7 +120,7 @@ class org_openpsa_helpers_handler_chooser extends midcom_baseclasses_components_
         $data['controller'] =& $this->_controller;
         $data['action'] =& $this->_action;
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -130,7 +130,7 @@ class org_openpsa_helpers_handler_chooser extends midcom_baseclasses_components_
             )
         );
 
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
 
         // Add toolbar items
         org_openpsa_helpers::dm2_savecancel($this);
@@ -146,11 +146,11 @@ class org_openpsa_helpers_handler_chooser extends midcom_baseclasses_components_
         switch ($this->_dbaclass)
         {
             case 'org_openpsa_contacts_person_dba':
-                $indexer = $_MIDCOM->get_service('indexer');
+                $indexer = midcom::get_service('indexer');
                 org_openpsa_contacts_viewer::index_person($this->_controller->datamanager, $indexer, $this->_node[MIDCOM_NAV_OBJECT]);
                 break;
             default:
-                $_MIDCOM->generate_error
+                midcom::generate_error
                 (
                     MIDCOM_ERRCRIT,
                     "The DBA class {$this->_dbaclass} is unsupported"
@@ -167,14 +167,14 @@ class org_openpsa_helpers_handler_chooser extends midcom_baseclasses_components_
     {
         $siteconfig = org_openpsa_core_siteconfig::get_instance();
         $nap = new midcom_helper_nav();
-        $component = $_MIDCOM->dbclassloader->get_component_for_class($this->_dbaclass);
-        $_MIDCOM->componentloader->load($component);
+        $component = midcom::dbclassloader->get_component_for_class($this->_dbaclass);
+        midcom::componentloader->load($component);
         $topic_guid = $siteconfig->get_node_guid($component);
         $this->_node = $nap->resolve_guid($topic_guid);
 
         if (!$this->_node)
         {
-            $_MIDCOM->generate_error
+            midcom::generate_error
             (
                 MIDCOM_ERRCRIT,
                 "Could not load node information for topic {$topic_guid}. Last error was: " . midcom_connection::get_error_string()
@@ -198,7 +198,7 @@ class org_openpsa_helpers_handler_chooser extends midcom_baseclasses_components_
                 $config_key .= '_person';
                 break;
             default:
-                $_MIDCOM->generate_error
+                midcom::generate_error
                 (
                     MIDCOM_ERRCRIT,
                     "The DBA class {$this->_dbaclass} is unsupported"
@@ -224,7 +224,7 @@ class org_openpsa_helpers_handler_chooser extends midcom_baseclasses_components_
         $this->_controller->defaults =& $this->_defaults;
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
             // This will exit.
         }
     }
@@ -238,14 +238,14 @@ class org_openpsa_helpers_handler_chooser extends midcom_baseclasses_components_
         }
 
         // Initialize the datamanager with the schema
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
         $this->_schemadb = midcom_helper_datamanager2_schema::load_database($schemadb_snippet);
 
         $this->_datamanager = new midcom_helper_datamanager2_datamanager($this->_schemadb);
 
         if (!$this->_datamanager)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Datamanager could not be instantiated.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Datamanager could not be instantiated.");
             // This will exit.
         }
     }
@@ -262,7 +262,7 @@ class org_openpsa_helpers_handler_chooser extends midcom_baseclasses_components_
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $object);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to create a new object, cannot continue. Error: " . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -286,7 +286,7 @@ class org_openpsa_helpers_handler_chooser extends midcom_baseclasses_components_
                 $title = 'person';
                 break;
             default:
-                $_MIDCOM->generate_error
+                midcom::generate_error
                 (
                     MIDCOM_ERRCRIT,
                     "The DBA class {$this->_dbaclass} is unsupported"
@@ -294,7 +294,7 @@ class org_openpsa_helpers_handler_chooser extends midcom_baseclasses_components_
                 // This will exit.
                 break;
         }
-        $data['title'] = sprintf($this->_l10n_midcom->get('create %s'), $_MIDCOM->i18n->get_string($title, $this->_node[MIDCOM_NAV_COMPONENT]));
+        $data['title'] = sprintf($this->_l10n_midcom->get('create %s'), midcom::i18n()->get_string($title, $this->_node[MIDCOM_NAV_COMPONENT]));
 
         midcom_show_style('popup_head');
         if ($this->_action != 'form')
@@ -330,7 +330,7 @@ class org_openpsa_helpers_handler_chooser extends midcom_baseclasses_components_
                 $jsdata['email'] = $this->_object->email;
                 break;
             default:
-                $_MIDCOM->generate_error
+                midcom::generate_error
                 (
                     MIDCOM_ERRCRIT,
                     "The DBA class {$this->_dbaclass} is unsupported"

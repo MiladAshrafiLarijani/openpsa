@@ -21,8 +21,8 @@ class org_openpsa_projects_handler_csv extends midcom_baseclasses_components_han
 
     function _load_schemadb($handler_id, &$args, &$data)
     {
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
-        $_MIDCOM->skip_page_style = true;
+        midcom::load_library('midcom.helper.datamanager2');
+        midcom::skip_page_style = true;
         if(isset($args[0]))
         {
             $data['schemadb_to_use'] = 'schemadb_csvexport_' . $args[0];
@@ -43,17 +43,17 @@ class org_openpsa_projects_handler_csv extends midcom_baseclasses_components_han
     function _load_data($handler_id, &$args, &$data)
     {
 
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         if (   !isset($_POST['guids'])
             || !is_array($_POST['guids'])
             || empty($_POST['guids']))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "No GUIDs found, aborting.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "No GUIDs found, aborting.");
             // This will exit
         }
         $guids =& $_POST['guids'];
         
-        $dummy_object = $_MIDCOM->dbfactory->get_object_by_guid($guids[0]);
+        $dummy_object = midcom::dbfactory()->get_object_by_guid($guids[0]);
         $dba_class = get_class($dummy_object);
 
         $qb = call_user_func(array($dba_class, 'new_query_builder'));

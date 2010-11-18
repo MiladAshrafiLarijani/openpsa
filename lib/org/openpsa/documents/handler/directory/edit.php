@@ -46,7 +46,7 @@ class org_openpsa_documents_handler_directory_edit extends midcom_baseclasses_co
 
     function _on_initialize()
     {
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
     }
 
     /**
@@ -72,7 +72,7 @@ class org_openpsa_documents_handler_directory_edit extends midcom_baseclasses_co
         $this->_controller->set_storage($this->_request_data['directory'], $this->_schema);
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for task {$this->_directory->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for task {$this->_directory->id}.");
             // This will exit.
         }
     }
@@ -85,7 +85,7 @@ class org_openpsa_documents_handler_directory_edit extends midcom_baseclasses_co
      */
     function _handler_edit($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_do('midgard:update', $this->_request_data['directory']);
+        midcom::auth->require_do('midgard:update', $this->_request_data['directory']);
 
         $this->_load_edit_controller();
 
@@ -95,16 +95,16 @@ class org_openpsa_documents_handler_directory_edit extends midcom_baseclasses_co
                 // TODO: Update the URL name?
 
                 // Update the Index
-                $indexer = $_MIDCOM->get_service('indexer');
+                $indexer = midcom::get_service('indexer');
                 $indexer->index($this->_controller->datamanager);
 
                 $this->_view = "default";
-                $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX));
+                midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX));
                 // This will exit()
 
             case 'cancel':
                 $this->_view = "default";
-                $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX));
+                midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX));
                 // This will exit()
         }
 
@@ -118,12 +118,12 @@ class org_openpsa_documents_handler_directory_edit extends midcom_baseclasses_co
             MIDCOM_NAV_NAME => sprintf($this->_l10n_midcom->get('edit %s'), $this->_l10n->get('directory')),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         
         // Add toolbar items
         org_openpsa_helpers::dm2_savecancel($this); 
-        $_MIDCOM->bind_view_to_object($this->_request_data['directory'], $this->_controller->datamanager->schema->name);
+        midcom::bind_view_to_object($this->_request_data['directory'], $this->_controller->datamanager->schema->name);
 
         return true;
     }

@@ -27,7 +27,7 @@ class org_openpsa_projects_handler_frontpage extends midcom_baseclasses_componen
      */
     function _handler_frontpage($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         $this->_view_toolbar->add_item
         (
@@ -37,7 +37,7 @@ class org_openpsa_projects_handler_frontpage extends midcom_baseclasses_componen
                 MIDCOM_TOOLBAR_LABEL => $this->_l10n->get("create project"),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/new-dir.png',
-                MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_user_do('midgard:create', null, 'org_openpsa_projects_project'),
+                MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_user_do('midgard:create', null, 'org_openpsa_projects_project'),
             )
         );
 
@@ -49,7 +49,7 @@ class org_openpsa_projects_handler_frontpage extends midcom_baseclasses_componen
                 MIDCOM_TOOLBAR_LABEL => $this->_l10n->get("create task"),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/new_task.png',
-                MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_user_do('midgard:create', null, 'org_openpsa_projects_task_dba'),
+                MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_user_do('midgard:create', null, 'org_openpsa_projects_task_dba'),
             )
         );
 
@@ -87,7 +87,7 @@ class org_openpsa_projects_handler_frontpage extends midcom_baseclasses_componen
         $closed_qb->add_constraint('orgOpenpsaObtype', '=', ORG_OPENPSA_OBTYPE_PROJECT);
         $data['closed_count'] = $closed_qb->count();
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -97,9 +97,9 @@ class org_openpsa_projects_handler_frontpage extends midcom_baseclasses_componen
             )
         );
 
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/org.openpsa.projects/frontpage.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/org.openpsa.projects/frontpage.js');
 
-        $_MIDCOM->set_pagetitle($this->_l10n->get('current projects'));
+        midcom::set_pagetitle($this->_l10n->get('current projects'));
 
         return true;
     }

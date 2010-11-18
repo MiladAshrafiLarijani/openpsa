@@ -402,7 +402,7 @@ class midcom_application
             else
             {
                 // Fall back to another MidCOM topic so that admin has a chance to fix this
-                $_MIDCOM->auth->require_admin_user("Root folder is misconfigured. Please log in as administrator and fix this in settings.");
+                midcom::auth()->require_admin_user("Root folder is misconfigured. Please log in as administrator and fix this in settings.");
                 $qb = midcom_db_topic::new_query_builder();
                 $qb->add_constraint('up', '=', 0);
                 $qb->add_constraint('component', '<>', '');
@@ -558,7 +558,7 @@ class midcom_application
      * <code>
      * $blog = '/blog/latest/3/';
      * $substyle = 'homepage';
-     * $_MIDCOM->dynamic_load("/midcom-substyle-{$substyle}/{$blog}");
+     * midcom::dynamic_load("/midcom-substyle-{$substyle}/{$blog}");
      * </code>
      *
      * <B>Danger, Will Robinson:</b>
@@ -568,9 +568,9 @@ class midcom_application
      *
      * <code>
      * global $view;
-     * $_MIDCOM->dynamic_load($view['url1']);
+     * midcom::dynamic_load($view['url1']);
      * // You will most probably fail, could even loop infinitely!
-     * $_MIDCOM->dynamic_load($view['url2']);
+     * midcom::dynamic_load($view['url2']);
      * </code>
      *
      * The reason why this usually fails is, that the $view you have been using during
@@ -583,14 +583,14 @@ class midcom_application
      *
      * <code>
      * $view = $GLOBALS['view'];
-     * $_MIDCOM->dynamic_load($view['url1']);
-     * $_MIDCOM->dynamic_load($view['url2']);
+     * midcom::dynamic_load($view['url1']);
+     * midcom::dynamic_load($view['url2']);
      * </code>
      *
      * Results of dynamic_loads are cached, by default with the system cache strategy
      * but you can specify separate cache strategy for the DL in the config array like so
      * <code>
-     * $_MIDCOM->dynamic_load("/midcom-substyle-{$substyle}/{$newsticker}", array('cache_module_content_caching_strategy' => 'public'))
+     * midcom::dynamic_load("/midcom-substyle-{$substyle}/{$newsticker}", array('cache_module_content_caching_strategy' => 'public'))
      * </code>
      *
      * You can use only less specific strategy than the global strategy, ie basically you're limited to 'memberships' and 'public' as
@@ -624,7 +624,7 @@ class midcom_application
 
         // Determine new Context ID and set $this->_currentcontext,
         // enter that context and prepare its data structure.
-        $context = $this->_create_context(null, $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ROOTTOPIC));
+        $context = $this->_create_context(null, midcom::get_context_data(MIDCOM_CONTEXT_ROOTTOPIC));
 
         if ($pass_get)
         {
@@ -843,13 +843,13 @@ class midcom_application
                             if (   empty($GLOBALS['midcom_config']['indexer_reindex_allowed_ips'])
                                 || !in_array($_SERVER['REMOTE_ADDR'], $GLOBALS['midcom_config']['indexer_reindex_allowed_ips']))
                             {
-                                $_MIDCOM->auth->require_valid_user('basic');
-                                $_MIDCOM->auth->require_admin_user();
+                                midcom::auth()->require_valid_user('basic');
+                                midcom::auth()->require_admin_user();
                             }
                             $this->cache->content->enable_live_mode();
                             $this->cache->invalidate_all();
-                            $this->uimessages->add($_MIDCOM->i18n->get_string('MidCOM', 'midcom'), "Cache invalidation successful.", 'info');
-                            $_MIDCOM->relocate('');
+                            $this->uimessages->add(midcom::i18n()->get_string('MidCOM', 'midcom'), "Cache invalidation successful.", 'info');
+                            midcom::relocate('');
                         }
                         else if ($value == 'nocache')
                         {
@@ -940,7 +940,7 @@ class midcom_application
                         if (   !$this->jscss
                             || !is_callable(array($this->jscss, 'serve')))
                         {
-                            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Cache is not initialized');
+                            midcom::generate_error(MIDCOM_ERRCRIT, 'Cache is not initialized');
                             // this will exit
                         }
                         $this->jscss->serve($name);
@@ -948,7 +948,7 @@ class midcom_application
 
                     default:
                         debug_add("Unknown MidCOM URL Property ignored: {$key} => {$value}", MIDCOM_LOG_WARN);
-                        $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "This MidCOM URL method is unknown.");
+                        midcom::generate_error(MIDCOM_ERRNOTFOUND, "This MidCOM URL method is unknown.");
                         // This will exit.
                 }
             }
@@ -1549,14 +1549,14 @@ class midcom_application
      * <code>
      * class my_component_class_one {
      *     function init () {
-     *         $_MIDCOM->set_custom_context_data('classone', $this);
+     *         midcom::set_custom_context_data('classone', $this);
      *     }
      * }
      *
      * class my_component_class_two {
      *        var one;
      *     function my_component_class_two () {
-     *         $this->one =& $_MIDCOM->get_custom_context_data('classone');
+     *         $this->one =& midcom::get_custom_context_data('classone');
      *     }
      * }
      * </code>
@@ -1747,7 +1747,7 @@ class midcom_application
      * Common example:
      *
      * <code>
-     * $_MIDCOM->load_library('midcom.helper.datamanager');
+     * midcom::load_library('midcom.helper.datamanager');
      * </code>
      *
      * @param string $path    The name of the code library to load.
@@ -2191,7 +2191,7 @@ class midcom_application
         if (! $f)
         {
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to open attachment for reading: ' . midcom_connection::get_error_string());
+            midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to open attachment for reading: ' . midcom_connection::get_error_string());
             // This will exit()
         }
 
@@ -2608,7 +2608,7 @@ class midcom_application
      *
      * <code>
      * <HTML>
-     *     <BODY <?php $_MIDCOM->print_jsonload();?>>
+     *     <BODY <?php midcom::print_jsonload();?>>
      *            <!-- your actual body -->
      *     </BODY>
      * </HTML>
@@ -2725,7 +2725,7 @@ class midcom_application
         }
 
         $script  = "var MIDCOM_STATIC_URL = '" . MIDCOM_STATIC_URL . "';\n";
-        $script .= "var MIDCOM_PAGE_PREFIX = '" . $_MIDCOM->get_page_prefix() . "';\n";
+        $script .= "var MIDCOM_PAGE_PREFIX = '" . midcom::get_page_prefix() . "';\n";
 
         $this->_jquery_init_scripts .= "<script type=\"text/javascript\">\n";
         $this->_jquery_init_scripts .= trim($script) . "\n";
@@ -2895,7 +2895,7 @@ class midcom_application
         $this->metadata->bind_metadata_to_object(MIDCOM_METADATA_VIEW, $object, $this->_currentcontext);
 
         // Push the object's CSS classes to metadata service
-        $page_class = $_MIDCOM->metadata->get_object_classes($object, $page_class);
+        $page_class = midcom::metadata()->get_object_classes($object, $page_class);
         $this->metadata->set_page_class($page_class, $this->_currentcontext);
 
         $this->substyle_append($page_class);

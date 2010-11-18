@@ -52,7 +52,7 @@ class midcom_admin_folder_handler_index  extends midcom_baseclasses_components_h
          * change the pagetitle. (must be supported in the style)
          */
         $title = $this->_l10n_midcom->get('index');
-        $_MIDCOM->set_pagetitle(":: {$title}");
+        midcom::set_pagetitle(":: {$title}");
         /**
          * Example of getting a config var.
          */
@@ -84,7 +84,7 @@ class midcom_admin_folder_handler_index  extends midcom_baseclasses_components_h
             MIDCOM_NAV_NAME => $this->_l10n->get('index'),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 }
 ?>

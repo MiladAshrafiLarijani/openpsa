@@ -100,7 +100,7 @@ class org_openpsa_reports_viewer extends midcom_baseclasses_components_request
     function _on_handle($handler, $args)
     {
         // Always run in uncached mode
-        $_MIDCOM->cache->content->no_cache();
+        midcom::cache()->content->no_cache();
         return parent::_on_handle($handler, $args);
     }
 
@@ -124,7 +124,7 @@ class org_openpsa_reports_viewer extends midcom_baseclasses_components_request
         }
 
         $report->delete();
-        $_MIDCOM->relocate();
+        midcom::relocate();
 
         return true;
     }
@@ -149,8 +149,8 @@ class org_openpsa_reports_viewer extends midcom_baseclasses_components_request
         }
 
         //We're outputting CSV
-        $_MIDCOM->skip_page_style = true;
-        $_MIDCOM->cache->content->content_type('application/csv');
+        midcom::skip_page_style = true;
+        midcom::cache()->content->content_type('application/csv');
 
         return true;
     }
@@ -174,7 +174,7 @@ class org_openpsa_reports_viewer extends midcom_baseclasses_components_request
      */
     function _handler_frontpage($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         $data['available_components'] = org_openpsa_reports_viewer::available_component_generators();
 
@@ -205,10 +205,10 @@ class org_openpsa_reports_viewer extends midcom_baseclasses_components_request
             $GLOBALS['available_component_generators_components'] = array
             (
                 // TODO: better localization strings
-                'org.openpsa.projects' => $_MIDCOM->i18n->get_string('org.openpsa.projects', 'org.openpsa.projects'),
-                'org.openpsa.sales' => $_MIDCOM->i18n->get_string('org.openpsa.sales', 'org.openpsa.sales'),
-                'org.openpsa.invoices' => $_MIDCOM->i18n->get_string('org.openpsa.invoices', 'org.openpsa.invoices'),
-                //'org.openpsa.directmarketing' => $_MIDCOM->i18n->get_string('org.openpsa.directmarketing', 'org.openpsa.reports'),
+                'org.openpsa.projects' => midcom::i18n()->get_string('org.openpsa.projects', 'org.openpsa.projects'),
+                'org.openpsa.sales' => midcom::i18n()->get_string('org.openpsa.sales', 'org.openpsa.sales'),
+                'org.openpsa.invoices' => midcom::i18n()->get_string('org.openpsa.invoices', 'org.openpsa.invoices'),
+                //'org.openpsa.directmarketing' => midcom::i18n()->get_string('org.openpsa.directmarketing', 'org.openpsa.reports'),
             );
         }
         $components =& $GLOBALS['available_component_generators_components'];

@@ -320,10 +320,10 @@ class midcom_helper_datamanager2_type_select extends midcom_helper_datamanager2_
                     return null;
                 }
 
-                if (!$_MIDCOM->componentloader->is_loaded($this->storage->_schema->fields[$this->name]['widget_config']['component']))
+                if (!midcom::componentloader()->is_loaded($this->storage->_schema->fields[$this->name]['widget_config']['component']))
                 {
                     // Ensure the corresponding component is loaded
-                    $_MIDCOM->componentloader->load($this->storage->_schema->fields[$this->name]['widget_config']['component']);
+                    midcom::componentloader()->load($this->storage->_schema->fields[$this->name]['widget_config']['component']);
                 }
 
                 if (   isset($this->storage->_schema->fields[$this->name]['widget_config']['id_field'])
@@ -568,7 +568,7 @@ class midcom_helper_datamanager2_type_select extends midcom_helper_datamanager2_
                 return explode($glue, substr($source, 1, -1));
 
             default:
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "The multiple_storagemode '{$this->multiple_storagemode}' is invalid, cannot continue.");
                 // This will exit.
         }
@@ -606,7 +606,7 @@ class midcom_helper_datamanager2_type_select extends midcom_helper_datamanager2_
                 return "{$glue}{$options}{$glue}";
 
             default:
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "The multiple_storagemode '{$this->multiple_storagemode}' is invalid, cannot continue.");
                 // This will exit.
         }

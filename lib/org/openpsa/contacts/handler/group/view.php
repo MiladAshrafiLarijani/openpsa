@@ -37,7 +37,7 @@ class org_openpsa_contacts_handler_group_view extends midcom_baseclasses_compone
 
     function _on_initialize()
     {
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
     }
 
     /**
@@ -65,7 +65,7 @@ class org_openpsa_contacts_handler_group_view extends midcom_baseclasses_compone
         if (   ! $this->_datamanager
             || ! $this->_datamanager->autoset_storage($this->_group))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for group #{$this->_group->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for group #{$this->_group->id}.");
             // This will exit.
         }
     }
@@ -79,7 +79,7 @@ class org_openpsa_contacts_handler_group_view extends midcom_baseclasses_compone
      */
     function _handler_view($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         // Get the requested group object
         $this->_load($args[0]);
@@ -103,7 +103,7 @@ class org_openpsa_contacts_handler_group_view extends midcom_baseclasses_compone
         }
 
         //pass billing-data if invoices is installed
-        if ($_MIDCOM->componentloader->is_installed('org.openpsa.invoices'))
+        if (midcom::componentloader->is_installed('org.openpsa.invoices'))
         {
             $qb_billing_data = org_openpsa_invoices_billing_data_dba::new_query_builder();
             $qb_billing_data->add_constraint('linkGuid' , '=' , $this->_group->guid);
@@ -116,9 +116,9 @@ class org_openpsa_contacts_handler_group_view extends midcom_baseclasses_compone
 
         // Add toolbar items
         $this->_populate_toolbar();
-        $_MIDCOM->bind_view_to_object($this->_group);
+        midcom::bind_view_to_object($this->_group);
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -128,10 +128,10 @@ class org_openpsa_contacts_handler_group_view extends midcom_baseclasses_compone
             )
         );
         // This handler uses Ajax, include the handler javascripts
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . "/org.openpsa.helpers/ajaxutils.js");
+        midcom::add_jsfile(MIDCOM_STATIC_URL . "/org.openpsa.helpers/ajaxutils.js");
         org_openpsa_core_ui::enable_ui_tab();
 
-        $_MIDCOM->set_pagetitle($this->_group->official);
+        midcom::set_pagetitle($this->_group->official);
 
         $this->_update_breadcrumb_line();
 
@@ -148,7 +148,7 @@ class org_openpsa_contacts_handler_group_view extends midcom_baseclasses_compone
                 MIDCOM_TOOLBAR_LABEL => $this->_l10n_midcom->get("edit"),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/edit.png',
-                MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:update', $this->_group),
+                MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:update', $this->_group),
                 MIDCOM_TOOLBAR_ACCESSKEY => 'e',
             )
         );
@@ -165,8 +165,8 @@ class org_openpsa_contacts_handler_group_view extends midcom_baseclasses_compone
             )
         );
 
-        if (   $_MIDCOM->auth->can_user_do('midgard:create', null, 'org_openpsa_contacts_person_dba')
-            && $_MIDCOM->auth->can_do('midgard:create', $this->_group))
+        if (   midcom::auth->can_user_do('midgard:create', null, 'org_openpsa_contacts_person_dba')
+            && midcom::auth->can_do('midgard:create', $this->_group))
         {
             $allow_person_create = true;
         }
@@ -195,7 +195,7 @@ class org_openpsa_contacts_handler_group_view extends midcom_baseclasses_compone
                 MIDCOM_TOOLBAR_LABEL => $this->_l10n->get("notification settings"),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/stock-discussion.png',
-                MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:update', $this->_group),
+                MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:update', $this->_group),
             )
         );
 
@@ -207,7 +207,7 @@ class org_openpsa_contacts_handler_group_view extends midcom_baseclasses_compone
                 MIDCOM_TOOLBAR_LABEL => $this->_l10n->get("permissions"),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'midgard.admin.asgard/permissions-16.png',
-                MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:privileges', $this->_group),
+                MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:privileges', $this->_group),
             )
         );
 
@@ -245,7 +245,7 @@ class org_openpsa_contacts_handler_group_view extends midcom_baseclasses_compone
 
         org_openpsa_contacts_viewer::get_breadcrumb_path_for_group($this->_group, $tmp);
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**

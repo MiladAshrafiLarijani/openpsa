@@ -25,17 +25,17 @@ class org_openpsa_sales_salesproject_member_dba extends midcom_core_dbaobject
     
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
 
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
     
     /**
@@ -69,7 +69,7 @@ class org_openpsa_sales_salesproject_member_dba extends midcom_core_dbaobject
         $person = new midcom_db_person($this->person);
 
         $qb = org_openpsa_contacts_buddy_dba::new_query_builder();
-        $user =& $_MIDCOM->auth->user->get_storage();
+        $user =& midcom::auth->user->get_storage();
         $qb->add_constraint('account', '=', (string)$owner->guid);
         $qb->add_constraint('buddy', '=', (string)$person->guid);
         $qb->add_constraint('blacklisted', '=', false);

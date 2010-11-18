@@ -115,7 +115,7 @@ class org_openpsa_projects_handler_project_crud extends midcom_baseclasses_compo
                 break;
         }
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**
@@ -142,7 +142,7 @@ class org_openpsa_projects_handler_project_crud extends midcom_baseclasses_compo
                 break;
         }
         
-        $_MIDCOM->set_pagetitle($view_title);
+        midcom::set_pagetitle($view_title);
     }
 
     /**
@@ -165,7 +165,7 @@ class org_openpsa_projects_handler_project_crud extends midcom_baseclasses_compo
      */
     function _handler_callback($handler_id, $args, &$data)
     {
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -176,7 +176,7 @@ class org_openpsa_projects_handler_project_crud extends midcom_baseclasses_compo
         );
         if ($handler_id == 'project')
         {
-            $_MIDCOM->add_link_head
+            midcom::add_link_head
             (
                 array
                 (
@@ -185,7 +185,7 @@ class org_openpsa_projects_handler_project_crud extends midcom_baseclasses_compo
                     'href' => MIDCOM_STATIC_URL . "/org.openpsa.core/list.css",
                 )
             );
-            $_MIDCOM->load_library('org.openpsa.contactwidget');
+            midcom::load_library('org.openpsa.contactwidget');
         }
         return true;
     }
@@ -207,7 +207,7 @@ class org_openpsa_projects_handler_project_crud extends midcom_baseclasses_compo
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $project);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to create a new project, cannot continue. Error: " . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -224,7 +224,7 @@ class org_openpsa_projects_handler_project_crud extends midcom_baseclasses_compo
      */
     public function _index_object(&$dm)
     {
-        $indexer = $_MIDCOM->get_service('indexer');
+        $indexer = midcom::get_service('indexer');
 
         $nav = new midcom_helper_nav();
         //get the node to fill the required index-data for topic/component

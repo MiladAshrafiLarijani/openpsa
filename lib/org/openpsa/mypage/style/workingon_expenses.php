@@ -47,14 +47,14 @@ if (count($data['hours']) > 0)
     echo "    </tr>\n";
     echo "</table>\n";
     echo "<form action=\"{$data['expenses_url']}\" method='post'>";
-    $current_user = $_MIDCOM->auth->user->get_storage();
+    $current_user = midcom::auth->user->get_storage();
     echo "<input type=\"hidden\" name=\"person[]\" value=\"{$current_user->id}\" />";
     echo "<input type=\"submit\" value=\"".sprintf($data['l10n']->get('see all %s hours'), round($total_hours, 2))."\" />";
     echo "</form>";
 }
 else
 {
-    echo "<p><a href=\"{$data['expenses_url']}\">" . $_MIDCOM->i18n->get_string('report hours', 'org.openpsa.expenses') . "</a></p>\n";
+    echo "<p><a href=\"{$data['expenses_url']}\">" . midcom::i18n()->get_string('report hours', 'org.openpsa.expenses') . "</a></p>\n";
 }
 
 ?>

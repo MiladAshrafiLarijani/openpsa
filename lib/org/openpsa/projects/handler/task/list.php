@@ -23,7 +23,7 @@ class org_openpsa_projects_handler_task_list extends midcom_baseclasses_componen
 
     function _on_initialize()
     {
-        $_MIDCOM->load_library('org.openpsa.contactwidget');
+        midcom::load_library('org.openpsa.contactwidget');
     }
 
     /**
@@ -73,7 +73,7 @@ class org_openpsa_projects_handler_task_list extends midcom_baseclasses_componen
      */
     function _handler_list($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         $this->_request_data['tasks'] = Array();
 
         //get possible priorities from schema
@@ -92,7 +92,7 @@ class org_openpsa_projects_handler_task_list extends midcom_baseclasses_componen
                 case 'project':
                     $this->_prepare_output();
 
-                    $_MIDCOM->add_link_head
+                    midcom::add_link_head
                     (
                         array
                         (
@@ -108,7 +108,7 @@ class org_openpsa_projects_handler_task_list extends midcom_baseclasses_componen
                     $return = $this->_handler_list_project($args);
                     //form of tasks has to be changed for json
                     $this->_change_tasks_for_json();
-                    $_MIDCOM->skip_page_style = true;
+                    midcom::skip_page_style = true;
                     $this->_request_data['view'] = 'json';
                     return $return;
                 default:
@@ -647,7 +647,7 @@ class org_openpsa_projects_handler_task_list extends midcom_baseclasses_componen
         $siteconfig = org_openpsa_core_siteconfig::get_instance();
         $this->_request_data['contacts_url'] = $siteconfig->get_node_full_url('org.openpsa.contacts');
         $this->_request_data['sales_url'] = $siteconfig->get_node_full_url('org.openpsa.sales');
-        $this->_request_data['prefix'] = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $this->_request_data['prefix'] = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 
         $this->_view_toolbar->add_item
         (
@@ -657,7 +657,7 @@ class org_openpsa_projects_handler_task_list extends midcom_baseclasses_componen
                 MIDCOM_TOOLBAR_LABEL => $this->_l10n->get("create project"),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/new-dir.png',
-                MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_user_do('midgard:create', null, 'org_openpsa_projects_project'),
+                MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_user_do('midgard:create', null, 'org_openpsa_projects_project'),
             )
         );
 
@@ -669,7 +669,7 @@ class org_openpsa_projects_handler_task_list extends midcom_baseclasses_componen
                 MIDCOM_TOOLBAR_LABEL => $this->_l10n->get("create task"),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/new_task.png',
-                MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_user_do('midgard:create', null, 'org_openpsa_projects_task_dba'),
+                MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_user_do('midgard:create', null, 'org_openpsa_projects_task_dba'),
             )
         );
     }

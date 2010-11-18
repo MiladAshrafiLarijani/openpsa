@@ -27,7 +27,7 @@ class org_openpsa_helpers_list
         $ret = array(0 => '');
         $seen = array();
 
-        if (!$_MIDCOM->componentloader->load_graceful('org.openpsa.contacts'))
+        if (!midcom::componentloader->load_graceful('org.openpsa.contacts'))
         {
             //PONDER: Maybe we should raise a fatal error ??
             return $ret;
@@ -38,9 +38,9 @@ class org_openpsa_helpers_list
             && !isset($ret[$task->customer]))
         {
             //Make sure we can read the current customer for the name
-            $_MIDCOM->auth->request_sudo();
+            midcom::auth->request_sudo();
             $company = new org_openpsa_contacts_group_dba($task->customer);
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
             $seen[$company->id] = true;
             self::task_groups_put($ret, $mode, $company);
         }
@@ -126,7 +126,7 @@ class org_openpsa_helpers_list
         //Make sure the class we need exists
         if (!class_exists('org_openpsa_projects_task_dba'))
         {
-            $_MIDCOM->componentloader->load('org.openpsa.projects');
+            midcom::componentloader->load('org.openpsa.projects');
         }
         //Only query once pper request
         if (!array_key_exists('org_openpsa_helpers_tasks', $GLOBALS))
@@ -187,25 +187,25 @@ class org_openpsa_helpers_list
         {
             $GLOBALS[$array_name] = array();
             $my_subscription_groups = array();
-            if ($_MIDCOM->auth->user)
+            if (midcom::auth->user)
             {
                 if ($add_me == 'first')
                 {
                     //TODO: Localization
-                    $GLOBALS[$array_name][$_MIDCOM->auth->user->id] = 'me';
+                    $GLOBALS[$array_name][midcom::auth->user->id] = 'me';
                 }
 
                 if (midcom_connection::is_admin())
                 {
                     // Admins must see all workgroups, all the time
-                    $users_vgroups = $_MIDCOM->auth->get_all_vgroups();
-                    $users_groups = $_MIDCOM->auth->user->list_memberships();
+                    $users_vgroups = midcom::auth->get_all_vgroups();
+                    $users_groups = midcom::auth->user->list_memberships();
                     $users_groups = array_merge($users_vgroups, $users_groups);
                 }
                 else
                 {
                     // Regular people see only their own
-                    $users_groups = $_MIDCOM->auth->user->list_memberships();
+                    $users_groups = midcom::auth->user->list_memberships();
                 }
                 foreach ($users_groups as $key => $vgroup)
                 {
@@ -227,7 +227,7 @@ class org_openpsa_helpers_list
                         else
                         {
                             debug_add("This is subscriber group, get the real group instead");
-                            $real_group = $_MIDCOM->auth->get_group(substr($key, 0, strlen($key)-11));
+                            $real_group = midcom::auth->get_group(substr($key, 0, strlen($key)-11));
                             if ($real_group)
                             {
                                 $key = $real_group->id;
@@ -260,7 +260,7 @@ class org_openpsa_helpers_list
                 if ($add_me == 'last')
                 {
                     //TODO: Localization
-                    $GLOBALS[$array_name][$_MIDCOM->auth->user->id] = 'me';
+                    $GLOBALS[$array_name][midcom::auth->user->id] = 'me';
                 }
 
                 // Add subscription lists after real ones
@@ -295,15 +295,15 @@ class org_openpsa_helpers_list
             }
 
             if (   $GLOBALS['org_openpsa_core_workgroup_filter'] == 'all'
-                && $_MIDCOM->auth->user)
+                && midcom::auth->user)
             {
                 // Populate only the user himself to the list
-                $user = $_MIDCOM->auth->user->get_storage();
+                $user = midcom::auth->user->get_storage();
                 $GLOBALS['org_openpsa_helpers_resources'][$user->id] = true;
             }
             else
             {
-                $group = & $_MIDCOM->auth->get_group($GLOBALS['org_openpsa_core_workgroup_filter']);
+                $group = & midcom::auth->get_group($GLOBALS['org_openpsa_core_workgroup_filter']);
                 if ($group)
                 {
                     $members = $group->list_members();

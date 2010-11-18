@@ -24,7 +24,7 @@ class org_openpsa_products_handler_group_csvimport extends midcom_baseclasses_co
     {
         // Mass importing is for now better left for admins only
         // TODO: Add smarter per-type ACL checks
-        $_MIDCOM->auth->require_admin_user();
+        midcom::auth->require_admin_user();
         $this->_request_data['type'] = 'group';
 
         $this->_request_data['import_status'] = array
@@ -74,7 +74,7 @@ class org_openpsa_products_handler_group_csvimport extends midcom_baseclasses_co
         // Convert fields from latin-1 to MidCOM charset (usually utf-8)
         foreach ($groupdata as $key => $value)
         {
-            $groupdata[$key] = iconv('ISO-8859-1', $_MIDCOM->i18n->get_current_charset(), $value);
+            $groupdata[$key] = iconv('ISO-8859-1', midcom::i18n()->get_current_charset(), $value);
         }
 
         $group = null;
@@ -255,13 +255,13 @@ class org_openpsa_products_handler_group_csvimport extends midcom_baseclasses_co
 
         if (!array_key_exists('org_openpsa_products_import_separator', $_POST))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'No CSV separator specified.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'No CSV separator specified.');
             // This will exit.
         }
 
         if (!file_exists($_POST['org_openpsa_products_import_tmp_file']))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'No CSV file available.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'No CSV file available.');
             // This will exit.
         }
 

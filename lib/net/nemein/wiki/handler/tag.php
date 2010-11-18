@@ -39,7 +39,7 @@ class net_nemein_wiki_handler_tag extends midcom_baseclasses_components_handler
 
         if (count($tags) == 0)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "No wiki pages tagged with {$data['tag']}");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "No wiki pages tagged with {$data['tag']}");
             // This will exit
         }
 
@@ -51,7 +51,7 @@ class net_nemein_wiki_handler_tag extends midcom_baseclasses_components_handler
 
         if (empty($wikipage_guids))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "No wiki pages tagged with {$data['tag']}");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "No wiki pages tagged with {$data['tag']}");
             // This will exit
         }
 
@@ -62,12 +62,12 @@ class net_nemein_wiki_handler_tag extends midcom_baseclasses_components_handler
         $data['wikipages'] = $qb->execute();
         if (count($data['wikipages']) == 0)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "No wiki pages tagged with {$data['tag']}");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "No wiki pages tagged with {$data['tag']}");
             // This will exit
         }
         
         $data['view_title'] = sprintf($this->_request_data['l10n']->get('pages tagged with %s in %s'), $data['tag'], $this->_topic->extra);
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
 
         $tmp = array();
         $tmp[] = Array
@@ -75,7 +75,7 @@ class net_nemein_wiki_handler_tag extends midcom_baseclasses_components_handler
             MIDCOM_NAV_URL => "tags/{$data['tag']}/",
             MIDCOM_NAV_NAME => $data['view_title'],
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         return true;
     }

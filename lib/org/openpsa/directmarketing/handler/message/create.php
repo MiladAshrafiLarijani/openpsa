@@ -107,7 +107,7 @@ class org_openpsa_directmarketing_handler_message_create extends midcom_baseclas
         $this->_controller->callback_object =& $this;
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
             // This will exit.
         }
     }
@@ -127,7 +127,7 @@ class org_openpsa_directmarketing_handler_message_create extends midcom_baseclas
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $this->_message);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'Failed to create a new message, cannot continue. Last Midgard error was: ' . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -149,11 +149,11 @@ class org_openpsa_directmarketing_handler_message_create extends midcom_baseclas
         if (   !$data['campaign']
             || $data['campaign']->node != $this->_topic->id)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The campaign {$args[0]} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The campaign {$args[0]} was not found.");
             // This will exit.
         }
 
-        $_MIDCOM->auth->require_do('midgard:create', $data['campaign']);
+        midcom::auth->require_do('midgard:create', $data['campaign']);
 
         $this->_component_data['active_leaf'] = "campaign_{$data['campaign']->id}";  
 
@@ -173,22 +173,22 @@ class org_openpsa_directmarketing_handler_message_create extends midcom_baseclas
         {
             case 'save':
                 // Index the message
-                //$indexer = $_MIDCOM->get_service('indexer');
+                //$indexer = midcom::get_service('indexer');
                 //org_openpsa_directmarketing_viewer::index($this->_controller->datamanager, $indexer, $this->_topic);
 
-                $_MIDCOM->relocate("message/{$this->_message->guid}/");
+                midcom::relocate("message/{$this->_message->guid}/");
 
             case 'cancel':
-                $_MIDCOM->relocate("campaign/{$data['campaign']->guid}/");
+                midcom::relocate("campaign/{$data['campaign']->guid}/");
                 // This will exit.
         }
 
         if ($this->_message != null) 
         {
-            $_MIDCOM->set_26_request_metadata($this->_message->metadata->revised, $this->_message->guid);
+            midcom::set_26_request_metadata($this->_message->metadata->revised, $this->_message->guid);
         }
         $data['view_title'] = sprintf($this->_l10n_midcom->get('create %s'), $this->_l10n->get($this->_schemadb[$this->_schema]->description));
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
         $this->_update_breadcrumb_line($handler_id);
 
         org_openpsa_helpers::dm2_savecancel($this);
@@ -211,7 +211,7 @@ class org_openpsa_directmarketing_handler_message_create extends midcom_baseclas
             MIDCOM_NAV_NAME => sprintf($this->_l10n_midcom->get('create %s'), $this->_l10n->get($this->_schemadb[$this->_schema]->description)),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**

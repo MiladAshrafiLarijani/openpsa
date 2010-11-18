@@ -19,7 +19,7 @@ class org_openpsa_sales_sort
      */
     static function link($mode, $label, $type, $element = 'th')
     {
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . 'list/' . $type . '/';
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . 'list/' . $type . '/';
 
         $static_base = MIDCOM_STATIC_URL . '/';
         if (!isset($_REQUEST['org_openpsa_sales_sort_by']))

@@ -22,12 +22,12 @@ $status = $data['deliverable']->get_status();
         $at_entries = $data['deliverable']->get_at_entries();
         if (count($at_entries) > 0)
         {
-            echo "<h2>" . $_MIDCOM->i18n->get_string('scheduled operations', 'midcom.services.at') . "</h2>\n";
+            echo "<h2>" . midcom::i18n()->get_string('scheduled operations', 'midcom.services.at') . "</h2>\n";
             echo "<table>\n";
             echo "    <thead>\n";
             echo "        <tr>\n";
-            echo "            <th>" . $_MIDCOM->i18n->get_string('time', 'midcom.services.at') . "</th>\n";
-            echo "            <th>" . $_MIDCOM->i18n->get_string('status', 'midcom.services.at') . "</th>\n";
+            echo "            <th>" . midcom::i18n()->get_string('time', 'midcom.services.at') . "</th>\n";
+            echo "            <th>" . midcom::i18n()->get_string('status', 'midcom.services.at') . "</th>\n";
             echo "        </tr>\n";
             echo "    </thead>\n";
             echo "    <tbody>\n";
@@ -41,13 +41,13 @@ $status = $data['deliverable']->get_status();
                 switch ($entry->status)
                 {
                     case MIDCOM_SERVICES_AT_STATUS_SCHEDULED:
-                        echo $_MIDCOM->i18n->get_string('scheduled', 'midcom.services.at');
+                        echo midcom::i18n()->get_string('scheduled', 'midcom.services.at');
                         break;
                     case MIDCOM_SERVICES_AT_STATUS_RUNNING:
-                        echo $_MIDCOM->i18n->get_string('running', 'midcom.services.at');
+                        echo midcom::i18n()->get_string('running', 'midcom.services.at');
                         break;
                     case MIDCOM_SERVICES_AT_STATUS_FAILED:
-                        echo $_MIDCOM->i18n->get_string('failed', 'midcom.services.at');
+                        echo midcom::i18n()->get_string('failed', 'midcom.services.at');
                         break;
                 }
                 echo "</td>\n";
@@ -204,9 +204,9 @@ $status = $data['deliverable']->get_status();
                     && $product->guid
                     && $product->orgOpenpsaObtype == ORG_OPENPSA_PRODUCTS_PRODUCT_TYPE_SERVICE)
                 {
-                    $_MIDCOM->dynamic_load($data['projects_url'] . "task/list/all/agreement/{$data['deliverable']->id}");
+                    midcom::dynamic_load($data['projects_url'] . "task/list/all/agreement/{$data['deliverable']->id}");
                     // FIXME: This is a rather ugly hack
-                    $_MIDCOM->style->enter_context(0);
+                    midcom::style->enter_context(0);
                 }
             }
             ?>
@@ -216,9 +216,9 @@ $status = $data['deliverable']->get_status();
             if (   $data['invoices_url']
                 && $data['deliverable']->invoiced > 0)
             {
-                $_MIDCOM->dynamic_load($data['invoices_url'] . "list/deliverable/{$data['deliverable']->guid}");
+                midcom::dynamic_load($data['invoices_url'] . "list/deliverable/{$data['deliverable']->guid}");
                 // FIXME: This is a rather ugly hack
-                $_MIDCOM->style->enter_context(0);
+                midcom::style->enter_context(0);
             }
             ?>
         </div>

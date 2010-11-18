@@ -1,10 +1,10 @@
 <?php
-$_MIDCOM->auth->require_admin_user();
+midcom::auth->require_admin_user();
 // Get us to full live mode
-$_MIDCOM->cache->content->enable_live_mode();
+midcom::cache()->content->enable_live_mode();
 while(@ob_end_flush());
 
-$_MIDCOM->load_library('org.openpsa.mail');
+midcom::load_library('org.openpsa.mail');
 ?>
 <h1>Notify MoinMoin wiki users</h1>
 <?php

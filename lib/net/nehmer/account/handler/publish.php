@@ -118,14 +118,14 @@ class net_nehmer_account_handler_publish extends midcom_baseclasses_components_h
      */
     function _handler_publish($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
-        $this->_account = $_MIDCOM->auth->user->get_storage();
+        midcom::auth->require_valid_user();
+        $this->_account = midcom::auth->user->get_storage();
         net_nehmer_account_viewer::verify_person_privileges($this->_account);
         $this->_avatar = $this->_account->get_attachment('avatar');
         $this->_avatar_thumbnail = $this->_account->get_attachment('avatar_thumbnail');
-        $_MIDCOM->auth->require_do('midgard:update', $this->_account);
-        $_MIDCOM->auth->require_do('midgard:parameters', $this->_account);
-        $_MIDCOM->auth->require_do('midgard:attachments', $this->_account);
+        midcom::auth->require_do('midgard:update', $this->_account);
+        midcom::auth->require_do('midgard:parameters', $this->_account);
+        midcom::auth->require_do('midgard:attachments', $this->_account);
 
         $this->_prepare_datamanager();
         $this->_process_form();
@@ -133,19 +133,19 @@ class net_nehmer_account_handler_publish extends midcom_baseclasses_components_h
         $this->_compute_fields();
         $this->_prepare_request_data();
 
-        $_MIDCOM->bind_view_to_object($this->_account, $this->_datamanager->schema->name);
+        midcom::bind_view_to_object($this->_account, $this->_datamanager->schema->name);
 
-        $_MIDCOM->set_26_request_metadata(time(), $this->_topic->guid);
+        midcom::set_26_request_metadata(time(), $this->_topic->guid);
 
         $tmp[] = Array
         (
             MIDCOM_NAV_URL => 'publish/',
             MIDCOM_NAV_NAME => $this->_l10n->get('publish account details'),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
         $this->_view_toolbar->hide_item('publish/');
 
-        $_MIDCOM->set_pagetitle($this->_l10n->get('publish account details'));
+        midcom::set_pagetitle($this->_l10n->get('publish account details'));
 
         return true;
     }
@@ -201,8 +201,8 @@ class net_nehmer_account_handler_publish extends midcom_baseclasses_components_h
         $this->_account->set_parameter('net.nehmer.account', 'visible_field_list', implode(',', $published_fields));
         $this->_account->delete_parameter('net.nehmer.account', 'auto_published');
 
-        $_MIDCOM->uimessages->add($this->_l10n->get('publish account details'), $this->_l10n->get('publishing successful.'));
-        $_MIDCOM->relocate('');
+        midcom::uimessages()->add($this->_l10n->get('publish account details'), $this->_l10n->get('publishing successful.'));
+        midcom::relocate('');
     }
 
     /**
@@ -223,26 +223,26 @@ class net_nehmer_account_handler_publish extends midcom_baseclasses_components_h
             if (   ! $filter->set_file($file['tmp_name'])
                 || ! $filter->rescale($this->_config->get('avatar_x'), $this->_config->get('avatar_y')))
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to scale the avatar attachment.');
+                midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to scale the avatar attachment.');
                 // This will exit.
             }
             $this->_avatar = $this->_update_image_attachment('avatar', 'avatar', $file['type'], $file['tmp_name']);
             if (! $this->_avatar)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to update the avatar attachment.');
+                midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to update the avatar attachment.');
                 // This will exit.
             }
 
             // Scale the avatar thumbnail
             if (! $filter->rescale($this->_config->get('avatar_thumbnail_x'), $this->_config->get('avatar_thumbnail_y')))
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to scale the avatar thumbnail attachment.');
+                midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to scale the avatar thumbnail attachment.');
                 // This will exit.
             }
             $this->_avatar_thumbnail = $this->_update_image_attachment('avatar_thumbnail', 'avatar_thumbnail', $file['type'], $file['tmp_name']);
             if (! $this->_avatar_thumbnail)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to update the avatar thumbnail attachment.');
+                midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to update the avatar thumbnail attachment.');
                 // This will exit.
             }
 
@@ -269,7 +269,7 @@ class net_nehmer_account_handler_publish extends midcom_baseclasses_components_h
             $attachment = $this->_account->create_attachment($name, $title, $mimetype);
             if (! $attachment)
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Failed to create the attachment named {$name}, last Midgard error was: " . midcom_connection::get_error_string());
                 // This will exit.
             }
@@ -334,8 +334,8 @@ class net_nehmer_account_handler_publish extends midcom_baseclasses_components_h
      */
     function _prepare_request_data()
     {
-        $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-        $att_prefix = $_MIDCOM->get_page_prefix();
+        $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+        $att_prefix = midcom::get_page_prefix();
 
         $this->_request_data['datamanager'] =& $this->_datamanager;
         $this->_request_data['fields'] =& $this->_fields;
@@ -479,13 +479,13 @@ class net_nehmer_account_handler_publish extends midcom_baseclasses_components_h
                 $target = $this->_datamanager->schema->fields[$name]['customdata']['visible_link'];
                 if ($target == $name)
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                    midcom::generate_error(MIDCOM_ERRCRIT,
                         "Tried to link the visibility of {$name} to itself.");
                     // this will exit()
                 }
                 if ($this->_datamanager->schema->fields[$target]['customdata']['visible_mode'] == 'link')
                 {
-                    $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                    midcom::generate_error(MIDCOM_ERRCRIT,
                         "Tried to link the visibility of {$name} to the field {$target}, which is a link field too.");
                     // this will exit()
                 }
@@ -495,7 +495,7 @@ class net_nehmer_account_handler_publish extends midcom_baseclasses_components_h
                 return in_array($name, $this->_visible_fields_user_selection);
 
         }
-        $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+        midcom::generate_error(MIDCOM_ERRCRIT,
             "Unknown Visibility declaration in {$name}: {$this->_datamanager->schema->fields[$name]['customdata']['visible_mode']}.");
         // This will exit()
     }
@@ -568,8 +568,8 @@ class net_nehmer_account_handler_publish extends midcom_baseclasses_components_h
      */
     function _handler_publish_ok($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
-        $this->_account = $_MIDCOM->auth->user->get_storage();
+        midcom::auth->require_valid_user();
+        $this->_account = midcom::auth->user->get_storage();
         $this->_avatar = $this->_account->get_attachment('avatar');
         $this->_avatar_thumbnail = $this->_account->get_attachment('avatar_thumbnail');
 
@@ -577,10 +577,10 @@ class net_nehmer_account_handler_publish extends midcom_baseclasses_components_h
         $this->_compute_fields();
         $this->_prepare_request_data();
 
-        $_MIDCOM->substyle_append($this->_datamanager->schema->name);
-        $_MIDCOM->set_26_request_metadata(time(), $this->_topic->guid);
+        midcom::substyle_append($this->_datamanager->schema->name);
+        midcom::set_26_request_metadata(time(), $this->_topic->guid);
         $this->_component_data['active_leaf'] = NET_NEHMER_ACCOUNT_LEAFID_PUBLISH;
-        $_MIDCOM->set_pagetitle($this->_l10n->get('publish account details'));
+        midcom::set_pagetitle($this->_l10n->get('publish account details'));
 
         return true;
     }

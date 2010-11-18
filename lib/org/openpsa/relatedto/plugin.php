@@ -47,7 +47,7 @@ class org_openpsa_relatedto_plugin extends midcom_baseclasses_components_purecod
             return false;
         }
 
-        $_MIDCOM->componentloader->load('org.openpsa.relatedto');
+        midcom::componentloader->load('org.openpsa.relatedto');
 
         if (!$status)
         {
@@ -165,7 +165,7 @@ class org_openpsa_relatedto_plugin extends midcom_baseclasses_components_purecod
         $i = 0;
         foreach ($array as $rel)
         {
-            if (!$_MIDCOM->dbfactory->is_a($rel, 'org_openpsa_relatedto_dba')) //Matches also 'org_openpsa_relatedto'
+            if (!midcom::dbfactory()->is_a($rel, 'org_openpsa_relatedto_dba')) //Matches also 'org_openpsa_relatedto'
             {
                 //Wrong type of object found in array, cruelly abort the whole procedure
                 return false;
@@ -289,10 +289,10 @@ class org_openpsa_relatedto_plugin extends midcom_baseclasses_components_purecod
      */
     static function add_header_files()
     {
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . "/org.openpsa.helpers/ajaxutils.js");
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . "/org.openpsa.relatedto/related_to.js");
+        midcom::add_jsfile(MIDCOM_STATIC_URL . "/org.openpsa.helpers/ajaxutils.js");
+        midcom::add_jsfile(MIDCOM_STATIC_URL . "/org.openpsa.relatedto/related_to.js");
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -310,7 +310,7 @@ class org_openpsa_relatedto_plugin extends midcom_baseclasses_components_purecod
             array
             (
                 MIDCOM_TOOLBAR_URL => "__mfa/org.openpsa.relatedto/render/{$guid}/{$mode}/",
-                MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('view related information', 'org.openpsa.relatedto'),
+                MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('view related information', 'org.openpsa.relatedto'),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/attach.png',
                 MIDCOM_TOOLBAR_ENABLED => true,
@@ -321,7 +321,7 @@ class org_openpsa_relatedto_plugin extends midcom_baseclasses_components_purecod
     static function common_node_toolbar_buttons_sanitycheck(&$data, &$button_component, &$bind_object, &$calling_component)
     {
         debug_push_class(__CLASS__, __FUNCTION__);
-        if (!$_MIDCOM->componentloader->load_graceful($button_component))
+        if (!midcom::componentloader->load_graceful($button_component))
         {
             //For some reason the component is and can not (be) loaded
             debug_add("component {$button_component} could not be loaded", MIDCOM_LOG_ERROR);
@@ -408,7 +408,7 @@ class org_openpsa_relatedto_plugin extends midcom_baseclasses_components_purecod
                     $button_component = 'org.openpsa.calendar';
                     $related_to = self::common_node_toolbar_buttons_sanitycheck($data, $button_component, $bind_object, $calling_component);
                     if (   !is_object($related_to)
-                        || !$_MIDCOM->dbfactory->is_a($related_to, 'org_openpsa_relatedto_dba'))
+                        || !midcom::dbfactory()->is_a($related_to, 'org_openpsa_relatedto_dba'))
                     {
                         debug_add("sanitycheck returned '{$related_to}' (relatedto object expected), skipping", MIDCOM_LOG_WARN);
                         continue 2;
@@ -418,7 +418,7 @@ class org_openpsa_relatedto_plugin extends midcom_baseclasses_components_purecod
                         array
                         (
                             MIDCOM_TOOLBAR_URL => "#",
-                            MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('create event', $button_component),
+                            MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('create event', $button_component),
                             MIDCOM_TOOLBAR_HELPTEXT => null,
                             MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/stock_new-event.png',
                             //TODO: Check for privileges somehow
@@ -435,7 +435,7 @@ class org_openpsa_relatedto_plugin extends midcom_baseclasses_components_purecod
                     $button_component = 'org.openpsa.projects';
                     $related_to = self::common_node_toolbar_buttons_sanitycheck($data, $button_component, $bind_object, $calling_component);
                     if (   !is_object($related_to)
-                        || !$_MIDCOM->dbfactory->is_a($related_to, 'org_openpsa_relatedto_dba'))
+                        || !midcom::dbfactory()->is_a($related_to, 'org_openpsa_relatedto_dba'))
                     {
                         debug_add("sanitycheck returned '{$related_to}' (relatedto object expected), skipping", MIDCOM_LOG_WARN);
                         continue 2;
@@ -445,10 +445,10 @@ class org_openpsa_relatedto_plugin extends midcom_baseclasses_components_purecod
                         array
                         (
                             MIDCOM_TOOLBAR_URL => "{$data['node'][MIDCOM_NAV_FULLURL]}task/new/?" . self::relatedto2get(array($related_to)),
-                            MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('create task', $button_component),
+                            MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('create task', $button_component),
                             MIDCOM_TOOLBAR_HELPTEXT => null,
                             MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/new_task.png',
-                            MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_user_do('midgard:create', null, 'org_openpsa_projects_task_dba'),
+                            MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_user_do('midgard:create', null, 'org_openpsa_projects_task_dba'),
                             MIDCOM_TOOLBAR_OPTIONS  => array
                             (
                                 //PONDER: Open in new window or not??
@@ -468,7 +468,7 @@ class org_openpsa_relatedto_plugin extends midcom_baseclasses_components_purecod
                     }
                     $related_to = self::common_node_toolbar_buttons_sanitycheck($data, $button_component, $bind_object, $calling_component);
                     if (   !is_object($related_to)
-                        || !$_MIDCOM->dbfactory->is_a($related_to, 'org_openpsa_relatedto_dba'))
+                        || !midcom::dbfactory()->is_a($related_to, 'org_openpsa_relatedto_dba'))
                     {
                         debug_add("sanitycheck returned '{$related_to}' (relatedto object expected), skipping", MIDCOM_LOG_WARN);
                         continue 2;
@@ -488,11 +488,11 @@ class org_openpsa_relatedto_plugin extends midcom_baseclasses_components_purecod
                         array
                         (
                             MIDCOM_TOOLBAR_URL => "{$data['node'][MIDCOM_NAV_FULLURL]}create/?wikiword={$data['wikiword_encoded']}&amp;" . self::relatedto2get(array($related_to)),
-                            MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('create note', $button_component),
+                            MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('create note', $button_component),
                             MIDCOM_TOOLBAR_HELPTEXT => null,
                             //TODO: Different icon from new document ?
                             MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/new-text.png',
-                            //TODO: Check privileges somehow ($_MIDCOM->auth->can_do('midgard:create', $data['node'][MIDCOM_NAV_OBJECT] ?)
+                            //TODO: Check privileges somehow (midcom::auth->can_do('midgard:create', $data['node'][MIDCOM_NAV_OBJECT] ?)
                             MIDCOM_TOOLBAR_ENABLED => $data['node'][MIDCOM_NAV_OBJECT]->can_do('midgard:create'),
                             MIDCOM_TOOLBAR_OPTIONS  => array
                             (
@@ -506,7 +506,7 @@ class org_openpsa_relatedto_plugin extends midcom_baseclasses_components_purecod
                     $button_component = 'org.openpsa.documents';
                     $related_to = self::common_node_toolbar_buttons_sanitycheck($data, $button_component, $bind_object, $calling_component);
                     if (   !is_object($related_to)
-                        || !$_MIDCOM->dbfactory->is_a($related_to, 'org_openpsa_relatedto_dba'))
+                        || !midcom::dbfactory()->is_a($related_to, 'org_openpsa_relatedto_dba'))
                     {
                         debug_add("sanitycheck returned '{$related_to}' (relatedto object expected), skipping", MIDCOM_LOG_WARN);
                         continue 2;
@@ -516,10 +516,10 @@ class org_openpsa_relatedto_plugin extends midcom_baseclasses_components_purecod
                         array
                         (
                             MIDCOM_TOOLBAR_URL => "{$data['node'][MIDCOM_NAV_FULLURL]}document/create/choosefolder/?" . self::relatedto2get(array($related_to)),
-                            MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('create document', $button_component),
+                            MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('create document', $button_component),
                             MIDCOM_TOOLBAR_HELPTEXT => null,
                             MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/new-text.png',
-                            MIDCOM_TOOLBAR_ENABLED => $_MIDCOM->auth->can_do('midgard:create', $data['node'][MIDCOM_NAV_OBJECT]),
+                            MIDCOM_TOOLBAR_ENABLED => midcom::auth->can_do('midgard:create', $data['node'][MIDCOM_NAV_OBJECT]),
                             MIDCOM_TOOLBAR_OPTIONS  => array
                             (
                                 //PONDER: Open in new window or not ??
@@ -544,7 +544,7 @@ class org_openpsa_relatedto_plugin extends midcom_baseclasses_components_purecod
             array
             (
                 MIDCOM_TOOLBAR_URL => "__mfa/org.openpsa.relatedto/journalentry/{$guid}/html/",
-                MIDCOM_TOOLBAR_LABEL => $_MIDCOM->i18n->get_string('view journal entries', 'org.openpsa.relatedto'),
+                MIDCOM_TOOLBAR_LABEL => midcom::i18n()->get_string('view journal entries', 'org.openpsa.relatedto'),
                 MIDCOM_TOOLBAR_HELPTEXT => null,
                 MIDCOM_TOOLBAR_ICON => 'stock-icons/16x16/attach.png',
                 MIDCOM_TOOLBAR_ENABLED => true,

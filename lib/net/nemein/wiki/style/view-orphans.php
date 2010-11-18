@@ -8,7 +8,7 @@ if (count($data['orphans']) > 0)
     <?php
     foreach ($data['orphans'] as $orphan) 
     {
-        $orphan_link = $_MIDCOM->permalinks->create_permalink($orphan->guid);
+        $orphan_link = midcom::permalinks->create_permalink($orphan->guid);
         ?>
         <li><a href="&(orphan_link);">&(orphan.title);</a></li>
         <?php

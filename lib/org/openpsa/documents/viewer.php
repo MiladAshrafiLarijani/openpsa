@@ -117,13 +117,13 @@ class org_openpsa_documents_viewer extends midcom_baseclasses_components_request
         $this->_request_data['enable_versioning'] = $this->_config->get('enable_versioning');
 
         // Always run in uncached mode
-        $_MIDCOM->cache->content->no_cache();
+        midcom::cache()->content->no_cache();
 
 
         org_openpsa_core_ui::enable_jqgrid();
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.cookie.js');
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/org.openpsa.documents/dynatree_0.4/jquery.dynatree.min.js');
-        $_MIDCOM->add_link_head
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.cookie.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/org.openpsa.documents/dynatree_0.4/jquery.dynatree.min.js');
+        midcom::add_link_head
         (
             array
             (

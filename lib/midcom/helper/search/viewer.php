@@ -56,14 +56,14 @@ class midcom_helper_search_viewer extends midcom_baseclasses_components_request
 
     function _on_handle($handler_id, $args)
     {
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
                 'rel'   => 'search',
                 'type'  => 'application/opensearchdescription+xml',
                 'title' => $this->_topic->extra,
-                'href'  => $_MIDCOM->get_host_name() . $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . 'opensearch.xml',
+                'href'  => midcom::get_host_name() . midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX) . 'opensearch.xml',
             )
         );
 
@@ -155,7 +155,7 @@ class midcom_helper_search_viewer extends midcom_baseclasses_components_request
     function _handler_result($handler_id, $args, &$data)
     {
         debug_push_class(__CLASS__, __FUNCTION__);
-        $indexer = $_MIDCOM->get_service('indexer');
+        $indexer = midcom::get_service('indexer');
 
         // Sane defaults for REQUEST vars
         if (!isset($_REQUEST['type']))
@@ -185,9 +185,9 @@ class midcom_helper_search_viewer extends midcom_baseclasses_components_request
             debug_pop();
             if ($data['type'] == 'basic')
             {
-                $_MIDCOM->relocate('');
+                midcom::relocate('');
             }
-            $_MIDCOM->relocate('advanced/');
+            midcom::relocate('advanced/');
         }
 
         $data['type'] = $_REQUEST['type'];
@@ -282,7 +282,7 @@ class midcom_helper_search_viewer extends midcom_baseclasses_components_request
 
         if ($data['document_count'] == 0)
         {
-            $_MIDCOM->cache->content->uncached();
+            midcom::cache()->content->uncached();
         }
 
         if ($count > 0)
@@ -311,7 +311,7 @@ class midcom_helper_search_viewer extends midcom_baseclasses_components_request
                     // Non-Midgard results don't need to go through cache registration
                     continue;
                 }
-                $_MIDCOM->cache->content->register($doc->source);
+                midcom::cache()->content->register($doc->source);
             }
             reset($data['result']);
         }
@@ -347,9 +347,9 @@ class midcom_helper_search_viewer extends midcom_baseclasses_components_request
      */
     function _handler_opensearchdescription($handler_id, $args, &$data)
     {
-        $_MIDCOM->cache->content->content_type("application/opensearchdescription+xml");
-        $_MIDCOM->header("Content-type: application/opensearchdescription+xml; charset=UTF-8");
-        $_MIDCOM->skip_page_style = true;
+        midcom::cache()->content->content_type("application/opensearchdescription+xml");
+        midcom::header("Content-type: application/opensearchdescription+xml; charset=UTF-8");
+        midcom::skip_page_style = true;
         return true;
     }
 

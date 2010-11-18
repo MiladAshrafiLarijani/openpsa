@@ -82,7 +82,7 @@ class org_openpsa_contacts_handler_person_create extends midcom_baseclasses_comp
         $this->_controller->defaults =& $this->_defaults;
         if (! $this->_controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 create controller.");
             // This will exit.
         }
     }
@@ -95,14 +95,14 @@ class org_openpsa_contacts_handler_person_create extends midcom_baseclasses_comp
             return;
         }
         // Initialize the datamanager with the schema
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
         $this->_schemadb = midcom_helper_datamanager2_schema::load_database($schemadb_snippet);
 
         $this->_datamanager = new midcom_helper_datamanager2_datamanager($this->_schemadb);
 
         if (!$this->_datamanager)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Datamanager could not be instantiated.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Datamanager could not be instantiated.");
             // This will exit.
         }
     }
@@ -121,7 +121,7 @@ class org_openpsa_contacts_handler_person_create extends midcom_baseclasses_comp
             debug_push_class(__CLASS__, __FUNCTION__);
             debug_print_r('We operated on this object:', $person);
             debug_pop();
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Failed to create a new invoice, cannot continue. Error: " . midcom_connection::get_error_string());
             // This will exit.
         }
@@ -140,8 +140,8 @@ class org_openpsa_contacts_handler_person_create extends midcom_baseclasses_comp
     function _handler_create($handler_id, $args, &$data)
     {
 
-        $_MIDCOM->auth->require_valid_user();
-        $_MIDCOM->auth->require_user_do('midgard:create', null, 'org_openpsa_contacts_person_dba');
+        midcom::auth->require_valid_user();
+        midcom::auth->require_user_do('midgard:create', null, 'org_openpsa_contacts_person_dba');
 
         if (count($args) > 0)
         {
@@ -154,7 +154,7 @@ class org_openpsa_contacts_handler_person_create extends midcom_baseclasses_comp
             }
 
             // Check permissions
-            $_MIDCOM->auth->require_do('midgard:create', $this->_group);
+            midcom::auth->require_do('midgard:create', $this->_group);
         }
 
         $this->_initialize_datamanager($this->_config->get('schemadb_person'));
@@ -166,7 +166,7 @@ class org_openpsa_contacts_handler_person_create extends midcom_baseclasses_comp
             case 'save':
 
                 // Index the person
-                $indexer = $_MIDCOM->get_service('indexer');
+                $indexer = midcom::get_service('indexer');
                 org_openpsa_contacts_viewer::index_person($this->_controller->datamanager, $indexer, $this->_content_topic);
 
                 // Add person to group if requested
@@ -180,24 +180,24 @@ class org_openpsa_contacts_handler_person_create extends midcom_baseclasses_comp
                     if (!$member->id)
                     {
                         // TODO: Cleanup
-                        $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                        midcom::generate_error(MIDCOM_ERRCRIT,
                             "Failed adding the person to group #{$this->_group->id}, reason {$member->errstr}");
                         // This will exit
                     }
                 }
 
                 // Relocate to group view
-                $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-                $_MIDCOM->relocate("{$prefix}person/{$this->_person->guid}/");
+                $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+                midcom::relocate("{$prefix}person/{$this->_person->guid}/");
                 // This will exit
 
             case 'cancel':
-                $_MIDCOM->relocate('');
+                midcom::relocate('');
                 // This will exit
         }
         $this->_request_data['controller'] =& $this->_controller;
 
-        $_MIDCOM->set_pagetitle($this->_l10n->get("create person"));
+        midcom::set_pagetitle($this->_l10n->get("create person"));
 
         // Add toolbar items
         org_openpsa_helpers::dm2_savecancel($this);
@@ -217,7 +217,7 @@ class org_openpsa_contacts_handler_person_create extends midcom_baseclasses_comp
             return false;
         }
 
-        $_MIDCOM->set_pagetitle($group->official);
+        midcom::set_pagetitle($group->official);
 
         return $group;
     }
@@ -249,7 +249,7 @@ class org_openpsa_contacts_handler_person_create extends midcom_baseclasses_comp
             MIDCOM_NAV_NAME => sprintf($this->_l10n_midcom->get('create %s'), $this->_l10n->get('person')),
         );
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
 }

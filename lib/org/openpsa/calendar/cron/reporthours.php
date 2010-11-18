@@ -16,7 +16,7 @@ class org_openpsa_calendar_cron_reporthours extends midcom_baseclasses_component
 {
     function _on_initialize()
     {
-        return array_key_exists('org.openpsa.projects', $_MIDCOM->componentloader->manifests);
+        return array_key_exists('org.openpsa.projects', midcom::componentloader->manifests);
     }
 
     /**
@@ -38,7 +38,7 @@ class org_openpsa_calendar_cron_reporthours extends midcom_baseclasses_component
             return;
         }
 
-        $_MIDCOM->load_library('org.openpsa.relatedto');
+        midcom::load_library('org.openpsa.relatedto');
         if (!class_exists('org_openpsa_relatedto_dba'))
         {
             debug_add('relatedto library could not be loaded', MIDCOM_LOG_WARN);
@@ -46,14 +46,14 @@ class org_openpsa_calendar_cron_reporthours extends midcom_baseclasses_component
             return;
         }
 
-        $_MIDCOM->componentloader->load_graceful('org.openpsa.projects');
+        midcom::componentloader->load_graceful('org.openpsa.projects');
         if (!class_exists('org_openpsa_projects_task_dba'))
         {
             debug_add('org.openpsa.projects could not be loaded', MIDCOM_LOG_WARN);
             debug_pop();
             return;
         }
-        if (!$_MIDCOM->auth->request_sudo('org.openpsa.calendar'))
+        if (!midcom::auth->request_sudo('org.openpsa.calendar'))
         {
             $msg = "Could not get sudo, aborting operation, see error log for details";
             $this->print_error($msg);
@@ -82,7 +82,7 @@ class org_openpsa_calendar_cron_reporthours extends midcom_baseclasses_component
         if (   !is_array($eventmembers)
             || count ($eventmembers) < 1)
         {
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
             return;
         }
 
@@ -167,7 +167,7 @@ class org_openpsa_calendar_cron_reporthours extends midcom_baseclasses_component
             }
         }
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         debug_add('done');
         debug_pop();
         return;

@@ -27,15 +27,15 @@ class net_nemein_wiki_handler_feed extends midcom_baseclasses_components_handler
      */
     function _handler_rss($handler_id, $args, &$data)
     {
-        $_MIDCOM->load_library('de.bitfolge.feedcreator');
+        midcom::load_library('de.bitfolge.feedcreator');
 
         $data['nap'] = new midcom_helper_nav();
         $data['node'] = $data['nap']->get_node($this->_topic->id);
 
-        $_MIDCOM->cache->content->content_type("text/xml; charset=UTF-8");
-        $_MIDCOM->header("Content-type: text/xml; charset=UTF-8");
+        midcom::cache()->content->content_type("text/xml; charset=UTF-8");
+        midcom::header("Content-type: text/xml; charset=UTF-8");
 
-        $_MIDCOM->skip_page_style = true;
+        midcom::skip_page_style = true;
 
         $data['rss_creator'] = new UniversalFeedCreator();
         $data['rss_creator']->title = $data['node'][MIDCOM_NAV_NAME];
@@ -53,10 +53,10 @@ class net_nemein_wiki_handler_feed extends midcom_baseclasses_components_handler
      */
     function _show_rss($handler_id, &$data)
     {
-        $_MIDCOM->load_library('net.nehmer.markdown');
+        midcom::load_library('net.nehmer.markdown');
         
         $qb = net_nemein_wiki_wikipage::new_query_builder();
-        $qb->add_constraint('topic.component', '=', $_MIDCOM->get_context_data(MIDCOM_CONTEXT_COMPONENT));
+        $qb->add_constraint('topic.component', '=', midcom::get_context_data(MIDCOM_CONTEXT_COMPONENT));
         $qb->add_constraint('topic', 'INTREE', $this->_topic->id);
         $qb->add_order('metadata.revised', 'DESC');
         $qb->set_limit($this->_config->get('rss_count'));

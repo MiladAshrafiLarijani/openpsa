@@ -42,7 +42,7 @@ class org_openpsa_directmarketing_handler_logger extends midcom_baseclasses_comp
         $campaigns = array();
         $this->_request_data['update_status'] = array('receipts' => array(), 'members' => array());
 
-        $_MIDCOM->auth->request_sudo('org.openpsa.directmarketing');
+        midcom::auth->request_sudo('org.openpsa.directmarketing');
         debug_add("Looking for token '{$_POST['token']}' in sent receipts");
         $ret = $this->_qb_token_receipts($_POST['token']);
         debug_add("_qb_token_receipts({$_POST['token']}) returned ===\n" . org_openpsa_helpers::sprint_r($ret) . "===\n");
@@ -51,7 +51,7 @@ class org_openpsa_directmarketing_handler_logger extends midcom_baseclasses_comp
             //Token not present
             debug_add("No receipts with token '{$_POST['token']}' found", MIDCOM_LOG_WARN);
             debug_pop();
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
             return false;
         }
         //While in theory we should have only one token lets use foreach just to be sure
@@ -97,9 +97,9 @@ class org_openpsa_directmarketing_handler_logger extends midcom_baseclasses_comp
             }
         }
 
-        $_MIDCOM->auth->drop_sudo();
-        $_MIDCOM->skip_page_style = true;
-        $_MIDCOM->cache->content->content_type('text/plain');
+        midcom::auth->drop_sudo();
+        midcom::skip_page_style = true;
+        midcom::cache()->content->content_type('text/plain');
         debug_pop();
         return true;
     }
@@ -160,7 +160,7 @@ class org_openpsa_directmarketing_handler_logger extends midcom_baseclasses_comp
             return false;
         }
 
-        $_MIDCOM->auth->request_sudo('org.openpsa.directmarketing');
+        midcom::auth->request_sudo('org.openpsa.directmarketing');
         debug_add("Looking for token '{$_POST['token']}' in sent receipts");
         $ret = $this->_qb_token_receipts($_POST['token']);
         debug_add("_qb_token_receipts({$_POST['token']}) returned ===\n" . org_openpsa_helpers::sprint_r($ret) . "===\n");
@@ -169,7 +169,7 @@ class org_openpsa_directmarketing_handler_logger extends midcom_baseclasses_comp
             //Token not present
             debug_add("No receipts with token '{$_POST['token']}' found", MIDCOM_LOG_WARN);
             debug_pop();
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
             return false;
         }
         //While in theory we should have only one token lets use foreach just to be sure
@@ -178,9 +178,9 @@ class org_openpsa_directmarketing_handler_logger extends midcom_baseclasses_comp
             $this->_create_link_receipt($receipt, $_POST['token'], $_POST['link']);
         }
 
-        $_MIDCOM->auth->drop_sudo();
-        $_MIDCOM->skip_page_style = true;
-        $_MIDCOM->cache->content->content_type('text/plain');
+        midcom::auth->drop_sudo();
+        midcom::skip_page_style = true;
+        midcom::cache()->content->content_type('text/plain');
         debug_pop();
         return true;
     }
@@ -269,14 +269,14 @@ class org_openpsa_directmarketing_handler_logger extends midcom_baseclasses_comp
         //If we have a dummy token don't bother with looking for it, just go on.
         if ($this->_request_data['token'] === 'dummy')
         {
-            $_MIDCOM->skip_page_style = true;
+            midcom::skip_page_style = true;
             debug_pop();
-            $_MIDCOM->relocate($this->_request_data['target']);
+            midcom::relocate($this->_request_data['target']);
             //This will exit unless fails
             return true;
         }
 
-        $_MIDCOM->auth->request_sudo('org.openpsa.directmarketing');
+        midcom::auth->request_sudo('org.openpsa.directmarketing');
         debug_add("Looking for token '{$this->_request_data['token']}' in sent receipts");
         $ret = $this->_qb_token_receipts($this->_request_data['token']);
         if (empty($ret))
@@ -284,7 +284,7 @@ class org_openpsa_directmarketing_handler_logger extends midcom_baseclasses_comp
             //Token not present
             debug_add("No receipts with token '{$this->_request_data['token']}' found", MIDCOM_LOG_WARN);
             debug_pop();
-            $_MIDCOM->auth->drop_sudo();
+            midcom::auth->drop_sudo();
             return false;
         }
 
@@ -294,10 +294,10 @@ class org_openpsa_directmarketing_handler_logger extends midcom_baseclasses_comp
             $this->_create_link_receipt($receipt, $this->_request_data['token'], $this->_request_data['target']);
         }
 
-        $_MIDCOM->auth->drop_sudo();
-        $_MIDCOM->skip_page_style = true;
+        midcom::auth->drop_sudo();
+        midcom::skip_page_style = true;
         debug_pop();
-        $_MIDCOM->relocate($this->_request_data['target']);
+        midcom::relocate($this->_request_data['target']);
         //This will exit unless fails
         return true;
     }

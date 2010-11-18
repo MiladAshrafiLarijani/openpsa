@@ -1,5 +1,5 @@
 <?php
-$_MIDCOM->auth->require_valid_user();
+midcom::auth->require_valid_user();
 error_reporting(E_ALL);
 ini_set('max_execution_time', 0);
 
@@ -38,7 +38,7 @@ do
     $parent_class = get_class($parent);
 } while (!empty($parent));
 
-$_MIDCOM->componentloader->load('org.openpsa.projects');
+midcom::componentloader->load('org.openpsa.projects');
 $type = 'org_openpsa_task';
 $ref = midcom_helper_reflector_tree::get($type);
 $label = $ref->get_class_label();

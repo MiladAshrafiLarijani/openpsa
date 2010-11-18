@@ -31,17 +31,17 @@ class org_openpsa_sales_salesproject_deliverable_dba extends midcom_core_dbaobje
 
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
 
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
 
     function get_parent_guid_uncached()
@@ -153,7 +153,7 @@ class org_openpsa_sales_salesproject_deliverable_dba extends midcom_core_dbaobje
 
     function get_at_entries()
     {
-        $_MIDCOM->load_library('midcom.services.at');
+        midcom::load_library('midcom.services.at');
 
         $mc = new org_openpsa_relatedto_collector($this->guid, 'midcom_services_at_entry');
         $at_entries = $mc->get_related_objects();
@@ -313,10 +313,10 @@ class org_openpsa_sales_salesproject_deliverable_dba extends midcom_core_dbaobje
         if (   $generate_invoice
             && $sum > $open_amount)
         {
-            $_MIDCOM->uimessages->add
+            midcom::uimessages()->add
             (
-                $_MIDCOM->i18n->get_string('org.openpsa.sales', 'org.openpsa.sales'),
-                sprintf($_MIDCOM->i18n->get_string('the amount youre trying to invoice %s exceeds the open amount of the deliverable %s', 'org.openpsa.sales'), $sum, $open_amount),
+                midcom::i18n()->get_string('org.openpsa.sales', 'org.openpsa.sales'),
+                sprintf(midcom::i18n()->get_string('the amount youre trying to invoice %s exceeds the open amount of the deliverable %s', 'org.openpsa.sales'), $sum, $open_amount),
                 'error'
             );
             return false;
@@ -366,7 +366,7 @@ class org_openpsa_sales_salesproject_deliverable_dba extends midcom_core_dbaobje
 
         if (!$invoice->create())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "Invoice could not be created. Last Midgard error: " . midcom_connection::get_error_string());
             //This will exit
         }
@@ -520,7 +520,7 @@ class org_openpsa_sales_salesproject_deliverable_dba extends midcom_core_dbaobje
                     $tasks = $task_qb->execute();
                     foreach ($tasks as $task)
                     {
-                        org_openpsa_projects_workflow::close($task, sprintf($_MIDCOM->i18n->get_string('completed from deliverable %s', 'org.openpsa.sales'), $this->title));
+                        org_openpsa_projects_workflow::close($task, sprintf(midcom::i18n()->get_string('completed from deliverable %s', 'org.openpsa.sales'), $this->title));
                     }
                     break;
                 case ORG_OPENPSA_PRODUCTS_PRODUCT_TYPE_GOODS:
@@ -548,7 +548,7 @@ class org_openpsa_sales_salesproject_deliverable_dba extends midcom_core_dbaobje
             $salesproject = new org_openpsa_sales_salesproject_dba($this->salesproject);
             $salesproject->mark_delivered();
 
-            $_MIDCOM->uimessages->add($_MIDCOM->i18n->get_string('org.openpsa.sales', 'org.openpsa.sales'), sprintf($_MIDCOM->i18n->get_string('marked deliverable "%s" delivered', 'org.openpsa.sales'), $this->title), 'ok');
+            midcom::uimessages()->add(midcom::i18n()->get_string('org.openpsa.sales', 'org.openpsa.sales'), sprintf(midcom::i18n()->get_string('marked deliverable "%s" delivered', 'org.openpsa.sales'), $this->title), 'ok');
             return true;
         }
         return false;

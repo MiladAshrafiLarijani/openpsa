@@ -9,7 +9,7 @@
 
 if (! class_exists('midcom_helper_reflector'))
 {
-    $_MIDCOM->load_library('midcom.helper.reflector');
+    midcom::load_library('midcom.helper.reflector');
 }
 
 /**
@@ -436,7 +436,7 @@ class midcom_helper_datamanager2_widget_chooser extends midcom_helper_datamanage
                     debug_add("Field \"{$this->name}\" is set to store to a parameter but links via ID which is not replication-safe, aborting.", MIDCOM_LOG_WARN);
                     debug_pop();
 
-                    $_MIDCOM->uimessages->add($this->_l10n->get('midcom.helper.datamanager2'), sprintf($this->_l10n->get('field %s is set to store to a parameter but links via ID which is not replication-safe, aborting'), $this->name), 'error');
+                    midcom::uimessages()->add($this->_l10n->get('midcom.helper.datamanager2'), sprintf($this->_l10n->get('field %s is set to store to a parameter but links via ID which is not replication-safe, aborting'), $this->name), 'error');
 
                     return false;
             }
@@ -448,7 +448,7 @@ class midcom_helper_datamanager2_widget_chooser extends midcom_helper_datamanage
             {
                 // We have an object, check the link type
                 // Note: in creation mode we do not have this so we have no way to check)
-                $mgdschema_object = $_MIDCOM->dbfactory->convert_midcom_to_midgard($this->_type->storage->object);
+                $mgdschema_object = midcom::dbfactory()->convert_midcom_to_midgard($this->_type->storage->object);
                 if (    $mgdschema_object !== null
                      && $this->_field['storage']['location'] !== null)
                 {
@@ -462,7 +462,7 @@ class midcom_helper_datamanager2_widget_chooser extends midcom_helper_datamanage
                         debug_add("Field \"{$this->name}\" is set to store to property \"{$this->_field['storage']['location']}\" which is not link, making it replication-unsafe, aborting.", MIDCOM_LOG_WARN);
                         debug_pop();
 
-                        $_MIDCOM->uimessages->add($this->_l10n->get('midcom.helper.datamanager2'), sprintf($this->_l10n->get('field %s is set to store to property %s but links via ID which is not replication-safe, aborting'), $this->name, $this->_field['storage']['location']), 'error');
+                        midcom::uimessages()->add($this->_l10n->get('midcom.helper.datamanager2'), sprintf($this->_l10n->get('field %s is set to store to property %s but links via ID which is not replication-safe, aborting'), $this->name, $this->_field['storage']['location']), 'error');
 
                         return false;
                     }
@@ -480,9 +480,9 @@ class midcom_helper_datamanager2_widget_chooser extends midcom_helper_datamanage
             return false;
         }
 
-        $_MIDCOM->enable_jquery();
+        midcom::enable_jquery();
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -492,18 +492,18 @@ class midcom_helper_datamanager2_widget_chooser extends midcom_helper_datamanage
             )
         );
 
-        $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.core.min.js');
-        $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.widget.min.js');
-        $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.mouse.min.js');
+        midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.core.min.js');
+        midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.widget.min.js');
+        midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.mouse.min.js');
 
         if ($this->sortable)
         {
-            $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.draggable.min.js');
-            $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.droppable.min.js');
-            $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.sortable.min.js');
+            midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.draggable.min.js');
+            midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.droppable.min.js');
+            midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.sortable.min.js');
         }
 
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/chooser/jquery.chooser_widget.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/chooser/jquery.chooser_widget.js');
 
         $this->_element_id = "{$this->_namespace}{$this->name}_chooser_widget";
 
@@ -526,7 +526,7 @@ class midcom_helper_datamanager2_widget_chooser extends midcom_helper_datamanage
 
         if ($this->creation_mode_enabled)
         {
-            $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/chooser/jquery.jqModal.js');
+            midcom::add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/chooser/jquery.jqModal.js');
 
             $script = "
                 jQuery('#{$this->_element_id}_creation_dialog').jqm({
@@ -598,7 +598,7 @@ class midcom_helper_datamanager2_widget_chooser extends midcom_helper_datamanage
 
         if (! empty($this->component))
         {
-            $_MIDCOM->componentloader->load($this->component);
+            midcom::componentloader()->load($this->component);
         }
 
         return class_exists($this->class);
@@ -639,10 +639,10 @@ class midcom_helper_datamanager2_widget_chooser extends midcom_helper_datamanage
 
     function _check_clever_class()
     {
-        if (   isset($_MIDCOM->auth->user)
-            && method_exists($_MIDCOM->auth->user, 'get_storage'))
+        if (   isset(midcom::auth()->user)
+            && method_exists(midcom::auth()->user, 'get_storage'))
         {
-            $current_user = $_MIDCOM->auth->user->get_storage();
+            $current_user = midcom::auth()->user->get_storage();
         }
         else
         {
@@ -840,7 +840,7 @@ class midcom_helper_datamanager2_widget_chooser extends midcom_helper_datamanage
 
             if (! empty($this->component))
             {
-                $_MIDCOM->componentloader->load($this->component);
+                midcom::componentloader()->load($this->component);
             }
 
             if (empty($this->result_headers))
@@ -851,7 +851,7 @@ class midcom_helper_datamanager2_widget_chooser extends midcom_helper_datamanage
                     $header = array();
                     if ($this->component)
                     {
-                        $header['title'] = $_MIDCOM->i18n->get_string($header_key, $this->component);
+                        $header['title'] = midcom::i18n()->get_string($header_key, $this->component);
                     }
                     else
                     {
@@ -973,8 +973,8 @@ class midcom_helper_datamanager2_widget_chooser extends midcom_helper_datamanage
                 }
             }
 
-            $this->class = $_MIDCOM->dbclassloader->get_midcom_class_name_for_mgdschema_object($matching_type);
-            $this->component = $_MIDCOM->dbclassloader->get_component_for_class($matching_type);
+            $this->class = midcom::dbclassloader()->get_midcom_class_name_for_mgdschema_object($matching_type);
+            $this->component = midcom::dbclassloader()->get_component_for_class($matching_type);
 
             if (empty($this->constraints))
             {
@@ -1096,7 +1096,7 @@ class midcom_helper_datamanager2_widget_chooser extends midcom_helper_datamanage
         {
             $headers .= "{ ";
 
-            $header_title = $_MIDCOM->i18n->get_string($_MIDCOM->i18n->get_string($header_item['title'], $this->component), 'midcom');
+            $header_title = midcom::i18n()->get_string(midcom::i18n()->get_string($header_item['title'], $this->component), 'midcom');
 
             $headers .= "title: '{$header_title}', ";
             $headers .= "name: '{$header_item['name']}' ";
@@ -1290,19 +1290,19 @@ class midcom_helper_datamanager2_widget_chooser extends midcom_helper_datamanage
         if (   !empty($this->reflector_key)
             && !$this->result_headers)
         {
-            $title = $_MIDCOM->i18n->get_string('Label', 'midcom');
+            $title = midcom::i18n()->get_string('Label', 'midcom');
             $this->_static_items_html .= "            <th class=\"label\">{$title}&nbsp;</th>\n";
         }
         else
         {
             foreach ($this->result_headers as $header_item)
             {
-                $header_title = $_MIDCOM->i18n->get_string($_MIDCOM->i18n->get_string($header_item['title'], $this->component), 'midcom');
+                $header_title = midcom::i18n()->get_string(midcom::i18n()->get_string($header_item['title'], $this->component), 'midcom');
                 $this->_static_items_html .= "            <th class=\"{$header_item['name']}\">{$header_title}&nbsp;</th>\n";
             }
         }
 
-        $title = $_MIDCOM->i18n->get_string('Selected', 'midcom.helper.datamanager2');
+        $title = midcom::i18n()->get_string('Selected', 'midcom.helper.datamanager2');
         $this->_static_items_html .= "            <th class=\"selected\">{$title}&nbsp;</th>\n";
         $this->_static_items_html .= "        </tr>\n";
         $this->_static_items_html .= "    </thead>\n";
@@ -1391,7 +1391,7 @@ class midcom_helper_datamanager2_widget_chooser extends midcom_helper_datamanage
             && !$this->result_headers)
         {
             $value = @$object->get_label();
-            $title = $_MIDCOM->i18n->get_string('label', 'midcom');
+            $title = midcom::i18n()->get_string('label', 'midcom');
             $this->_static_items_html .= "<td class=\"label\">{$value}&nbsp;</td>\n";
         }
         else
@@ -1522,7 +1522,7 @@ class midcom_helper_datamanager2_widget_chooser extends midcom_helper_datamanage
             return $this->_object_to_jsdata($results);
         }
 
-        $_MIDCOM->auth->request_sudo();
+        midcom::auth()->request_sudo();
 
         if (   isset($this->reflector_key)
             && !empty($this->reflector_key))
@@ -1536,7 +1536,7 @@ class midcom_helper_datamanager2_widget_chooser extends midcom_helper_datamanage
 
         if (!class_exists($this->class))
         {
-            $_MIDCOM->componentloader->load_graceful($this->component);
+            midcom::componentloader()->load_graceful($this->component);
         }
 
         $qb = @call_user_func(array($this->class, 'new_query_builder'));
@@ -1549,7 +1549,7 @@ class midcom_helper_datamanager2_widget_chooser extends midcom_helper_datamanage
 
         $results = $qb->execute();
 
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth()->drop_sudo();
 
         if (count($results) == 0)
         {

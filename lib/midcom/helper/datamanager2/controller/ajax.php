@@ -38,13 +38,13 @@ class midcom_helper_datamanager2_controller_ajax extends midcom_helper_datamanag
 
         if (count($this->schemadb) == 0)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'You must set a schema database before initializing midcom_helper_datamanager2_controller_ajax.');
             // This will exit.
         }
         if ($this->datamanager === null)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'You must set the datamanager member before initializing midcom_helper_datamanager2_controller_ajax.');
             // This will exit.
         }
@@ -120,11 +120,11 @@ class midcom_helper_datamanager2_controller_ajax extends midcom_helper_datamanag
             return $state;
         }
 
-        $_MIDCOM->enable_jquery();
+        midcom::enable_jquery();
 
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/jquery.dm2_ajax_editor.js');
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.dimensions-1.2.min.js');
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.metadata.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/midcom.helper.datamanager2/jquery.dm2_ajax_editor.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.dimensions-1.2.min.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/jQuery/jquery.metadata.js');
 
         $mode = 'inline';
         $creation_mode_enabled = 'true';
@@ -157,9 +157,9 @@ class midcom_helper_datamanager2_controller_ajax extends midcom_helper_datamanag
 
         $config .= "}";
         $script = "jQuery.dm2.ajax_editor.init('{$this->form_identifier}', {$config});";
-        $_MIDCOM->add_jquery_state_script($script);
+        midcom::add_jquery_state_script($script);
 
-        $_MIDCOM->add_link_head(
+        midcom::add_link_head(
             array
             (
                 'rel'   => 'stylesheet',
@@ -243,7 +243,7 @@ class midcom_helper_datamanager2_controller_ajax extends midcom_helper_datamanag
 
         if ($exit)
         {
-            $_MIDCOM->finish();
+            midcom::finish();
             _midcom_stop_request();
         }
 
@@ -318,7 +318,7 @@ class midcom_helper_datamanager2_controller_ajax extends midcom_helper_datamanag
     {
         if ($this->formmanager === null)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'You must initialize a controller class before using it.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'You must initialize a controller class before using it.');
         }
 
         $result = $this->formmanager->process_form();
@@ -345,7 +345,7 @@ class midcom_helper_datamanager2_controller_ajax extends midcom_helper_datamanag
             {
                 // In case that the type validation fails, we bail with generate_error, until
                 // we have a better defined way-of-life here.
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                midcom::generate_error(MIDCOM_ERRCRIT,
                     "Failed to save object, type validation failed:\n" . implode("\n", $this->datamanager->validation_errors));
                 // This will exit.
             }
@@ -365,7 +365,7 @@ class midcom_helper_datamanager2_controller_ajax extends midcom_helper_datamanag
                     else
                     {
                         // It seems to be a critical error.
-                        $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+                        midcom::generate_error(MIDCOM_ERRCRIT,
                             'Failed to save the data to disk, last midgard error code: ' . midcom_connection::get_error_string() . '. Check the debug level log for more information.');
                         // This will exit.
                     }

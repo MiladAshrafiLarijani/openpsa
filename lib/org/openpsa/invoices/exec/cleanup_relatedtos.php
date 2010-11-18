@@ -1,6 +1,6 @@
 <?php
 //This script is meant to clean up some of the fallout of #1893, use at your own risk
-$_MIDCOM->auth->require_admin_user();
+midcom::auth->require_admin_user();
 
 set_time_limit(50000);
 ini_set('memory_limit', "800M");

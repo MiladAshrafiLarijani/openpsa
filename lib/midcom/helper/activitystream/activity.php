@@ -28,17 +28,17 @@ class midcom_helper_activitystream_activity_dba extends midcom_core_dbaobject
 
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
 
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
     
     /**
@@ -71,7 +71,7 @@ class midcom_helper_activitystream_activity_dba extends midcom_core_dbaobject
         if (   !$target
             && $activity->target)
         {
-            $target = $_MIDCOM->dbfactory->get_object_by_guid($activity->target);
+            $target = midcom::dbfactory()->get_object_by_guid($activity->target);
         }
         
         $target_label = $activity->target;
@@ -88,21 +88,21 @@ class midcom_helper_activitystream_activity_dba extends midcom_core_dbaobject
             case 'http://activitystrea.ms/schema/1.0/post':
                 if ($actor)
                 {
-                    return sprintf($_MIDCOM->i18n->get_string('%s saved %s', 'midcom.helper.activitystream'), $actor->name, $target_label);
+                    return sprintf(midcom::i18n()->get_string('%s saved %s', 'midcom.helper.activitystream'), $actor->name, $target_label);
                 }
-                return sprintf($_MIDCOM->i18n->get_string('%s was saved', 'midcom.helper.activitystream'), $target_label);
+                return sprintf(midcom::i18n()->get_string('%s was saved', 'midcom.helper.activitystream'), $target_label);
             case 'http://community-equity.org/schema/1.0/delete':
                 if ($actor)
                 {
-                    return sprintf($_MIDCOM->i18n->get_string('%s deleted %s', 'midcom.helper.activitystream'), $actor->name, $target_label);
+                    return sprintf(midcom::i18n()->get_string('%s deleted %s', 'midcom.helper.activitystream'), $actor->name, $target_label);
                 }
-                return sprintf($_MIDCOM->i18n->get_string('%s was deleted', 'midcom.helper.activitystream'), $target_label);
+                return sprintf(midcom::i18n()->get_string('%s was deleted', 'midcom.helper.activitystream'), $target_label);
             case 'http://community-equity.org/schema/1.0/clone':
                 if ($actor)
                 {
-                    return sprintf($_MIDCOM->i18n->get_string('%s cloned %s', 'midcom.helper.activitystream'), $actor->name, $target_label);
+                    return sprintf(midcom::i18n()->get_string('%s cloned %s', 'midcom.helper.activitystream'), $actor->name, $target_label);
                 }
-                return sprintf($_MIDCOM->i18n->get_string('%s was cloned', 'midcom.helper.activitystream'), $target_label);
+                return sprintf(midcom::i18n()->get_string('%s was cloned', 'midcom.helper.activitystream'), $target_label);
             default:
                 // TODO: Check if the originating component can provide this
                 return '';

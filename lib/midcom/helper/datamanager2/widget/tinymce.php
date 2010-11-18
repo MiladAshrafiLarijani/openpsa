@@ -136,11 +136,11 @@ class midcom_helper_datamanager2_widget_tinymce extends midcom_helper_datamanage
         $prefix = $this->_config->get('tinymce_url');
         if ($this->_config->get('tinymce_use_compressor'))
         {
-            $_MIDCOM->add_jsfile("{$prefix}/tiny_mce_gzip.js", true);
+            midcom::add_jsfile("{$prefix}/tiny_mce_gzip.js", true);
         }
         else
         {
-            $_MIDCOM->add_jsfile("{$prefix}/tiny_mce.js", true);
+            midcom::add_jsfile("{$prefix}/tiny_mce.js", true);
         }
     }
 
@@ -163,7 +163,7 @@ class midcom_helper_datamanager2_widget_tinymce extends midcom_helper_datamanage
         }
 
 
-        $language = $_MIDCOM->i18n->get_current_language();
+        $language = midcom::i18n()->get_current_language();
         // fix to use the correct langcode for norwegian.
         if ($language == 'no')
         {
@@ -180,7 +180,7 @@ class midcom_helper_datamanager2_widget_tinymce extends midcom_helper_datamanage
         $imagepopup_url = '';
         if ($this->use_imagepopup)
         {
-            $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+            $prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
             $imagepopup_url = "plugin_imagepopup_popupurl: \"{$prefix}__ais/imagepopup/";
 
             if ($this->_type->storage->object)
@@ -208,7 +208,7 @@ disk_cache : true,
 debug : false
 });
 EOT;
-        $_MIDCOM->add_jscript($script_gz);
+        midcom::add_jscript($script_gz);
         }
 
         // Compute the final script:
@@ -228,7 +228,7 @@ browsers : "msie,gecko,opera,safari"
 });
 EOT;
 
-        $_MIDCOM->add_jscript($script);
+        midcom::add_jscript($script);
     }
     /**
      * Returns the string ,imagepopup that is added if we are editing a
@@ -376,7 +376,7 @@ EOT;
             else
             {
                 // No object has been created yet. Therefore, we register the schema for the topic GUID
-                $topic = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_CONTENTTOPIC);
+                $topic = midcom::get_context_data(MIDCOM_CONTEXT_CONTENTTOPIC);
                 $this->_schema->register_to_session($topic->guid);
             }
         }

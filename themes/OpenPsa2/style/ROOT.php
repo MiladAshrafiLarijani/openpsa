@@ -13,32 +13,32 @@ if ($width !== false)
     $pref_found = true;
 }
 
-$topic = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_CONTENTTOPIC);
+$topic = midcom::get_context_data(MIDCOM_CONTEXT_CONTENTTOPIC);
 
 echo "<?xml version=\"1.0\"?>\n";
 ?>
 <!DOCTYPE html
     PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $_MIDCOM->i18n->get_current_language(); ?>">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo midcom::i18n()->get_current_language(); ?>">
     <head>
         <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
-        <title><?php echo $topic->extra . ': ' . $_MIDCOM->get_context_data(MIDCOM_CONTEXT_PAGETITLE); ?> - <(title)> OpenPSA</title>
+        <title><?php echo $topic->extra . ': ' . midcom::get_context_data(MIDCOM_CONTEXT_PAGETITLE); ?> - <(title)> OpenPSA</title>
         <link type="image/x-icon" href="<?php echo MIDCOM_STATIC_URL; ?>/org.openpsa.core/openpsa-16x16.png" rel="shortcut icon"/>
         <?php
-        $_MIDCOM->add_link_head(array('rel' => 'stylesheet',  'type' => 'text/css', 'href' => MIDCOM_STATIC_URL . '/OpenPsa2/style.css', 'media' => 'screen,projection'));
-        $_MIDCOM->add_link_head(array('rel' => 'stylesheet',  'type' => 'text/css', 'href' => MIDCOM_STATIC_URL . '/OpenPsa2/content.css', 'media' => 'all'));
-        $_MIDCOM->add_link_head(array('rel' => 'stylesheet',  'type' => 'text/css', 'href' => MIDCOM_STATIC_URL . '/OpenPsa2/print.css', 'media' => 'print'));
+        midcom::add_link_head(array('rel' => 'stylesheet',  'type' => 'text/css', 'href' => MIDCOM_STATIC_URL . '/OpenPsa2/style.css', 'media' => 'screen,projection'));
+        midcom::add_link_head(array('rel' => 'stylesheet',  'type' => 'text/css', 'href' => MIDCOM_STATIC_URL . '/OpenPsa2/content.css', 'media' => 'all'));
+        midcom::add_link_head(array('rel' => 'stylesheet',  'type' => 'text/css', 'href' => MIDCOM_STATIC_URL . '/OpenPsa2/print.css', 'media' => 'print'));
 
-        $_MIDCOM->enable_jquery();
-        $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.core.min.js');
-        $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.widget.min.js');
-        $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.mouse.min.js');
-        $_MIDCOM->add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.draggable.min.js');
-        $_MIDCOM->add_jsfile(MIDCOM_STATIC_URL . '/OpenPsa2/ui.js');
-        $_MIDCOM->add_jscript("var MIDGARD_ROOT = '" . midcom_connection::get_url('self') . "';");
+        midcom::enable_jquery();
+        midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.core.min.js');
+        midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.widget.min.js');
+        midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.mouse.min.js');
+        midcom::add_jsfile(MIDCOM_JQUERY_UI_URL . '/ui/jquery.ui.draggable.min.js');
+        midcom::add_jsfile(MIDCOM_STATIC_URL . '/OpenPsa2/ui.js');
+        midcom::add_jscript("var MIDGARD_ROOT = '" . midcom_connection::get_url('self') . "';");
 
-        $_MIDCOM->print_head_elements();
+        midcom::print_head_elements();
 
         if ($pref_found)
         {?>
@@ -55,7 +55,7 @@ echo "<?xml version=\"1.0\"?>\n";
             </style>
         <?php } ?>
     </head>
-    <body<?php $_MIDCOM->print_jsonload(); ?>>
+    <body<?php midcom::print_jsonload(); ?>>
         <(toolbar)>
         <div id="container">
           <div id="leftframe">
@@ -86,7 +86,7 @@ echo "<?xml version=\"1.0\"?>\n";
        </div>
 <?php
 //Display any UI messages added to stack on PHP level
-$_MIDCOM->uimessages->show();
+midcom::uimessages()->show();
 ?>
     <script type="text/javascript">
         jQuery(document).ready(org_openpsa_jsqueue.execute());

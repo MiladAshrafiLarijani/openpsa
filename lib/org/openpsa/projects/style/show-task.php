@@ -7,7 +7,7 @@ $siteconfig = org_openpsa_core_siteconfig::get_instance();
 $sales_url = $siteconfig->get_node_full_url('org.openpsa.sales');
 $expenses_url = $siteconfig->get_node_relative_url('org.openpsa.expenses');
 
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
 ?>
 <div class="org_openpsa_projects_task">
     <div class="sidebar">
@@ -198,7 +198,7 @@ $prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
             ?>
         </div>
         <div class="hours wide">
-          <?php $_MIDCOM->dynamic_load($expenses_url . "hours/task/all/" . $task->guid . "/"); ?>
+          <?php midcom::dynamic_load($expenses_url . "hours/task/all/" . $task->guid . "/"); ?>
         </div>
     </div>
 

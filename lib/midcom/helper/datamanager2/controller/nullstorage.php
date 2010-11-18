@@ -45,7 +45,7 @@ class midcom_helper_datamanager2_controller_nullstorage extends midcom_helper_da
     {
         if (count($this->schemadb) == 0)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'You must set a schema database before initializing midcom_helper_datamanager2_controller_nullstorage.');
             // This will exit.
         }
@@ -95,7 +95,7 @@ class midcom_helper_datamanager2_controller_nullstorage extends midcom_helper_da
     {
         if ($this->formmanager === null)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'You must initialize a controller class before using it.');
+            midcom::generate_error(MIDCOM_ERRCRIT, 'You must initialize a controller class before using it.');
         }
 
         $result = $this->formmanager->process_form();

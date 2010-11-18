@@ -30,7 +30,7 @@ class org_openpsa_sales_interface extends midcom_baseclasses_components_interfac
     function _on_initialize()
     {
         // Load needed data classes
-        $_MIDCOM->componentloader->load_graceful('org.openpsa.products');
+        midcom::componentloader->load_graceful('org.openpsa.products');
 
         //TODO: Check that the loads actually succeeded
 
@@ -92,14 +92,14 @@ class org_openpsa_sales_interface extends midcom_baseclasses_components_interfac
 
         switch(true)
         {
-            case $_MIDCOM->dbfactory->is_a($object, 'midcom_db_person'):
+            case midcom::dbfactory()->is_a($object, 'midcom_db_person'):
                 //Fall-trough intentional
-            case $_MIDCOM->dbfactory->is_a($object, 'org_openpsa_contacts_person_dba'):
+            case midcom::dbfactory()->is_a($object, 'org_openpsa_contacts_person_dba'):
                 //List all projects and tasks given person is involved with
                 $this->_org_openpsa_relatedto_find_suspects_person($object, $defaults, $links_array);
                 break;
-            case $_MIDCOM->dbfactory->is_a($object, 'midcom_db_event'):
-            case $_MIDCOM->dbfactory->is_a($object, 'org_openpsa_calendar_event_dba'):
+            case midcom::dbfactory()->is_a($object, 'midcom_db_event'):
+            case midcom::dbfactory()->is_a($object, 'org_openpsa_calendar_event_dba'):
                 $this->_org_openpsa_relatedto_find_suspects_event($object, $defaults, $links_array);
                 break;
                 //TODO: groups ? other objects ?
@@ -316,7 +316,7 @@ class org_openpsa_sales_interface extends midcom_baseclasses_components_interfac
             debug_pop();
             return false;
         }
-        $_MIDCOM->load_library('org.openpsa.notifications');
+        midcom::load_library('org.openpsa.notifications');
 
         return org_openpsa_notifications::notify('org.openpsa.sales:new_notification_message', $project->owner, $notify_msg);
     }

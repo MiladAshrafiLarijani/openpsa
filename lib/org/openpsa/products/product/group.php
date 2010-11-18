@@ -22,17 +22,17 @@ class org_openpsa_products_product_group_dba extends midcom_core_dbaobject
 
     static function new_query_builder()
     {
-        return $_MIDCOM->dbfactory->new_query_builder(__CLASS__);
+        return midcom::dbfactory()->new_query_builder(__CLASS__);
     }
 
     static function new_collector($domain, $value)
     {
-        return $_MIDCOM->dbfactory->new_collector(__CLASS__, $domain, $value);
+        return midcom::dbfactory()->new_collector(__CLASS__, $domain, $value);
     }
 
     static function &get_cached($src)
     {
-        return $_MIDCOM->dbfactory->get_cached(__CLASS__, $src);
+        return midcom::dbfactory()->get_cached(__CLASS__, $src);
     }
 
     function _on_creating()
@@ -112,11 +112,11 @@ class org_openpsa_products_product_group_dba extends midcom_core_dbaobject
             // TODO: use reflection to see what kind of property this is ?
             if ($keyproperty == 'id')
             {
-                $ret[0] = $_MIDCOM->i18n->get_string('toplevel', 'org.openpsa.products');
+                $ret[0] = midcom::i18n()->get_string('toplevel', 'org.openpsa.products');
             }
             else
             {
-                $ret[''] = $_MIDCOM->i18n->get_string('toplevel', 'org.openpsa.products');
+                $ret[''] = midcom::i18n()->get_string('toplevel', 'org.openpsa.products');
             }
         }
         if (mgd_is_guid($up))
@@ -126,7 +126,7 @@ class org_openpsa_products_product_group_dba extends midcom_core_dbaobject
             // Error message on failure
             if (empty($group))
             {
-                $_MIDCOM->generate_error(MIDCOM_ERRCRIT, 'Failed to get the configured product root group');
+                midcom::generate_error(MIDCOM_ERRCRIT, 'Failed to get the configured product root group');
                 // This will exit
             }
 

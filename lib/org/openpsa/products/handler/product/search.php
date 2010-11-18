@@ -24,7 +24,7 @@ class org_openpsa_products_handler_product_search extends midcom_baseclasses_com
 
     function _on_initialize()
     {
-        $_MIDCOM->load_library('org.openpsa.qbpager');
+        midcom::load_library('org.openpsa.qbpager');
     }
 
     /**
@@ -38,7 +38,7 @@ class org_openpsa_products_handler_product_search extends midcom_baseclasses_com
     {
         foreach ($data['schemadb_product'] as $name => $schema)
         {
-            $_MIDCOM->relocate("search/{$name}/");
+            midcom::relocate("search/{$name}/");
             // This will exit
         }
     }
@@ -507,7 +507,7 @@ class org_openpsa_products_handler_product_search extends midcom_baseclasses_com
 
         if ($handler_id == 'view_search_raw')
         {
-            $_MIDCOM->skip_page_style = true;
+            midcom::skip_page_style = true;
         }
 
         $data['results'] = array();
@@ -555,7 +555,7 @@ class org_openpsa_products_handler_product_search extends midcom_baseclasses_com
         // Prepare datamanager
         $data['datamanager'] = new midcom_helper_datamanager2_datamanager($data['schemadb_product']);
 
-        $_MIDCOM->add_link_head
+        midcom::add_link_head
         (
             array
             (
@@ -600,11 +600,11 @@ class org_openpsa_products_handler_product_search extends midcom_baseclasses_com
             }
         }
 
-        $_MIDCOM->bind_view_to_object($this->_topic, $data['search_schema']);
+        midcom::bind_view_to_object($this->_topic, $data['search_schema']);
 
         $data['view_title'] = $this->_l10n->get('search') . ': ' . $this->_l10n->get($data['schemadb_product'][$data['search_schema']]->description);
 
-        $_MIDCOM->set_pagetitle($data['view_title']);
+        midcom::set_pagetitle($data['view_title']);
 
         return true;
     }

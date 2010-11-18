@@ -54,7 +54,7 @@ class org_openpsa_contacts_handler_group_action extends midcom_baseclasses_compo
             );
         }
 
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
     }
 
     /**
@@ -65,7 +65,7 @@ class org_openpsa_contacts_handler_group_action extends midcom_baseclasses_compo
      */
     function _handler_notifications($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         // Check if we get the group
         $group = $this->_load($args[0]);
         if (!$group)
@@ -75,7 +75,7 @@ class org_openpsa_contacts_handler_group_action extends midcom_baseclasses_compo
 
         $group->require_do('midgard:update');
 
-        $_MIDCOM->load_library('midcom.helper.datamanager2');
+        midcom::load_library('midcom.helper.datamanager2');
 
         $schemadb = midcom_helper_datamanager2_schema::load_database($this->_config->get('schemadb_notifications'));
 
@@ -84,19 +84,19 @@ class org_openpsa_contacts_handler_group_action extends midcom_baseclasses_compo
         $controller->set_storage($group);
         if (! $controller->initialize())
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for group {$group->id}.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to initialize a DM2 controller instance for group {$group->id}.");
             // This will exit.
         }
 
         switch ($controller->process_form())
         {
             case 'save':
-                $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+                midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                                    . "group/" . $group->guid . "/");
                 // This will exit()
 
             case 'cancel':
-                $_MIDCOM->relocate($_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
+                midcom::relocate(midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX)
                                    . "group/" . $group->guid . "/");
                 // This will exit()
         }
@@ -104,7 +104,7 @@ class org_openpsa_contacts_handler_group_action extends midcom_baseclasses_compo
         $this->_request_data['notifications_dm'] =& $controller;
         $this->_request_data['group'] =& $group;
 
-        $_MIDCOM->set_pagetitle($group->official . ": ". $this->_l10n->get("notification settings"));
+        midcom::set_pagetitle($group->official . ": ". $this->_l10n->get("notification settings"));
 
         $this->_update_breadcrumb_line($this->_l10n->get("notification settings"));
         org_openpsa_helpers::dm2_savecancel($this);
@@ -120,7 +120,7 @@ class org_openpsa_contacts_handler_group_action extends midcom_baseclasses_compo
      */
     function _handler_action($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         // Check if we get the group
         $this->_request_data['group'] = $this->_load($args[0]);
         if (!$this->_request_data['group'])
@@ -144,7 +144,7 @@ class org_openpsa_contacts_handler_group_action extends midcom_baseclasses_compo
                         $member = new midcom_db_member($id);
                         if ($member)
                         {
-                            $_MIDCOM->auth->require_do('midgard:update', $member);
+                            midcom::auth->require_do('midgard:update', $member);
                             $member->extra = $title;
                             $update_succeeded = $member->update();
                             $errstr = midcom_connection::get_error_string();
@@ -191,7 +191,7 @@ class org_openpsa_contacts_handler_group_action extends midcom_baseclasses_compo
         {
             case "area_group_members":
                 // This is most likely a dynamic_load
-                $_MIDCOM->load_library('org.openpsa.qbpager');
+                midcom::load_library('org.openpsa.qbpager');
                 $qb = new org_openpsa_qbpager('midcom_db_member', 'group_members');
                 $qb->add_constraint('gid', '=', $this->_request_data['group']->id);
                 $qb->results_per_page = 10;
@@ -201,7 +201,7 @@ class org_openpsa_contacts_handler_group_action extends midcom_baseclasses_compo
                 if (count($results) > 0)
                 {
                     midcom_show_style("show-group-persons-header");
-                    $_MIDCOM->load_library('org.openpsa.contactwidget');
+                    midcom::load_library('org.openpsa.contactwidget');
                     foreach ($results as $member)
                     {
                         $this->_request_data['member'] = $member;

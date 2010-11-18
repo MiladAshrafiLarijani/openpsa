@@ -1,6 +1,6 @@
 <?php
-$prefix = $_MIDCOM->get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
-$_MIDCOM->load_library('midcom.helper.xsspreventer');
+$prefix = midcom::get_context_data(MIDCOM_CONTEXT_ANCHORPREFIX);
+midcom::load_library('midcom.helper.xsspreventer');
 $query = midcom_helper_xsspreventer::escape_attribute($data['query']);
 
 $params = '';

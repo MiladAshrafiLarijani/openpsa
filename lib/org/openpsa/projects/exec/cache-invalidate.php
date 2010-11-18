@@ -1,8 +1,8 @@
 <?php
-$_MIDCOM->auth->require_admin_user();
+midcom::auth->require_admin_user();
 
 // Ensure this is not buffered
-$_MIDCOM->cache->content->enable_live_mode();
+midcom::cache()->content->enable_live_mode();
 while(@ob_end_flush())
 
 // TODO: Could this be done more safely somehow

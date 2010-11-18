@@ -157,14 +157,14 @@ class midcom_services_cron extends midcom_baseclasses_core_object
     {
         debug_push_class(__CLASS__, __FUNCTION__);
 
-        $data = $_MIDCOM->componentloader->get_all_manifest_customdata('midcom.services.cron');
+        $data = midcom::componentloader->get_all_manifest_customdata('midcom.services.cron');
         $data['midcom'] = $this->_midcom_jobs;
 
         foreach ($data as $component => $jobs)
         {
             // First, verify the component is loaded
             if (   $component != 'midcom'
-                && ! $_MIDCOM->componentloader->load_graceful($component))
+                && ! midcom::componentloader->load_graceful($component))
             {
                 debug_push_class(__CLASS__, __FUNCTION__);
                 $msg = "Failed to load the component {$component}. See the debug level log for further information, skipping this component.";

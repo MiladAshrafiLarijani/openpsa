@@ -42,7 +42,7 @@ class org_openpsa_directmarketing_handler_message_send extends midcom_baseclasse
 
         if (!$this->_datamanager)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for messages.");
+            midcom::generate_error(MIDCOM_ERRCRIT, "Failed to create a DM2 instance for messages.");
             // This will exit.
         }
     }
@@ -56,14 +56,14 @@ class org_openpsa_directmarketing_handler_message_send extends midcom_baseclasse
     function _handler_send_bg($handler_id, $args, &$data)
     {
         debug_push_class(__CLASS__, __FUNCTION__);
-        $_MIDCOM->auth->request_sudo();
+        midcom::auth->request_sudo();
 
         //Load message
         $data['message'] = new org_openpsa_directmarketing_campaign_message_dba($args[0]);
         if (   !$data['message']
             || !$data['message']->guid)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The message {$args[0]} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The message {$args[0]} was not found.");
             // This will exit.
         }
         // TODO: Check that campaign is in this topic
@@ -93,7 +93,7 @@ class org_openpsa_directmarketing_handler_message_send extends midcom_baseclasse
             return false;
         }
         $job = new midcom_services_at_entry($args[2]);
-        if (!$_MIDCOM->dbfactory->is_a($job, 'midcom_services_at_entry_db'))
+        if (!midcom::dbfactory()->is_a($job, 'midcom_services_at_entry_db'))
         {
             debug_add('Invalid job GUID', MIDCOM_LOG_ERROR);
             debug_pop();
@@ -109,8 +109,8 @@ class org_openpsa_directmarketing_handler_message_send extends midcom_baseclasse
             return false;
         }
         ignore_user_abort();
-        $_MIDCOM->skip_page_style = true;
-        $_MIDCOM->auth->drop_sudo();
+        midcom::skip_page_style = true;
+        midcom::auth->drop_sudo();
         debug_pop();
         return true;
     }
@@ -123,9 +123,9 @@ class org_openpsa_directmarketing_handler_message_send extends midcom_baseclasse
     function _show_send_bg($handler_id, &$data)
     {
         debug_push_class(__CLASS__, __FUNCTION__);
-        $_MIDCOM->auth->request_sudo();
+        midcom::auth->request_sudo();
         debug_add('Forcing content type: text/plain');
-        $_MIDCOM->cache->content->content_type('text/plain');
+        midcom::cache()->content->content_type('text/plain');
         $composed = $this->_prepare_send($data);
         $data['message_obj']->test_mode = false;
         $data['message_obj']->send_output = false;
@@ -138,7 +138,7 @@ class org_openpsa_directmarketing_handler_message_send extends midcom_baseclasse
         {
             echo "Batch #{$data['batch_number']} DONE\n";
         }
-        $_MIDCOM->auth->drop_sudo();
+        midcom::auth->drop_sudo();
         debug_pop();
     }
 
@@ -156,14 +156,14 @@ class org_openpsa_directmarketing_handler_message_send extends midcom_baseclasse
         ini_set('log_errors', true);
         ini_set('display_errors', false);
         ob_start();
-        $_MIDCOM->dynamic_load($data['compose_url']);
+        midcom::dynamic_load($data['compose_url']);
         $composed = ob_get_contents();
         ob_end_clean();
         ini_set('display_errors', $de_backup);
         ini_set('log_errors', $le_backup);
         //We force the content-type since the compositor might have set it to something else in compositor for preview purposes
         debug_add('Forcing content type: text/html');
-        $_MIDCOM->cache->content->content_type('text/html');
+        midcom::cache()->content->content_type('text/html');
 
         //PONDER: Should we leave these entirely for the methods to parse from the array ?
         $data['compose_subject'] = '';
@@ -232,14 +232,14 @@ class org_openpsa_directmarketing_handler_message_send extends midcom_baseclasse
      */
     function _handler_send($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
         debug_push_class(__CLASS__, __FUNCTION__);
         //Load message
         $data['message'] = new org_openpsa_directmarketing_campaign_message_dba($args[0]);
         if (   !$data['message']
             || !$data['message']->guid)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The message {$args[0]} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The message {$args[0]} was not found.");
             // This will exit.
         }
 
@@ -247,7 +247,7 @@ class org_openpsa_directmarketing_handler_message_send extends midcom_baseclasse
         if (   !$data['campaign']
             || $data['campaign']->node != $this->_topic->id)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRNOTFOUND, "The campaign {$data['message']->campaign} was not found.");
+            midcom::generate_error(MIDCOM_ERRNOTFOUND, "The campaign {$data['message']->campaign} was not found.");
             // This will exit.
         }
 
@@ -264,7 +264,7 @@ class org_openpsa_directmarketing_handler_message_send extends midcom_baseclasse
             MIDCOM_NAV_URL => "send_test/{$data['message']->guid}/",
             MIDCOM_NAV_NAME => $this->_l10n->get('send'),
         );
-        $_MIDCOM->set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
+        midcom::set_custom_context_data('midcom.helper.nav.breadcrumb', $tmp);
 
         $this->_load_datamanager();
         $this->_datamanager->autoset_storage($data['message']);

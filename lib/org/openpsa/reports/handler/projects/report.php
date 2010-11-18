@@ -335,7 +335,7 @@ class org_openpsa_reports_handler_projects_report extends org_openpsa_reports_ha
      */
     function _handler_generator($handler_id, $args, &$data)
     {
-        $_MIDCOM->auth->require_valid_user();
+        midcom::auth->require_valid_user();
 
         if (!$this->_generator_load_redirect($args))
         {

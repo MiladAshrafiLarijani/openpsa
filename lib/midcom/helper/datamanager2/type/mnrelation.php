@@ -232,7 +232,7 @@ class midcom_helper_datamanager2_type_mnrelation extends midcom_helper_datamanag
             || ! $this->master_fieldname
             || ! $this->member_fieldname)
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 'The configuration options mapping_class_name, master_filename and member_fieldname ' .
                 'must be defined for  any mnselect type.');
             // This will exit.
@@ -240,7 +240,7 @@ class midcom_helper_datamanager2_type_mnrelation extends midcom_helper_datamanag
 
         if (! class_exists($this->mapping_class_name))
         {
-            $_MIDCOM->generate_error(MIDCOM_ERRCRIT,
+            midcom::generate_error(MIDCOM_ERRCRIT,
                 "The mapping class {$this->mapping_class_name} does not exist.");
             // This will exit.
         }
@@ -296,7 +296,7 @@ class midcom_helper_datamanager2_type_mnrelation extends midcom_helper_datamanag
      */
     function _load_membership_objects()
     {
-        $qb = $_MIDCOM->dbfactory->new_query_builder($this->mapping_class_name);
+        $qb = midcom::dbfactory()->new_query_builder($this->mapping_class_name);
         $qb->add_constraint($this->master_fieldname, '=', $this->_get_master_foreign_key());
 
         if (   $this->sortable

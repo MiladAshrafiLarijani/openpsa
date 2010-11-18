@@ -27,7 +27,7 @@ class net_nehmer_account_navigation extends midcom_baseclasses_components_naviga
     {
         $leaves = Array();
 
-        if ($_MIDCOM->auth->user == null)
+        if (midcom::auth->user == null)
         {
             if ($this->_config->get('allow_register'))
             {
@@ -59,7 +59,7 @@ class net_nehmer_account_navigation extends midcom_baseclasses_components_naviga
         }
 
         // Pending registrations
-        if (   $_MIDCOM->auth->admin
+        if (   midcom::auth->admin
             && $this->_config->get('require_activation'))
         {
             // Get the count of persons waiting for approval
